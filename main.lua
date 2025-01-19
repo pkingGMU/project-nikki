@@ -1,10 +1,17 @@
+-- Global Imports --
+package.path = package.path .. ";/usr/share/lua/5.4/?.lua"
+local Class = require("hump.class")
+
+-- Local imports --
+require("states.baseWindow")
+
+
 --Callback function love.load 
 --Called once upon opening
 
 function love.load()
-    love.graphics.setNewFont(12)
-    love.graphics.setColor(1,1,1)
-    love.graphics.setBackgroundColor(255,255,255)
+    local window = baseWindow()
+    window:init()
 
     -- Load test image
     pfp_test = love.graphics.newImage("pfp.jpg")
@@ -21,8 +28,6 @@ function love.update(dt)
     if love.keyboard.isDown("up") then
         Num = Num + 100 * dt
     end
-
-    print(Num)
     
 end
 
