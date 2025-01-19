@@ -1,2 +1,2 @@
-new_globals = { '_', 'love' }
+new_globals = { '_', 'love', 'Class'}
 exclude_files = { '**/.*' }
