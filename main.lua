@@ -3,6 +3,8 @@ package.path = package.path .. ";/usr/share/lua/5.4/?.lua"
 local Class = require("hump.class")
 local Gamestate = require("hump.gamestate")
 
+
+
 -- Local imports --
 require("states.baseWindow")
 
@@ -19,6 +21,8 @@ function love.load()
     -- Hump gamestate init --
     Gamestate.registerEvents()
     Gamestate.switch(menu)
+
+    
 
     
 end
@@ -56,6 +60,7 @@ function menu:update(dt)
     end
     
 end
+
 -- Callback function love.keypressed
 -- Action listener?
 -- Menu Keypressed --

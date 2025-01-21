@@ -1,5 +1,7 @@
 Look into hump and gamestate for keeping track of states ->
 
+https://hump.readthedocs.io/en/latest/gamestate.html
+
 Code structure ->
 
 File structure ->
