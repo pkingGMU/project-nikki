@@ -1,27 +1,40 @@
 local Class = require("libraries.hump-master.class")
 
+-- Local Imports --
+require("classes.Timer")
+
 MidiTrigger = Class()
 
 function MidiTrigger:init()
+    self.noteDurationTimer = false
 end
 
-function MidiTrigger:midiHash(lines)
+function MidiTrigger:findNote(hashMap, elapsedTime)
 
+    elapsedTime = math.floor(elapsedTime * 10 + 0.5) / 10
     
-
+    if hashMap[tostring(elapsedTime)] then
+        self.noteDurationTimer = true
+        return hashMap[tostring(elapsedTime)]
+    else
+        self.noteDurationTimer = false
+        return 'No Notes'
+    end
 end
 
-function MidiTrigger:findNote(lines)
-    for fields in lines do
-        if midi_line_count < 2 or midi_line_count > 4 then
+
+function MidiTrigger:findNotes(hashMap, elapsedTime)
+    
+    for key, value in pairs(hashMap) do
+        local numericKey = tonumber(key)
+
+        if not numericKey then
             goto continue
-        else
-            -- print first row
-           local first_col = fields[1]
-            print(first_col)
         end
-        
+        if numericKey[elapsedTime] then
+            return value
+        end
         ::continue::
-        midi_line_count = midi_line_count + 1
     end
+    return 'No Notes'
 end

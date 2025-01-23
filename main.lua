@@ -32,10 +32,11 @@ function menu:init()
     window:init()
 
     -- Test Timer --
-    myTimer = Timer(5)
+    myTimer = Timer(30)
+    noteTimer = Timer(1)
 
     -- Test Midi Trigger --
-    local midiTrigger = MidiTrigger()
+    midiTrigger = MidiTrigger()
     
     -- Load test image
     pfp_test = love.graphics.newImage("assets/img/pfp.jpg")
@@ -45,16 +46,6 @@ function menu:init()
 
     midiFile = "sounds/midi_training.csv"
     midiHash = midiFileHandler:readMidi(midiFile)
-    
-
-    
-
-    print(midiHash[tostring(1.8)])
-
-    
-
-
-
     
 end
 
@@ -70,6 +61,7 @@ function menu:draw()
 
     love.graphics.setColor(255, 0, 0)
     love.graphics.print(Num, 0, 0)
+    love.graphics.print(midiPitch, 60, 20)
     love.graphics.print(myTimer:getRemainingTime(), 20, 20)
 
     if myTimer:isFinished() then
@@ -80,6 +72,12 @@ end
 
 -- Menu Update --
 function menu:update(dt)
+
+    --Debug--
+    print(midiTrigger.noteDurationTimer)
+
+
+
     if love.keyboard.isDown("up") then
         Num = Num + 100 * dt
     end
@@ -88,11 +86,38 @@ function menu:update(dt)
     if myTimer.running then
         myTimer:update(dt)
     end
+
+    if noteTimer.running then
+        noteTimer:update(dt)
+    end
      -- If 't' is pressed, start the timer
      if t_down then
         myTimer:start()
         t_down = false  -- Reset the flag after starting the timer
     end
+
+    print(noteTimer:getRemainingTime())
+
+    if noteTimer:getRemainingTime() <= 0 then
+        midiTrigger.noteDurationTimer = false
+        noteTimer:stop()
+    end
+
+    --print(midiTrigger.noteDurationTimer)
+
+    if midiTrigger.noteDurationTimer == true then
+        goto continue
+    end
+
+    
+
+    midiPitch = midiTrigger:findNote(midiHash, myTimer.elapsedTime)
+
+    if midiPitch == not 'No Notes' then
+        noteTimer:start()
+        midiTrigger.noteDurationTimer = true
+    end
+    ::continue::
     
     
 end
