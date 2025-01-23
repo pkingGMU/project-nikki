@@ -6,12 +6,11 @@ local Gamestate = require("libraries.hump-master.gamestate")
 local csv = require("libraries.lua-csv-master.lua.csv")
 
 
-print("Hello World")
-
 -- Local imports --
 require("states.baseWindow")
 require("classes.midiFileHandler")
 require("classes.Timer")
+require("classes.MidiTrigger")
 
 -- Gamestate variables --
 local menu = {}
@@ -32,7 +31,11 @@ function menu:init()
     local window = baseWindow()
     window:init()
 
+    -- Test Timer --
     myTimer = Timer(5)
+
+    -- Test Midi Trigger --
+    local midiTrigger = MidiTrigger()
     
     -- Load test image
     pfp_test = love.graphics.newImage("assets/img/pfp.jpg")
@@ -40,11 +43,17 @@ function menu:init()
     b_down = false
     t_down = false
 
-    
+    midiFile = "sounds/midi_training.csv"
+    midiHash = midiFileHandler:readMidi(midiFile)
     
 
-    midiFile = "sounds/midi_training.csv"
-    midiFileHandler:readMidi(midiFile)
+    
+
+    print(midiHash[tostring(1.8)])
+
+    
+
+
 
     
 end
