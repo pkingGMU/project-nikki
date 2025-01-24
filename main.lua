@@ -31,8 +31,12 @@ function menu:init()
     local window = baseWindow()
     window:init()
 
+    --window sizes--
+    window_height = window.windowHeight
+    window_width = window.windowWidth
+
     -- Test Timer --
-    myTimer = Timer(5)
+    myTimer = Timer(10)
 
     -- Test Midi Trigger --
     midiTrigger = MidiTrigger()
@@ -45,22 +49,42 @@ function menu:init()
 
     midiFile = "sounds/midi_training.csv"
     midiHash = midiFileHandler:readMidi(midiFile)
+
+    -- Goal rectangle -- 
+    goal_rect = {
+        x = (window_width/2) - 50,
+        y = 50,
+        width = 100,
+        height = 100
+    }
+    -- Moving rectangel -- 
+    moving_rect = {
+        x = 50,
+        y = 50,
+        width = 100,
+        height = 100
+    }
+
     
 end
 
 -- Menu Draw --
 function menu:draw()
-    if b_down == false then
-        love.graphics.setColor(1, 1, 1)
-        -- love.graphics.draw(pfp_test, 50, 50) --
-        love.graphics.rectangle("fill", 50, 50, 100, 100)
-    end
+
+    -- Goal and moving rectangle --
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.rectangle("fill", goal_rect.x, goal_rect.y, goal_rect.width, goal_rect.height)
+    
+    love.graphics.setColor(255, 0, 0)
+    love.graphics.rectangle("fill", moving_rect.x, moving_rect.y, moving_rect.width, moving_rect.height)
+    
 
    
 
     love.graphics.setColor(255, 0, 0)
     love.graphics.print(Num, 0, 0)
-    love.graphics.print(midiPitch, 60, 20)
+    
+    --love.graphics.print(midiPitch, 60, 20)
     love.graphics.print(myTimer:getRemainingTime(), 20, 20)
 
     if myTimer:isFinished() then
@@ -80,28 +104,27 @@ function menu:update(dt)
     if love.keyboard.isDown("up") then
         Num = Num + 100 * dt
     end
-
     -- test for timer
     if myTimer.running then
         myTimer:update(dt)
     end
-
-    
      -- If 't' is pressed, start the timer
      if t_down then
         myTimer:start()
         t_down = false  -- Reset the flag after starting the timer
     end
-
-    
-
     -- Trigger midi notes --
     midiPitch = midiTrigger:findNote(midiHash, myTimer.elapsedTime)
 
     
-    ::continue::
-    
-    
+
+    if not (midiPitch == 'No Notes') and not (moving_rect.x >= goal_rect.x) then
+        moving_rect.x = moving_rect.x + 5
+        print(moving_rect.x)
+    else
+        moving_rect.x = 50
+    end
+  
 end
 
 -- Callback function love.keypressed
