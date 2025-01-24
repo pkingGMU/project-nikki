@@ -23,18 +23,3 @@ function MidiTrigger:findNote(hashMap, elapsedTime)
 end
 
 
-function MidiTrigger:findNotes(hashMap, elapsedTime)
-    
-    for key, value in pairs(hashMap) do
-        local numericKey = tonumber(key)
-
-        if not numericKey then
-            goto continue
-        end
-        if numericKey[elapsedTime] then
-            return value
-        end
-        ::continue::
-    end
-    return 'No Notes'
-end

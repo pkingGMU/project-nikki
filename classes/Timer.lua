@@ -22,6 +22,10 @@ end
 
 -- Method to update the timer each frame
 function Timer:update(dt)
+    if self.elapsedTime >= self.duration then
+        self.running = false
+    end
+
     if self.running then
         self.elapsedTime = self.elapsedTime + dt
     end

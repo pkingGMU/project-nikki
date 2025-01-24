@@ -32,8 +32,7 @@ function menu:init()
     window:init()
 
     -- Test Timer --
-    myTimer = Timer(30)
-    noteTimer = Timer(1)
+    myTimer = Timer(5)
 
     -- Test Midi Trigger --
     midiTrigger = MidiTrigger()
@@ -73,11 +72,11 @@ end
 -- Menu Update --
 function menu:update(dt)
 
-    --Debug--
-    print(midiTrigger.noteDurationTimer)
+    --Debug-------------
+    
 
 
-
+    --------------------
     if love.keyboard.isDown("up") then
         Num = Num + 100 * dt
     end
@@ -87,36 +86,19 @@ function menu:update(dt)
         myTimer:update(dt)
     end
 
-    if noteTimer.running then
-        noteTimer:update(dt)
-    end
+    
      -- If 't' is pressed, start the timer
      if t_down then
         myTimer:start()
         t_down = false  -- Reset the flag after starting the timer
     end
 
-    print(noteTimer:getRemainingTime())
-
-    if noteTimer:getRemainingTime() <= 0 then
-        midiTrigger.noteDurationTimer = false
-        noteTimer:stop()
-    end
-
-    --print(midiTrigger.noteDurationTimer)
-
-    if midiTrigger.noteDurationTimer == true then
-        goto continue
-    end
-
     
 
+    -- Trigger midi notes --
     midiPitch = midiTrigger:findNote(midiHash, myTimer.elapsedTime)
 
-    if midiPitch == not 'No Notes' then
-        noteTimer:start()
-        midiTrigger.noteDurationTimer = true
-    end
+    
     ::continue::
     
     
