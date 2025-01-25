@@ -11,7 +11,7 @@ end
 
 function MidiTrigger:findNote(hashMap, elapsedTime)
 
-    elapsedTime = math.floor(elapsedTime * 10 + 0.5) / 10
+    elapsedTime = (math.floor(elapsedTime * 10 + 0.5) / 10) - .1
     
     if hashMap[tostring(elapsedTime)] then
         self.noteDurationTimer = true

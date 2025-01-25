@@ -11,6 +11,8 @@ require("states.baseWindow")
 require("classes.midiFileHandler")
 require("classes.Timer")
 require("classes.MidiTrigger")
+require("classes.spawn-objects.SpawnRectangle")
+require("classes.spawn-objects.ShapeHandler")
 
 -- Gamestate variables --
 local menu = {}
@@ -36,10 +38,14 @@ function menu:init()
     window_width = window.windowWidth
 
     -- Test Timer --
-    myTimer = Timer(10)
+    myTimer = Timer(60)
 
     -- Test Midi Trigger --
     midiTrigger = MidiTrigger()
+
+    -- Test object handler --
+    shapeHandler = ShapeHandler()
+    
     
     -- Load test image
     pfp_test = love.graphics.newImage("assets/img/pfp.jpg")
@@ -64,6 +70,13 @@ function menu:init()
         width = 100,
         height = 100
     }
+
+    song = love.audio.newSource("sounds/song1.mp3", "stream")
+    song:play()
+    music = false
+
+    -- variable that keeps track of rectangles that have spawed --
+    last_call = 0
 
     
 end
@@ -90,6 +103,19 @@ function menu:draw()
     if myTimer:isFinished() then
         love.graphics.print("Timer finished!", 10, 30)
     end
+
+    -- Draw rectangle from midi --
+    
+
+    
+    print(#shapeHandler.shape_table)
+    love.graphics.setColor(0,0,0)
+
+    if not (#shapeHandler.shape_table == 0) and shapeHandler.spawned == false then
+        love.graphics.setColor((#shapeHandler.shape_table/50), 1 - (#shapeHandler.shape_table/50),(#shapeHandler.shape_table/50) + .03)
+        love.graphics.rectangle("fill", latest_rectangle.x, latest_rectangle.y, latest_rectangle.width, latest_rectangle.height)
+        last_call = #shapeHandler.shape_table
+    end
 end
 
 
@@ -109,6 +135,13 @@ function menu:update(dt)
         myTimer:update(dt)
     end
      -- If 't' is pressed, start the timer
+
+     
+     if music == false then
+        myTimer:start()
+        music = true
+     end
+
      if t_down then
         myTimer:start()
         t_down = false  -- Reset the flag after starting the timer
@@ -116,11 +149,24 @@ function menu:update(dt)
     -- Trigger midi notes --
     midiPitch = midiTrigger:findNote(midiHash, myTimer.elapsedTime)
 
+    if not (midiPitch == 'No Notes') and shapeHandler.spawned == false then
+        shapeHandler:addRectangle(SpawnRectangle(50, 300))
+        shapeHandler.spawned = true
+    elseif midiPitch == 'No Notes' then
+        shapeHandler.spawned = false
+    end
+
+    latest_rectangle = shapeHandler.shape_table[#shapeHandler.shape_table]
+    latest_rectangle_idx = #shapeHandler.shape_table
+    
+    
     
 
+    --print(shapeHandler.shape_idx)
+
     if not (midiPitch == 'No Notes') and not (moving_rect.x >= goal_rect.x) then
-        moving_rect.x = moving_rect.x + 5
-        print(moving_rect.x)
+        moving_rect.x = moving_rect.x + 6
+        
     else
         moving_rect.x = 50
     end

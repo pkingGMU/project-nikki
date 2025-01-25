@@ -1,5 +1,5 @@
 -- Global Imports --
-local Class = require("hump.class")
+local Class = require("libraries.hump-master.class")
 
 baseWindow = Class()
 

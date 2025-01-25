@@ -1,12 +1,15 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-      {
-        "name": "Debug Love2D",
-        "type": "lua",
-        "request": "launch",
-        "program": "${workspaceFolder}/main.lua",
-        "args": []
-      }
-    ]
-  }
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run with LÖVE",
+      "type": "lua",
+      "request": "launch",
+      "program": "${workspaceFolder}/main.lua",
+      "runtimeExecutable": "/Applications/love.app/Contents/MacOS/love",
+      "args": [
+        "."
+      ]
+    }
+  ]
+}
