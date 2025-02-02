@@ -13,6 +13,7 @@ require("classes.Timer")
 require("classes.MidiTrigger")
 require("classes.spawn-objects.SpawnRectangle")
 require("classes.spawn-objects.ShapeHandler")
+require("classes.spawn-objects.SpawnCircle")
 
 -- Gamestate variables --
 local menu = {}
@@ -112,11 +113,11 @@ function menu:draw()
     love.graphics.setColor(0,0,0)
 
     --draw every rectangle
-    if not (#shapeHandler.shape_table == 0) then
+    if not (#shapeHandler.cir_shape_table == 0) then
 
-        for key, pair in ipairs(shapeHandler.shape_table) do
+        for key, pair in ipairs(shapeHandler.cir_shape_table) do
             love.graphics.setColor(pair.r, pair.g, pair.b)
-            love.graphics.rectangle("fill", pair.x, pair.y, pair.width, pair.height)
+            love.graphics.circle("fill", pair.x, pair.y, pair.radius)
         end
 
     end
@@ -161,41 +162,35 @@ function menu:update(dt)
     -- Trigger midi notes --
     midiPitch = midiTrigger:findNote(midiHash, myTimer.elapsedTime)
 
-    if not (midiPitch == 'No Notes') and shapeHandler.spawned == false then
-        shapeHandler:addRectangle(SpawnRectangle(50, 300, 1, 1-(last_call/50), last_call/50))
+    if not (midiPitch == 'No Notes') and shapeHandler.cir_spawned == false then
+        shapeHandler:addCircle(SpawnCircle(50, 300, 1, 1-(last_call/50), last_call/50))
         last_call = last_call + 1
-        shapeHandler.spawned = true
+        shapeHandler.cir_spawned = true
     elseif midiPitch == 'No Notes' then
-        shapeHandler.spawned = false
+        shapeHandler.cir_spawned = false
     end
 
-    latest_rectangle = shapeHandler.shape_table[#shapeHandler.shape_table]
-    latest_rectangle_idx = #shapeHandler.shape_table
+    latest_circle = shapeHandler.cir_shape_table[#shapeHandler.cir_shape_table]
+    latest_circle_idx = #shapeHandler.cir_shape_table
 
     -- Make every rectangle move --
 
-    for key, pair in ipairs(shapeHandler.shape_table) do
+    for key, pair in ipairs(shapeHandler.cir_shape_table) do
 
         print(key)
 
-        current_shape_x = shapeHandler.shape_table[key].x
+        current_shape_x = shapeHandler.cir_shape_table[key].x
 
-        if not (#shapeHandler.shape_table == 1) and not (key == 1) then
-            --previous_shape_x = shapeHandler.shape_table[key + 1].x
-        else
-            --previous_shape_x = 0
-        end
-
-        if shapeHandler.shape_table[key].x + 6 >= window_width then
-            table.remove(shapeHandler.shape_table, key)
+        if shapeHandler.cir_shape_table[key].x + 6 >= window_width then
+            table.remove(shapeHandler.cir_shape_table, key)
             goto continue
         end
 
-        if #shapeHandler.shape_table >= 1 then
+        if #shapeHandler.cir_shape_table >= 1 then
             current_shape_x = current_shape_x + .7
         end
 
-        shapeHandler.shape_table[key].x = current_shape_x
+        shapeHandler.cir_shape_table[key].x = current_shape_x
 
         ::continue::
     end
@@ -204,7 +199,6 @@ function menu:update(dt)
     
     
 
-    --print(shapeHandler.shape_idx)
 
     if not (midiPitch == 'No Notes') and not (moving_rect.x >= goal_rect.x) then
         moving_rect.x = moving_rect.x + 6
