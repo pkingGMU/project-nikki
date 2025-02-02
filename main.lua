@@ -108,14 +108,26 @@ function menu:draw()
     
 
     
-    print(#shapeHandler.shape_table)
+    --print(#shapeHandler.shape_table)
     love.graphics.setColor(0,0,0)
 
-    if not (#shapeHandler.shape_table == 0) and shapeHandler.spawned == false then
-        love.graphics.setColor((#shapeHandler.shape_table/50), 1 - (#shapeHandler.shape_table/50),(#shapeHandler.shape_table/50) + .03)
-        love.graphics.rectangle("fill", latest_rectangle.x, latest_rectangle.y, latest_rectangle.width, latest_rectangle.height)
-        last_call = #shapeHandler.shape_table
+    --draw every rectangle
+    if not (#shapeHandler.shape_table == 0) then
+
+        for key, pair in ipairs(shapeHandler.shape_table) do
+            love.graphics.setColor(pair.r, pair.g, pair.b)
+            love.graphics.rectangle("fill", pair.x, pair.y, pair.width, pair.height)
+        end
+
     end
+
+
+    -- draw the latest_rectangle
+    --if not (#shapeHandler.shape_table == 0) and shapeHandler.spawned == false then
+    --    love.graphics.setColor((#shapeHandler.shape_table/50), 1 - (#shapeHandler.shape_table/50),(#shapeHandler.shape_table/50) + .03)
+    --    love.graphics.rectangle("fill", latest_rectangle.x, latest_rectangle.y, latest_rectangle.width, latest_rectangle.height)
+    --    last_call = #shapeHandler.shape_table
+    --end
 end
 
 
@@ -150,7 +162,8 @@ function menu:update(dt)
     midiPitch = midiTrigger:findNote(midiHash, myTimer.elapsedTime)
 
     if not (midiPitch == 'No Notes') and shapeHandler.spawned == false then
-        shapeHandler:addRectangle(SpawnRectangle(50, 300))
+        shapeHandler:addRectangle(SpawnRectangle(50, 300, 1, 1-(last_call/50), last_call/50))
+        last_call = last_call + 1
         shapeHandler.spawned = true
     elseif midiPitch == 'No Notes' then
         shapeHandler.spawned = false
@@ -158,6 +171,35 @@ function menu:update(dt)
 
     latest_rectangle = shapeHandler.shape_table[#shapeHandler.shape_table]
     latest_rectangle_idx = #shapeHandler.shape_table
+
+    -- Make every rectangle move --
+
+    for key, pair in ipairs(shapeHandler.shape_table) do
+
+        print(key)
+
+        current_shape_x = shapeHandler.shape_table[key].x
+
+        if not (#shapeHandler.shape_table == 1) and not (key == 1) then
+            --previous_shape_x = shapeHandler.shape_table[key + 1].x
+        else
+            --previous_shape_x = 0
+        end
+
+        if shapeHandler.shape_table[key].x + 6 >= window_width then
+            table.remove(shapeHandler.shape_table, key)
+            goto continue
+        end
+
+        if #shapeHandler.shape_table >= 1 then
+            current_shape_x = current_shape_x + .7
+        end
+
+        shapeHandler.shape_table[key].x = current_shape_x
+
+        ::continue::
+    end
+    
     
     
     
