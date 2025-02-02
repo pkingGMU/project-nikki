@@ -64,6 +64,7 @@ function menu:init()
         width = 100,
         height = 100
     }
+    
 
     song = love.audio.newSource("sounds/song1.mp3", "stream")
     song:play()
@@ -78,15 +79,9 @@ end
 -- Menu Draw --
 function menu:draw()
 
-    -- Goal and moving rectangle --
+    -- Goal rectangle --
     love.graphics.setColor(1, 1, 1)
     love.graphics.rectangle("fill", goal_rect.x, goal_rect.y, goal_rect.width, goal_rect.height)
-    
-    love.graphics.setColor(255, 0, 0)
-    love.graphics.rectangle("fill", moving_rect.x, moving_rect.y, moving_rect.width, moving_rect.height)
-    
-
-   
 
     love.graphics.setColor(255, 0, 0)
     love.graphics.print(Num, 0, 0)
