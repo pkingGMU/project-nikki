@@ -60,14 +60,7 @@ function menu:init()
     -- Goal rectangle -- 
     goal_rect = {
         x = (window_width/2) - 50,
-        y = 50,
-        width = 100,
-        height = 100
-    }
-    -- Moving rectangel -- 
-    moving_rect = {
-        x = 50,
-        y = 50,
+        y = (window_height/2) - 50,
         width = 100,
         height = 100
     }
