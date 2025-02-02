@@ -36,6 +36,10 @@ function Timer:getRemainingTime()
     return math.max(self.duration - math.floor(self.elapsedTime), 0)  -- Don't go below zero
 end
 
+function Timer:getRemainingTimeFloat()
+    return math.max(self.duration - self.elapsedTime, 0)
+end
+
 -- Method to check if the timer has finished
 function Timer:isFinished()
     return self.elapsedTime >= self.duration
