@@ -6,17 +6,27 @@ local Class = require("libraries.hump-master.class")
 ShapeHandler = Class()
 
 function ShapeHandler:init()
-    self.shape_table = {}
-    self.shape_idx = 0
-    self.spawned = false
+    self.rect_shape_table = {}
+    self.rect_shape_idx = 0
+    self.rect_spawned = false
+
+    self.cir_shape_table = {}
+    self.cir_shape_idx = 0
+    self.cir_spawned = false
 end
 
 function ShapeHandler:addRectangle(shape --[[object]])
-    self.shape_idx = self.shape_idx + 1
-    key = 'rectangle' .. tostring(self.shape_idx)
-    table.insert(self.shape_table, shape)
+    self.rect_shape_idx = self.rect_shape_idx + 1
+    key = 'rectangle' .. tostring(self.rect_shape_idx)
+    table.insert(self.rect_shape_table, shape)
     --self.shape_table[key] = shape
     --print(shape.x)
+end
+
+function ShapeHandler:addCircle(shape --[[object]])
+    self.cir_shape_idx = self.cir_shape_idx + 1
+    key = 'circle' .. tostring(self.cir_shape_idx)
+    table.insert(self.cir_shape_table, shape)
 end
 
 function ShapeHandler:update(dt)
