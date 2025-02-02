@@ -41,6 +41,8 @@ function menu:init()
     -- Test Timer --
     myTimer = Timer(60)
 
+    
+
     -- Test Midi Trigger --
     midiTrigger = MidiTrigger()
 
@@ -82,7 +84,7 @@ function menu:draw()
     -- Goal rectangle --
     love.graphics.setColor(1, 1, 1)
     love.graphics.rectangle("fill", goal_rect.x, goal_rect.y, goal_rect.width, goal_rect.height)
-
+    
     love.graphics.setColor(255, 0, 0)
     love.graphics.print(Num, 0, 0)
     
@@ -166,9 +168,14 @@ function menu:update(dt)
 
     for key, pair in ipairs(shapeHandler.cir_shape_table) do
 
-        print(key)
+        current_shape = shapeHandler.cir_shape_table[key]
 
-        current_shape_x = shapeHandler.cir_shape_table[key].x
+        current_shape.lifespanTimer:update(dt)
+
+        
+        
+        shapeHandler:setVelocity(current_shape, current_shape.x, goal_rect.x, current_shape.y, goal_rect.y, current_shape.lifespanTimer:getRemainingTimeFloat())
+        
 
         if shapeHandler.cir_shape_table[key].x + 6 >= window_width then
             table.remove(shapeHandler.cir_shape_table, key)
@@ -176,7 +183,8 @@ function menu:update(dt)
         end
 
         if #shapeHandler.cir_shape_table >= 1 then
-            current_shape_x = current_shape_x + .7
+            current_shape_x = current_shape.x + current_shape.velocityX * dt
+            current_shape_y = current_shape.y + current_shape.velocityY * dt
         end
 
         shapeHandler.cir_shape_table[key].x = current_shape_x
@@ -184,17 +192,7 @@ function menu:update(dt)
         ::continue::
     end
     
-    
-    
-    
-
-
-    if not (midiPitch == 'No Notes') and not (moving_rect.x >= goal_rect.x) then
-        moving_rect.x = moving_rect.x + 6
-        
-    else
-        moving_rect.x = 50
-    end
+   
   
 end
 
