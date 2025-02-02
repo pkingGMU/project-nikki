@@ -29,6 +29,15 @@ function ShapeHandler:addCircle(shape --[[object]])
     table.insert(self.cir_shape_table, shape)
 end
 
+function ShapeHandler:setVelocity(shape --[[object]], positionX --[[int]], goalX --[[int]], positionY --[[int]], goalY --[[int]], staggerTime --[[float]])
+    
+    shape.velocityX = (math.abs(positionX - goalX)) / staggerTime
+    shape.velocityY = (math.abs(positionY - goalY)) / staggerTime
+    
+end
+
+
+
 function ShapeHandler:update(dt)
 
 end
