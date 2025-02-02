@@ -151,7 +151,8 @@ function menu:update(dt)
     midiPitch = midiTrigger:findNote(midiHash, myTimer.elapsedTime)
 
     if not (midiPitch == 'No Notes') and shapeHandler.cir_spawned == false then
-        shapeHandler:addCircle(SpawnCircle(50, 300, 1, 1-(last_call/50), last_call/50))
+
+        shapeHandler:addCircle(SpawnCircle(50, 300, 1, 1-(last_call/50), last_call/50, Timer(.5)))
         last_call = last_call + 1
         shapeHandler.cir_spawned = true
     elseif midiPitch == 'No Notes' then
