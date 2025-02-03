@@ -7,7 +7,7 @@ MidiTrigger = Class()
 
 function MidiTrigger:init()
     self.noteDurationTimer = false
-    self.staggerTime = .5
+    self.staggerTime = 1
 end
 
 function MidiTrigger:findNote(hashMap, elapsedTime)
