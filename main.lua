@@ -39,7 +39,7 @@ function menu:init()
     window_width = window.windowWidth
 
     -- Test Timer --
-    myTimer = Timer(60)
+    myTimer = Timer(200)
 
     
 
@@ -55,20 +55,24 @@ function menu:init()
     Num = 0
     b_down = false
     t_down = false
+    a_down = false
+    s_down = false
+    d_down = false
+    w_down = false
 
-    midiFile = "sounds/midi_training.csv"
+    midiFile = "sounds/Asgore/midi_training.csv"
     midiHash = midiFileHandler:readMidi(midiFile)
 
     -- Goal rectangle -- 
     goal_rect = {
-        x = (window_width/2) - 50,
-        y = (window_height/2) - 50,
-        width = 100,
-        height = 100
+        x = (window_width/2) - 25,
+        y = (window_height/2) - 25,
+        width = 50,
+        height = 50
     }
     
 
-    song = love.audio.newSource("sounds/song1.mp3", "stream")
+    song = love.audio.newSource("sounds/Asgore/Asgore.mp3", "stream")
     song:play()
     music = false
 
@@ -149,12 +153,33 @@ function menu:update(dt)
         myTimer:start()
         t_down = false  -- Reset the flag after starting the timer
     end
+
+
+    -- Move goal rectangle --
+    if a_down then
+        goal_rect.x = goal_rect.x - 200 * dt
+    end
+
+    if d_down then
+        goal_rect.x = goal_rect.x + 200 * dt
+    end
+
+    if w_down then
+        goal_rect.y = goal_rect.y - 200 * dt
+    end
+
+    if s_down then
+        goal_rect.y = goal_rect.y + 200 * dt
+    end
+
+
+
     -- Trigger midi notes --
     midiPitch = midiTrigger:findNote(midiHash, myTimer.elapsedTime)
 
     if not (midiPitch == 'No Notes') and shapeHandler.cir_spawned == false then
 
-        shapeHandler:addCircle(SpawnCircle(50, 300, 1, 1-(last_call/50), last_call/50, Timer(.5)))
+        shapeHandler:addCircle(SpawnCircle(50, 300, 1, 1-(last_call/250), last_call/250, Timer(1)))
         last_call = last_call + 1
         shapeHandler.cir_spawned = true
     elseif midiPitch == 'No Notes' then
@@ -177,7 +202,7 @@ function menu:update(dt)
         shapeHandler:setVelocity(current_shape, current_shape.x, goal_rect.x, current_shape.y, goal_rect.y, current_shape.lifespanTimer:getRemainingTimeFloat())
         
 
-        if shapeHandler.cir_shape_table[key].x + 6 >= window_width then
+        if (shapeHandler.cir_shape_table[key].x == goal_rect.x) and (shapeHandler.cir_shape_table[key].y == goal_rect.y) then
             table.remove(shapeHandler.cir_shape_table, key)
             goto continue
         end
@@ -188,6 +213,7 @@ function menu:update(dt)
         end
 
         shapeHandler.cir_shape_table[key].x = current_shape_x
+        shapeHandler.cir_shape_table[key].y = current_shape_y
 
         ::continue::
     end
@@ -207,6 +233,22 @@ function menu:keypressed(key)
     if key == 't' then
         t_down = true
     end
+
+    if key == 'a' then
+        a_down = true
+    end
+
+    if key == 's' then
+        s_down = true
+    end
+
+    if key == 'd' then
+        d_down = true
+    end
+
+    if key == 'w' then
+        w_down = true
+    end
 end
 
 -- Callback function love.keyreleased
@@ -215,6 +257,22 @@ end
 function menu:keyreleased(key)
     if key == 'b' then
         b_down = false
+    end
+
+    if key == 'a' then
+        a_down = false
+    end
+
+    if key == 's' then
+        s_down = false
+    end
+
+    if key == 'd' then
+        d_down = false
+    end
+
+    if key == 'w' then
+        w_down = false
     end
 
     
