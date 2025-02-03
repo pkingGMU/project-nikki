@@ -34,9 +34,6 @@ function midiFileHandler:readMidi(midiFilePath --[[string]])
 
         local key = fields[6]
         local pair = fields[4]
-
-        
-
         notesTable[key] = pair
         
     end
