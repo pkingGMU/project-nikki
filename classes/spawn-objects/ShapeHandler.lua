@@ -31,8 +31,8 @@ end
 
 function ShapeHandler:setVelocity(shape --[[object]], positionX --[[int]], goalX --[[int]], positionY --[[int]], goalY --[[int]], staggerTime --[[float]])
     
-    shape.velocityX = (math.abs(positionX - goalX)) / staggerTime
-    shape.velocityY = (math.abs(positionY - goalY)) / staggerTime
+    shape.velocityX = (goalX - (positionX - 25)) / staggerTime
+    shape.velocityY = (goalY - (positionY - 25)) / staggerTime
     
 end
 
