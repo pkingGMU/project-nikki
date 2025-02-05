@@ -25,7 +25,7 @@ require("classes.game.gameStateMousePressed")
 
 
 -- Gamestate variables --
-local menuState = {}
+menuState = {}
 local gameState = {}
 
 --Callback function love.load 
@@ -99,11 +99,6 @@ end
 function gameState:mousereleased(mx, my, mbutton)
     gameStateMousePressed:mousereleased(mx, my, mbutton, game)
 
-    if (mbutton == 1)  then
-        print("Clicked")
-        Gamestate.switch(menuState)
-    end
-
-    game.song:stop()
+    
 end
 
