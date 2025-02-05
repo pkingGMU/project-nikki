@@ -17,8 +17,11 @@ require("classes.spawn-objects.SpawnCircle")
 require("classes.menu.menuStateInit")
 require("classes.menu.menuStateDraw")
 require("classes.game.gameStateInit")
+require("classes.game.gameStateEnter")
 require("classes.game.gameStateDraw")
 require("classes.game.gameStateUpdate")
+require("classes.game.gameStateKeyPressed")
+require("classes.game.gameStateMousePressed")
 
 
 -- Gamestate variables --
@@ -34,7 +37,7 @@ function love.load()
     Gamestate.switch(menuState)
 end
 
--- Gamestate menu --
+----------------------------------------- MENU ----------------------------------------------
 
 -- Menu Init (Load) --
 function menuState:init()
@@ -56,11 +59,15 @@ function menuState:mousereleased(mx, my, mbutton)
     end
 end
 
-
+----------------------------------------- GAMESTATE -----------------------------------------
 
 -- gamestate Init --
 function gameState:init()
     game = gameStateInit()
+end
+
+function gameState:enter()
+    game = gameStateEnter()
 end
 
 -- gamestate Draw --
@@ -68,67 +75,35 @@ function gameState:draw()
     gameStateDraw:draw(game)
 end
 
-
 -- Menu Update --
 function gameState:update(dt)
    gameStateUpdate:update(dt, game)
 end
 
 -- Callback function love.keypressed
--- Action listener?
--- Menu Keypressed --
 function gameState:keypressed(key)
-    if key == 'b' then
-        game.b_down = true
-    end
-
-    if key == 't' then
-        game.t_down = true
-    end
-
-    if key == 'a' then
-        game.a_down = true
-    end
-
-    if key == 's' then
-        game.s_down = true
-    end
-
-    if key == 'd' then
-        game.d_down = true
-    end
-
-    if key == 'w' then
-        game.w_down = true
-    end
+    gameStateKeyPressed:keypressed(key, game)
 end
 
 -- Callback function love.keyreleased
--- Action listener?
--- Menu Keyreleased --
 function gameState:keyreleased(key)
-    if key == 'b' then
-        game.b_down = false
+    gameStateKeyPressed:keyreleased(key, game)
+end
+
+-- Callback function love.mousepressed
+function gameState:mousepressed(mx, my, mbutton)
+    gameStateMousePressed:mousepressed(mx, my, mbutton, game)
+end
+
+-- Callback function love.mousereleased
+function gameState:mousereleased(mx, my, mbutton)
+    gameStateMousePressed:mousereleased(mx, my, mbutton, game)
+
+    if (mbutton == 1)  then
+        print("Clicked")
+        Gamestate.switch(menuState)
     end
 
-    if key == 'a' then
-        game.a_down = false
-    end
-
-    if key == 's' then
-        game.s_down = false
-    end
-
-    if key == 'd' then
-        game.d_down = false
-    end
-
-    if key == 'w' then
-        game.w_down = false
-    end
-
-    
-
-    
+    game.song:stop()
 end
 
