@@ -2,7 +2,8 @@
     "Lua.diagnostics.globals": [
         "love",
         "Class",
-        "Gamestate"
+        "Gamestate",
+        "abs"
     ],
     "Lua.completion.autoRequire": false
 }

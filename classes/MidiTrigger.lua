@@ -7,15 +7,18 @@ MidiTrigger = Class()
 
 function MidiTrigger:init()
     self.noteDurationTimer = false
+    self.staggerTime = 1
 end
 
 function MidiTrigger:findNote(hashMap, elapsedTime)
 
-    elapsedTime = (math.floor(elapsedTime * 10 + 0.5) / 10) - .1
+    elapsedTime = (math.floor(elapsedTime * 10 + 0.5) / 10)
+
+    elapsedTimeStaggered = elapsedTime + self.staggerTime
     
-    if hashMap[tostring(elapsedTime)] then
+    if hashMap[tostring(elapsedTimeStaggered)] then
         self.noteDurationTimer = true
-        return hashMap[tostring(elapsedTime)]
+        return hashMap[tostring(elapsedTimeStaggered)]
     else
         self.noteDurationTimer = false
         return 'No Notes'
