@@ -58,15 +58,26 @@ function gameStateEnter:init()
         x = (self.window_width/2) - 25,
         y = (self.window_height/2) - 25,
         width = 50,
-        height = 50
+        height = 50,
+        xvel = 0,
+        yvel = 0,
+        friction = 5,
+        speed = 2000,
+        jump_vel = -200,
+        can_jump = true
     }
 
 
     self.song = love.audio.newSource("sounds/Asgore/Asgore.mp3", "stream")
-    self.song:play()
+    --self.song:play()
     self.music = false
 
     -- variable that keeps track of rectangles that have spawed --
     self.last_call = 0
+
+    -- Physics --
+    self.gravity = 500
+    self.mass = 1
+    self.force = self.gravity * self.mass
 
 end

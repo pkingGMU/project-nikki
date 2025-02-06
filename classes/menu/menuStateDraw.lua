@@ -11,11 +11,6 @@ function menuStateDraw:init()
 end
 
 function menuStateDraw:draw(menu)
-    love.graphics.setColor(1,1,1)
-    love.graphics.rectangle("fill", 100,100,100,100)
-    love.graphics.print(menu.debugText)
-
-
-    love.graphics.setColor(0,1,0)
-    love.graphics.rectangle("fill", menu.test_button.x, menu.test_button.y, menu.test_button.width, menu.test_button.height)
+    love.graphics.setColor(menu.play_button.r, menu.play_button.g, menu.play_button.b)
+    love.graphics.rectangle("fill", menu.play_button.x, menu.play_button.y, menu.play_button.width, menu.play_button.height)
 end

@@ -34,6 +34,9 @@ function gameStateKeyPressed:keypressed(key, game)
     if key == 'w' then
         game.w_down = true
     end
+    if key == "space" then
+        game.goal_rect.yvel = game.goal_rect.jump_vel
+    end
 end
 
 function gameStateKeyPressed:keyreleased(key, game)
@@ -55,6 +58,12 @@ function gameStateKeyPressed:keyreleased(key, game)
 
     if key == 'w' then
         game.w_down = false
+    end
+
+    if key == "space" then
+        
+        
+        
     end
 
 end

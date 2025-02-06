@@ -25,8 +25,12 @@ require("classes.game.gameStateMousePressed")
 
 
 -- Gamestate variables --
-menuState = {}
+local menuState = {}
 local gameState = {}
+
+-- Main Objects --
+local menu
+local game
 
 --Callback function love.load 
 --Called once upon opening
@@ -53,7 +57,7 @@ function menuState:update(dt)
 end
 
 function menuState:mousereleased(mx, my, mbutton)
-    if (mbutton == 1) and (mx >= menu.test_button.x) and (mx < (menu.test_button.x + menu.test_button.width)) and (my >= menu.test_button.y) and (my < (menu.test_button.y + menu.test_button.height)) then
+    if (mbutton == 1) and (mx >= menu.play_button.x) and (mx < (menu.play_button.x + menu.play_button.width)) and (my >= menu.play_button.y) and (my < (menu.play_button.y + menu.play_button.height)) then
         print("Clicked")
         Gamestate.switch(gameState)
     end

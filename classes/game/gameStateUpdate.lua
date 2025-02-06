@@ -33,22 +33,39 @@ function gameStateUpdate:update(dt, game)
     end
 
 
-    -- Move goal rectangle --
-    if game.a_down then
-        game.goal_rect.x = game.goal_rect.x - 200 * dt
+    -- Change Player velocity --
+    if game.a_down and (game.goal_rect.xvel <= game.goal_rect.speed) then
+        game.goal_rect.xvel = game.goal_rect.xvel - game.goal_rect.speed * dt
     end
 
-    if game.d_down then
-        game.goal_rect.x = game.goal_rect.x + 200 * dt
+    if game.d_down and (game.goal_rect.xvel >= -game.goal_rect.speed)then
+        game.goal_rect.xvel = game.goal_rect.xvel + game.goal_rect.speed * dt
     end
 
-    if game.w_down then
-        game.goal_rect.y = game.goal_rect.y - 200 * dt
+    -- Move Player --
+    game.goal_rect.x = game.goal_rect.x + game.goal_rect.xvel * dt
+    game.goal_rect.y = game.goal_rect.y + dt*(game.goal_rect.yvel + dt*game.gravity/2)
+    game.goal_rect.yvel = game.goal_rect.yvel + game.gravity * dt
+    game.goal_rect.xvel = game.goal_rect.xvel * (1- math.min(dt*game.goal_rect.friction, 1))
+
+    
+
+    -- Player Physics -- 
+    -- Check if we collided with the bottom of the screen --
+    if (game.goal_rect.y + game.goal_rect.height >= game.window_height)  then
+        game.goal_rect.y = game.window_height - game.goal_rect.height
+        game.goal_rect.can_jump = true
+    elseif (game.goal_rect.y  <= 0) then
+        game.goal_rect.y  = 0
     end
 
-    if game.s_down then
-        game.goal_rect.y = game.goal_rect.y + 200 * dt
+    if (game.goal_rect.x + game.goal_rect.width >= game.window_width) then
+        game.goal_rect.x = game.window_width - game.goal_rect.width
+    elseif (game.goal_rect.x  <= 0) then
+        game.goal_rect.x = 0
     end
+
+  
 
 
 
@@ -67,7 +84,7 @@ function gameStateUpdate:update(dt, game)
     game.latest_circle = game.shapeHandler.cir_shape_table[#game.shapeHandler.cir_shape_table]
     game.latest_circle_idx = #game.shapeHandler.cir_shape_table
 
-    -- Make every rectangle move --
+    -- Make every circle move --
 
     for key, pair in ipairs(game.shapeHandler.cir_shape_table) do
 
