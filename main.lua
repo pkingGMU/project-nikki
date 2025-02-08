@@ -30,6 +30,7 @@ local gameState = {}
 
 -- Main Objects --
 local menu
+local game_init
 local game
 
 --Callback function love.load 
@@ -102,7 +103,5 @@ end
 -- Callback function love.mousereleased
 function gameState:mousereleased(mx, my, mbutton)
     gameStateMousePressed:mousereleased(mx, my, mbutton, game)
-
-    
 end
 

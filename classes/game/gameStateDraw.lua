@@ -11,6 +11,8 @@ function gameStateDraw:init()
 end
 
 function gameStateDraw:draw(game)
+
+
     -- Goal rectangle --
     love.graphics.setColor(1, 1, 1)
     love.graphics.rectangle("fill", game.goal_rect.x, game.goal_rect.y, game.goal_rect.width, game.goal_rect.height)

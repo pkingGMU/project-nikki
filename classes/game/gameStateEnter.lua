@@ -62,8 +62,8 @@ function gameStateEnter:init()
         xvel = 0,
         yvel = 0,
         friction = 5,
-        speed = 2000,
-        jump_vel = -200,
+        speed = 1500,
+        jump_vel = -800,
         can_jump = true
     }
 
@@ -76,7 +76,7 @@ function gameStateEnter:init()
     self.last_call = 0
 
     -- Physics --
-    self.gravity = 500
+    self.gravity = 2000
     self.mass = 1
     self.force = self.gravity * self.mass
 
