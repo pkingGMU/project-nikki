@@ -69,7 +69,7 @@ function gameStateEnter:init()
 
 
     self.song = love.audio.newSource("sounds/Asgore/Asgore.mp3", "stream")
-    --self.song:play()
+    self.song:play()
     self.music = false
 
     -- variable that keeps track of rectangles that have spawed --

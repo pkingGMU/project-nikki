@@ -73,7 +73,7 @@ function gameStateUpdate:update(dt, game)
 
     -- Player Physics -- 
     -- Check if we collided with the bottom of the screen --
-    print(goal_rect.yvel)
+    --print(goal_rect.yvel)
     if (goal_rect.y + goal_rect.height >= window_height)  then
         game.goal_rect.y = window_height - goal_rect.height
         game.goal_rect.yvel = 0.0
