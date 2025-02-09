@@ -24,6 +24,9 @@ function menuStateInit:init()
     self.window_height = self.window.windowHeight
     self.window_width = self.window.windowWidth
 
+    -- Background dimensions --
+    self.background = SpawnRectangle(0,0,self.window_width, self.window_height, 1.0,1.0,1.0)
+
     -- Button dimensions --
     self.menu_button_margin_side = ((self.window_width * 10)/15) 
     self.menu_button_margin_top = ((self.window_height * 10)/11) 
@@ -40,6 +43,9 @@ function menuStateInit:init()
     self.menu_song = love.audio.newSource("sounds/Main_Menu/8bit.mp3", 'stream')
     self.menu_song:setLooping(true)
     self.menu_song:play()
+
+    -- Load Menu Background shader --
+    self.background_shader = love.graphics.newShader("shaders/menu/menu-background.glsl")
 
     
 end
