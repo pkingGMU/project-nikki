@@ -61,6 +61,7 @@ function menuState:mousereleased(mx, my, mbutton)
     if (mbutton == 1) and (mx >= menu.play_button.x) and (mx < (menu.play_button.x + menu.play_button.width)) and (my >= menu.play_button.y) and (my < (menu.play_button.y + menu.play_button.height)) then
         print("Clicked")
         Gamestate.switch(gameState)
+        menu.menu_song:stop()
     end
 end
 
