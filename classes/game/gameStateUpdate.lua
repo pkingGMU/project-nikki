@@ -95,7 +95,7 @@ function gameStateUpdate:update(dt, game)
 
 
     -- Trigger midi notes --
-    game.midiPitch = midiTrigger:findNote(midiHash, myTimer.elapsedTime)
+    game.midiPitch = midiTrigger:findNote(midiHash, myTimer.elapsedTime, 1)
     if not (game.midiPitch == 'No Notes') and game.shapeHandler.cir_spawned == false then
         shapeHandler:addCircle(SpawnCircle(50, 300, 1, 1-(last_call/250), last_call/250, Timer(1)))
         game.last_call = last_call + 1

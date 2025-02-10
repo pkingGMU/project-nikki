@@ -16,6 +16,8 @@ require("classes.spawn-objects.ShapeHandler")
 require("classes.spawn-objects.SpawnCircle")
 require("classes.menu.menuStateInit")
 require("classes.menu.menuStateDraw")
+require("classes.menu.menuStateUpdate")
+
 require("classes.game.gameStateInit")
 require("classes.game.gameStateEnter")
 require("classes.game.gameStateDraw")
@@ -54,7 +56,7 @@ function menuState:draw()
 end
 
 function menuState:update(dt)
-    
+    menuStateUpdate:update(dt, menu)
 end
 
 function menuState:mousereleased(mx, my, mbutton)

@@ -25,7 +25,7 @@ function menuStateInit:init()
     self.window_width = self.window.windowWidth
 
     -- Background dimensions --
-    self.background = SpawnRectangle(0,0,self.window_width, self.window_height, 1.0,1.0,1.0)
+    self.background = SpawnRectangle(0,0,self.window_width, self.window_height, 0.0,0.0,0.0)
 
     -- Button dimensions --
     self.menu_button_margin_side = ((self.window_width * 10)/15) 
@@ -41,8 +41,20 @@ function menuStateInit:init()
 
     -- Menu Music --
     self.menu_song = love.audio.newSource("sounds/Main_Menu/8bit.mp3", 'stream')
-    self.menu_song:setLooping(true)
     self.menu_song:play()
+
+    -- Timer For Menu Music --
+    self.menu_song_timer = Timer(20)
+
+    -- MidiTrigger Object --
+    self.midi_trigger = MidiTrigger()
+    self.music = false
+
+    -- Hash Music --
+    self.midi_file = "sounds/Main_Menu/midi_training.csv"
+    self.midi_hash = midiFileHandler:readMidi(self.midi_file)
+    self.midi_pitch = 0
+
 
     -- Load Menu Background shader --
     self.background_shader = love.graphics.newShader("shaders/menu/menu-background.glsl")
