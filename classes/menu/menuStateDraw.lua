@@ -14,6 +14,16 @@ function menuStateDraw:draw(menu)
     -- Background --
     -- Background Shader --
     love.graphics.setShader(menu.background_shader)
+
+    -- Send variables to shader --
+
+    if menu.midi_pitch == 'No Notes' then
+        goto continue
+    end
+    
+    menu.background_shader:send("pitch", tonumber(menu.midi_pitch))
+
+    ::continue::
     love.graphics.setColor(menu.background.r, menu.background.g, menu.background.b)
     love.graphics.rectangle("fill", menu.background.x, menu.background.y, menu.background.width, menu.background.height)
     -- Remove background shader --
