@@ -31,7 +31,20 @@ function menuStateUpdate:update(dt, menu)
     
     menu.midi_pitch = midi_trigger:findNote(midi_hash, song_timer.elapsedTime, 0)
 
-    print(menu.midi_pitch)
+    --print(menu.midi_pitch)
+
+    if menu.midi_pitch == 'No Notes' then
+        goto continue
+    end
+ 
+    --menu.background_shader:send("pitch", tonumber(menu.midi_pitch))
+    ::continue::
+
+    -- Shader sends --
+    -- Pass the elapsed time to the shader
+    menu.background_shader:send("iTime", love.timer.getTime())
+    
+    menu.background_shader:send("screen", {menu.window_width, menu.window_height})
 
     
 end
