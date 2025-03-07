@@ -34,6 +34,8 @@ local gameState = {}
 local menu
 local game_init
 local game
+local myObject
+local myEntity
 
 --Callback function love.load 
 --Called once upon opening
@@ -49,6 +51,13 @@ end
 -- Menu Init (Load) --
 function menuState:init()
     menu = menuStateInit()
+
+    -- Testing objects
+    --myObject = Object()
+    --myObject:testPrint("Object test")
+    --myEntity = Entity()
+    --myEntity:testPrint("Object test")
+
 end
 
 function menuState:draw()

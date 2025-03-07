@@ -10,7 +10,7 @@ require("classes.spawn-objects.SpawnRectangle")
 require("classes.spawn-objects.ShapeHandler")
 require("classes.spawn-objects.SpawnCircle")
 require("classes.button")
-
+require("classes.objects.Object")
 
 menuStateInit = Class()
 
