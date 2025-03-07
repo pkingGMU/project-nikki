@@ -17,6 +17,8 @@ require("classes.spawn-objects.SpawnCircle")
 require("classes.menu.menuStateInit")
 require("classes.menu.menuStateDraw")
 require("classes.menu.menuStateUpdate")
+require("classes.objects.Object")
+require("classes.objects.Entity")
 
 require("classes.game.gameStateInit")
 require("classes.game.gameStateEnter")
