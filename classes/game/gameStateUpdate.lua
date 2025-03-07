@@ -2,7 +2,7 @@
 local Class = require("libraries.hump-master.class")
 
 -- Local imports --
-
+require("classes.objects.Player")
 
 gameStateUpdate = Class()
 
@@ -64,6 +64,14 @@ function gameStateUpdate:update(dt, game)
     if d_down and (goal_rect.xvel >= -goal_rect.speed)then
         game.goal_rect.xvel = goal_rect.xvel + goal_rect.speed * dt
     end
+
+    -- Test Player
+    game.myPlayer:updateVelocity(dt)
+
+    
+
+    
+
 
     -- Move Player --
     game.goal_rect.x = goal_rect.x + goal_rect.xvel * dt

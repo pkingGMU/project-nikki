@@ -19,9 +19,7 @@ function gameStateEnter:init()
     self.window = baseWindow()
     self.window:init()
 
-    
-
-    self.debugText = 'Hello'
+    self.myPlayer = Player()
 
     --window sizes--
     self.window_height = self.window.windowHeight

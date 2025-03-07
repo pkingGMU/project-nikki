@@ -10,7 +10,7 @@ require("classes.spawn-objects.SpawnRectangle")
 require("classes.spawn-objects.ShapeHandler")
 require("classes.spawn-objects.SpawnCircle")
 require("classes.button")
-
+require("classes.objects.Object")
 
 menuStateInit = Class()
 
@@ -41,6 +41,21 @@ function menuStateInit:init()
     self.menu_song:setLooping(true)
     self.menu_song:play()
 
-    
+    -- Timer For Menu Music --
+    self.menu_song_timer = Timer(20)
+
+    -- MidiTrigger Object --
+    self.midi_trigger = MidiTrigger()
+    self.music = false
+
+    -- Hash Music --
+    self.midi_file = "sounds/Main_Menu/midi_training.csv"
+    self.midi_hash = midiFileHandler:readMidi(self.midi_file)
+    self.midi_pitch = 0
+
+
+    -- Load Menu Background shader --
+    self.background_shader = love.graphics.newShader("shaders/menu/menu-background.glsl")
+
 end
 

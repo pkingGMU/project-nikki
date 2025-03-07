@@ -17,6 +17,5 @@ gameStateInit = Class()
 function gameStateInit:init()
 
     
-    
 end
 

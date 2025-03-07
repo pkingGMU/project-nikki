@@ -16,6 +16,10 @@ require("classes.spawn-objects.ShapeHandler")
 require("classes.spawn-objects.SpawnCircle")
 require("classes.menu.menuStateInit")
 require("classes.menu.menuStateDraw")
+require("classes.menu.menuStateUpdate")
+require("classes.objects.Object")
+require("classes.objects.Entity")
+
 require("classes.game.gameStateInit")
 require("classes.game.gameStateEnter")
 require("classes.game.gameStateDraw")
@@ -32,6 +36,8 @@ local gameState = {}
 local menu
 local game_init
 local game
+local myObject
+local myEntity
 
 --Callback function love.load 
 --Called once upon opening
@@ -47,6 +53,13 @@ end
 -- Menu Init (Load) --
 function menuState:init()
     menu = menuStateInit()
+
+    -- Testing objects
+    --myObject = Object()
+    --myObject:testPrint("Object test")
+    --myEntity = Entity()
+    --myEntity:testPrint("Object test")
+
 end
 
 function menuState:draw()

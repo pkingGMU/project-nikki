@@ -12,6 +12,10 @@ end
 
 function gameStateDraw:draw(game)
 
+    -- Test Player --
+    love.graphics.setColor(1, 1, 1)
+    game.myPlayer:draw()
+
 
     -- Goal rectangle --
     love.graphics.setColor(1, 1, 1)
