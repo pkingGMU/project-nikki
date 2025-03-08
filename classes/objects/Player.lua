@@ -36,8 +36,6 @@ end
 
  function Player:updatePhysics(window_width, window_height)
 
-    print(self.y)
-
     if (self.y + self.h >= window_height)  then
         self.y = window_height - self.h
         self.yvel = 0.0

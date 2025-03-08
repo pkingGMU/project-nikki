@@ -2,7 +2,12 @@
 -- Global Imports --
 package.path = package.path .. ";/usr/share/lua/5.4/?.lua"
 local Class = require("libraries.hump-master.class")
-local Gamestate = require("libraries.hump-master.gamestate")
+-- main.lua
+local Gamestate = require "libraries.hump-master.gamestate"
+-- Load the necessary state files
+require("states.BaseState")  -- Base state with common methods
+require("states.MenuState")  -- MenuState (state for the main menu)
+require("states.DevState")   -- DevState (state for development/debug mode)
 local csv = require("libraries.lua-csv-master.lua.csv")
 
 
@@ -20,17 +25,12 @@ require("classes.menu.menuStateUpdate")
 require("classes.objects.Object")
 require("classes.objects.Entity")
 
-require("classes.game.gameStateInit")
-require("classes.game.gameStateEnter")
-require("classes.game.gameStateDraw")
-require("classes.game.gameStateUpdate")
-require("classes.game.gameStateKeyPressed")
-require("classes.game.gameStateMousePressed")
+
 
 
 -- Gamestate variables --
-local menuState = {}
-local gameState = {}
+--local menuState = {}
+--local gameState = {}
 
 -- Main Objects --
 local menu
@@ -38,6 +38,7 @@ local game_init
 local game
 local myObject
 local myEntity
+local state
 
 --Callback function love.load 
 --Called once upon opening
@@ -45,77 +46,36 @@ local myEntity
 function love.load()
     -- Hump gamestate init --
     Gamestate.registerEvents()
-    Gamestate.switch(menuState)
+    Gamestate.push(MenuState)
+    
+end
+
+state = Gamestate.current()
+
+function state:update(dt)
+    state.update(dt)
+end
+
+
+function love.draw()
+    Gamestate.draw()
+end
+
+function love.keypressed(key)
+    Gamestate.keypressed(key)
+end
+
+function love.keyreleased(key)
+    Gamestate.keyreleased(key)
+end
+
+function love.mousepressed(mx, my, mbutton)
+    Gamestate.mousepressed(mx, my, mbutton)
+end
+
+function love.mousereleased(mx, my, mbutton)
+    Gamestate.mousereleased(mx, my, mbutton)
 end
 
 ----------------------------------------- MENU ----------------------------------------------
-
--- Menu Init (Load) --
-function menuState:init()
-    menu = menuStateInit()
-
-    -- Testing objects
-    --myObject = Object()
-    --myObject:testPrint("Object test")
-    --myEntity = Entity()
-    --myEntity:testPrint("Object test")
-
-end
-
-function menuState:draw()
-    menuStateDraw:draw(menu)
-end
-
-function menuState:update(dt)
-    menuStateUpdate:update(dt, menu)
-end
-
-function menuState:mousereleased(mx, my, mbutton)
-    if (mbutton == 1) and (mx >= menu.play_button.x) and (mx < (menu.play_button.x + menu.play_button.width)) and (my >= menu.play_button.y) and (my < (menu.play_button.y + menu.play_button.height)) then
-        print("Clicked")
-        Gamestate.switch(gameState)
-        menu.menu_song:stop()
-    end
-end
-
------------------------------------------ GAMESTATE -----------------------------------------
-
--- gamestate Init --
-function gameState:init()
-    game = gameStateInit()
-end
-
-function gameState:enter()
-    game = gameStateEnter()
-end
-
--- gamestate Draw --
-function gameState:draw()
-    gameStateDraw:draw(game)
-end
-
--- Menu Update --
-function gameState:update(dt)
-   gameStateUpdate:update(dt, game)
-end
-
--- Callback function love.keypressed
-function gameState:keypressed(key)
-    gameStateKeyPressed:keypressed(key, game)
-end
-
--- Callback function love.keyreleased
-function gameState:keyreleased(key)
-    gameStateKeyPressed:keyreleased(key, game)
-end
-
--- Callback function love.mousepressed
-function gameState:mousepressed(mx, my, mbutton)
-    gameStateMousePressed:mousepressed(mx, my, mbutton, game)
-end
-
--- Callback function love.mousereleased
-function gameState:mousereleased(mx, my, mbutton)
-    gameStateMousePressed:mousereleased(mx, my, mbutton, game)
-end
 
