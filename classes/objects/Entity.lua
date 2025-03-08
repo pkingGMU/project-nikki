@@ -11,8 +11,9 @@ function Entity:init(xvel, yvel, speed)
 
     self.xvel = xvel or 0
     self.yvel = yvel or 0
-    self.speed = speed or 0
+    
 
 end
+
 
 
