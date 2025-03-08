@@ -56,10 +56,10 @@ function state:update(dt)
     state.update(dt)
 end
 
-
-function love.draw()
-    Gamestate.draw()
+function state:draw(dt)
+    state.draw(dt)
 end
+
 
 function love.keypressed(key)
     Gamestate.keypressed(key)
