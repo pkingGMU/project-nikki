@@ -26,8 +26,8 @@ local last_call
 local midiPitch
 local Num 
 local current_shape
-local latest_circle
-local latest_circle_idx
+local current_shape_x
+local current_shape_y
 local window = baseWindow()
 local myPlayer
 local pfp_test
@@ -126,7 +126,6 @@ function DevRoomState:update(dt)
     -- Update player physics --
 
     myPlayer:updatePhysics(self.window_width, self.window_height)
-
     -- Trigger midi notes --
     midiPitch = midiTrigger:findNote(midiHash, myTimer.elapsedTime, 1)
     if not (midiPitch == 'No Notes') and shapeHandler.cir_spawned == false then
@@ -144,9 +143,9 @@ function DevRoomState:update(dt)
         current_shape.lifespanTimer:update(dt)
         
         
-        shapeHandler:setVelocity(current_shape, current_shape.x, goal_rect.x, current_shape.y, goal_rect.y, current_shape.lifespanTimer:getRemainingTimeFloat())
+        shapeHandler:setVelocity(current_shape, current_shape.x, myPlayer.x, current_shape.y, myPlayer.y, current_shape.lifespanTimer:getRemainingTimeFloat())
         
-        if (shapeHandler.cir_shape_table[key].x == goal_rect.x) and (shapeHandler.cir_shape_table[key].y == goal_rect.y) then
+        if (shapeHandler.cir_shape_table[key].x == myPlayer.x) and (shapeHandler.cir_shape_table[key].y == myPlayer.y) then
             table.remove(shapeHandler.cir_shape_table, key)
             goto continue
         end
