@@ -4,6 +4,7 @@ require("states.BaseState")
 
 -- Local imports --
 require("classes.objects.Player")
+require("classes.objects.Enemy")
 require("states.baseWindow")
 
 require("classes.midiFileHandler")
@@ -12,6 +13,9 @@ require("classes.MidiTrigger")
 require("classes.spawn-objects.SpawnRectangle")
 require("classes.spawn-objects.ShapeHandler")
 require("classes.spawn-objects.SpawnCircle")
+
+-- Camera --
+local camera = require("libraries.hump-master.camera")
 
 
 
@@ -29,9 +33,12 @@ local current_shape
 local current_shape_x
 local current_shape_y
 local window = baseWindow()
+local bottom_border_platform
 local myPlayer
+local myEnemy
 local pfp_test
 local song
+local cam
 
 
 DevRoomState = BaseState.new()
@@ -46,10 +53,19 @@ end
 
 function DevRoomState:enter()
     BaseState.enter(self)
+
+    self.cam = camera()
     
     window:init()
 
+    -- Create a Player --
     myPlayer = Player()
+
+    -- Create an Enemy --
+    myEnemy = Enemy()
+
+    -- Create a bottom border for collision detection --
+    bottom_border_platform = Object(0, self.window_height, nil, nil, self.window_width * 3, 20)
 
 
     -- Test Timer --
@@ -115,10 +131,15 @@ function DevRoomState:update(dt)
         music = true
      end
 
-     print(dt)
 
     -- Test Player
     myPlayer:updateVelocity(dt)
+
+    -- Test Enemy --
+    myEnemy:updateVelocity(dt)
+    myEnemy:updateMove(dt, gravity)
+    myEnemy:updatePhysics(self.window_width, self.window_height)
+     
 
     -- Move Player --
     myPlayer:updateMove(dt, gravity)
@@ -129,7 +150,7 @@ function DevRoomState:update(dt)
     -- Trigger midi notes --
     midiPitch = midiTrigger:findNote(midiHash, myTimer.elapsedTime, 1)
     if not (midiPitch == 'No Notes') and shapeHandler.cir_spawned == false then
-        shapeHandler:addCircle(SpawnCircle(50, 300, 1, 1-(last_call/250), last_call/250, Timer(1)))
+        shapeHandler:addCircle(SpawnCircle(myEnemy.x + myEnemy.w /2, myEnemy.y + myEnemy.h / 2, 1, 1-(last_call/250), last_call/250, Timer(1)))
         last_call = last_call + 1
         shapeHandler.cir_spawned = true
     elseif midiPitch == 'No Notes' then
@@ -157,18 +178,40 @@ function DevRoomState:update(dt)
         shapeHandler.cir_shape_table[key].y = current_shape_y
         ::continue::
     end
+    
+
+    -- Camera Update --
+    self.cam:lookAt(myPlayer.x, myPlayer.y)
 end
 
 
 function DevRoomState:draw()
+
+    -- Camera --
+   self.cam:attach()
    -- Test Player --
    love.graphics.setColor(1, 1, 1)
    myPlayer:draw()
+   love.graphics.setColor(1,0,0)
+   myEnemy:draw()
+   love.graphics.setColor(1,1,1,.4)
+   bottom_border_platform:draw()
+
+   --draw every rectangle
+   if not (#shapeHandler.cir_shape_table == 0) then
+
+        for key, pair in ipairs(shapeHandler.cir_shape_table) do
+            love.graphics.setColor(pair.r, pair.g, pair.b)
+            love.graphics.circle("fill", pair.x, pair.y, pair.radius)
+        end
+
+    end
+   self.cam:detach()
 
 
    -- Goal rectangle --
-   love.graphics.setColor(1, 1, 1)
-   love.graphics.rectangle("fill", goal_rect.x, goal_rect.y, goal_rect.width, goal_rect.height)
+   --love.graphics.setColor(1, 1, 1)
+   --love.graphics.rectangle("fill", goal_rect.x, goal_rect.y, goal_rect.width, goal_rect.height)
    
    love.graphics.setColor(255, 0, 0)
    love.graphics.print(Num, 0, 0)
@@ -187,15 +230,7 @@ function DevRoomState:draw()
    --print(#shapeHandler.shape_table)
    love.graphics.setColor(0,0,0)
 
-   --draw every rectangle
-   if not (#shapeHandler.cir_shape_table == 0) then
-
-       for key, pair in ipairs(shapeHandler.cir_shape_table) do
-           love.graphics.setColor(pair.r, pair.g, pair.b)
-           love.graphics.circle("fill", pair.x, pair.y, pair.radius)
-       end
-
-   end
+   
 
 
    -- draw the latest_rectangle
