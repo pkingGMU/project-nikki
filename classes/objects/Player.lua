@@ -45,7 +45,7 @@ end
     end
 
     if (self.x + self.w >= window_width) then
-        self.x = window_width - self.w
+        --self.x = window_width - self.w
     elseif (self.x  <= 0) then
         self.x = 0
     end
