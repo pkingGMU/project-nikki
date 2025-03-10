@@ -5,6 +5,7 @@ require("states.BaseState")
 -- Local imports --
 require("classes.objects.Player")
 require("classes.objects.Enemy")
+require("classes.spawn-objects.TileHandler")
 require("states.baseWindow")
 
 require("classes.midiFileHandler")
@@ -39,6 +40,7 @@ local myEnemy
 local pfp_test
 local song
 local cam
+local tileHandler = TileHandler()
 
 
 DevRoomState = BaseState.new()
@@ -59,13 +61,13 @@ function DevRoomState:enter()
     window:init()
 
     -- Create a Player --
-    myPlayer = Player()
+    myPlayer = Player({w = 32, h = 32, health = 100, speed = 500})
 
     -- Create an Enemy --
-    myEnemy = Enemy()
+    myEnemy = Enemy({w = 32, h = 32})
 
     -- Create a bottom border for collision detection --
-    bottom_border_platform = Object(0, self.window_height, nil, nil, self.window_width * 3, 20)
+    bottom_border_platform = Object({x = 0, y = self.window_height, w = self.window_width, h = 20})
 
 
     -- Test Timer --
@@ -134,11 +136,13 @@ function DevRoomState:update(dt)
 
     -- Test Player
     myPlayer:updateVelocity(dt)
+    myPlayer:update()
 
     -- Test Enemy --
-    myEnemy:updateVelocity(dt)
+    myEnemy:updateVelocity(dt, myPlayer)
     myEnemy:updateMove(dt, gravity)
     myEnemy:updatePhysics(self.window_width, self.window_height)
+    myEnemy:update()
      
 
     -- Move Player --
@@ -158,18 +162,25 @@ function DevRoomState:update(dt)
     end
     latest_circle = shapeHandler.cir_shape_table[#shapeHandler.cir_shape_table]
     latest_circle_idx = #shapeHandler.cir_shape_table
-    -- Make every rectangle move --
+    -- Make every circle move --
     for key, pair in ipairs(shapeHandler.cir_shape_table) do
         current_shape = shapeHandler.cir_shape_table[key]
         current_shape.lifespanTimer:update(dt)
         
         
-        shapeHandler:setVelocity(current_shape, current_shape.x, myPlayer.x, current_shape.y, myPlayer.y, current_shape.lifespanTimer:getRemainingTimeFloat())
         
-        if (shapeHandler.cir_shape_table[key].x == myPlayer.x) and (shapeHandler.cir_shape_table[key].y == myPlayer.y) then
+        
+        -- Debug --
+        shapeHandler:setVelocity(current_shape, current_shape.x, myPlayer.centerX, current_shape.y, myPlayer.centerY, current_shape.lifespanTimer:getRemainingTimeFloat())
+
+
+        if (((current_shape.x >= myPlayer.x) and (current_shape.x <= myPlayer.x + myPlayer.w)) and ((current_shape.y >= myPlayer.y) and current_shape.y <= myPlayer.y + myPlayer.h)) then
+            myPlayer:takeDamage(1)
             table.remove(shapeHandler.cir_shape_table, key)
             goto continue
         end
+
+
         if #shapeHandler.cir_shape_table >= 1 then
             current_shape_x = current_shape.x + current_shape.velocityX * dt
             current_shape_y = current_shape.y + current_shape.velocityY * dt
@@ -177,11 +188,23 @@ function DevRoomState:update(dt)
         shapeHandler.cir_shape_table[key].x = current_shape_x
         shapeHandler.cir_shape_table[key].y = current_shape_y
         ::continue::
+
+
+        
     end
     
 
     -- Camera Update --
-    self.cam:lookAt(myPlayer.x, myPlayer.y)
+    self.cam:lookAt(myPlayer.x + myPlayer.w / 2, myPlayer.y + myPlayer.h / 2)
+
+    if self.cam.x < self.window_width / 2 then
+        self.cam.x = self.window_width / 2
+    end
+
+    if self.cam.y < self.window_height / 2 or self.cam.y > self.window_height / 2 then
+        self.cam.y = self.window_height / 2
+    end
+
 end
 
 
@@ -196,6 +219,11 @@ function DevRoomState:draw()
    myEnemy:draw()
    love.graphics.setColor(1,1,1,.4)
    bottom_border_platform:draw()
+
+   -- Tile Map --
+   tileHandler:draw()
+
+ 
 
    --draw every rectangle
    if not (#shapeHandler.cir_shape_table == 0) then
@@ -218,7 +246,8 @@ function DevRoomState:draw()
    
    --love.graphics.print(midiPitch, 60, 20)
    love.graphics.print(myTimer:getRemainingTime(), 20, 20)
-
+   love.graphics.print("Health: " .. myPlayer.health, self.window_width - 100, 50)
+ 
    if myTimer:isFinished() then
        love.graphics.print("Timer finished!", 10, 30)
    end
