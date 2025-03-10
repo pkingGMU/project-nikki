@@ -6,9 +6,8 @@ require('classes.objects.Entity')
 -- Parent class Object --
 Player = Class{__includes = Entity}
 
-function Player:init()
-    Entity.init(self)
-
+function Player:init(params)
+    Entity.init(self, params)
 end
 
 function Player:updateVelocity(dt)
