@@ -33,11 +33,6 @@ require("classes.objects.Entity")
 --local gameState = {}
 
 -- Main Objects --
-local menu
-local game_init
-local game
-local myObject
-local myEntity
 local state
 
 --Callback function love.load 
@@ -46,7 +41,7 @@ local state
 function love.load()
     -- Hump gamestate init --
     Gamestate.registerEvents()
-    Gamestate.push(MenuState)
+    Gamestate.push(DevRoomState)
     
 end
 
