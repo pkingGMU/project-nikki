@@ -5,15 +5,18 @@ local Class = require("libraries.hump-master.class")
 
 Object = Class()
 
-function Object:init(x, y, z, rot, w, h, scaleX, scaleY)
-    self.x = x or 0
-    self.y = y or 0
-    self.z = z or 0
-    self.w = w or 50
-    self.h = h or 50
-    self.rot = rot or 0
-    self.scaleX = scaleX or 1
-    self.scaleY = scaleY or 1
+function Object:init(params)
+    self.x = params.x or 0
+    self.y = params.y or 0
+    self.z = params.z or 0
+    self.w = params.w or 50
+    self.h = params.h or 50
+    self.rot = params.rot or 0
+    self.scaleX = params.scaleX or 1
+    self.scaleY = params.scaleY or 1
+
+    self.centerX = self.x + self.w / 2
+    self.centerY = self.y + self.h / 2
 end
 
 function Object:draw()
@@ -24,6 +27,14 @@ function Object:draw()
     love.graphics.pop()
 
 end
+
+function Object:update()
+
+    self.centerX = self.x + self.w / 2
+    self.centerY = self.y + self.h / 2
+
+end
+
 
 function Object:testPrint(word --[[string]])
     print(word)
