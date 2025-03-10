@@ -8,23 +8,39 @@ Enemy = Class{__includes = Entity}
 
 local right_edge_reached = false
 local left_edge_reached = false
+local vector_threshold = 200
 
-function Enemy:init()
-    Entity.init(self)
+function Enemy:init(params)
+    Entity.init(self, params)
 end
 
-function Enemy:updateVelocity(dt)
+function Enemy:updateVelocity(dt, myPlayer)
 
     math.randomseed(os.time())
 
     self.speed = math.random(100, 500)
 
+    print((self.x + self.xvel) - (myPlayer.x + myPlayer.xvel))
+
     if right_edge_reached == true then
-        self.xvel = self.xvel - self.speed * dt
+        --self.xvel = self.xvel - self.speed * dt
     elseif left_edge_reached == true then
-        self.xvel = self.xvel + self.speed * dt
+        --self.xvel = self.xvel + self.speed * dt
     else
-        self.xvel = self.xvel + self.speed * dt
+        --self.xvel = self.xvel + self.speed * dt
+
+    end
+
+    if math.abs((self.x) - (myPlayer.x)) < vector_threshold then
+
+        if self.x > myPlayer.x then
+            self.xvel = self.xvel + myPlayer.speed * dt
+        elseif self.x < myPlayer.x then
+            self.xvel = self.xvel - myPlayer.speed * dt
+        else
+            self.xvel = self.xvel + myPlayer.speed * dt
+        end
+
 
     end
 
