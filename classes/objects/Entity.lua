@@ -6,8 +6,8 @@ require('classes.objects.Object')
 -- Parent class Object --
 Entity = Class{__includes = Object}
 
-function Entity:init(params)
-    Object.init(self, params)
+function Entity:init(params, objectHandler)
+    Object.init(self, params, objectHandler)
 
     self.xvel = params.xvel or 0
     self.yvel = params.yvel or 0
@@ -28,6 +28,8 @@ end
 function Entity:takeDamage(damage)
     self.health = self.health - damage
 end
+
+
 
 
 
