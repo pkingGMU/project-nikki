@@ -16,6 +16,7 @@ function SpawnCircle:init(pos_x, pos_y, r, g, b, lifespanTimer)
     self.velocityX = 0
     self.velocityY = 0
     self.lifespanTimer:start()
+    self.after_contact = false
     
 
 end
