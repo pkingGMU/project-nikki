@@ -8,10 +8,14 @@ Enemy = Class{__includes = Entity}
 
 local right_edge_reached = false
 local left_edge_reached = false
-local vector_threshold = 200
+local vector_threshold = 100
 
-function Enemy:init(params)
-    Entity.init(self, params)
+function Enemy:init(params, objectHandler)
+    Entity.init(self, params, objectHandler)
+
+    self.isEnemy = true
+
+    table.insert(self.type, 2)
 end
 
 function Enemy:updateVelocity(dt, myPlayer)
@@ -20,7 +24,7 @@ function Enemy:updateVelocity(dt, myPlayer)
 
     self.speed = math.random(100, 500)
 
-    print((self.x + self.xvel) - (myPlayer.x + myPlayer.xvel))
+    
 
     if right_edge_reached == true then
         --self.xvel = self.xvel - self.speed * dt
@@ -33,12 +37,12 @@ function Enemy:updateVelocity(dt, myPlayer)
 
     if math.abs((self.x) - (myPlayer.x)) < vector_threshold then
 
-        if self.x > myPlayer.x then
+        if self.x >= myPlayer.x and self.y - 10 <= myPlayer.y then
             self.xvel = self.xvel + myPlayer.speed * dt
-        elseif self.x < myPlayer.x then
+        elseif self.x <= myPlayer.x and self.y - 10 <= myPlayer.y then
             self.xvel = self.xvel - myPlayer.speed * dt
         else
-            self.xvel = self.xvel + myPlayer.speed * dt
+            --self.xvel = self.xvel + myPlayer.speed * dt
         end
 
 
@@ -59,7 +63,7 @@ end
 
  end
 
- function Enemy:updatePhysics(window_width, window_height)
+ function Enemy:updatePhysics(window_width, window_height, objectHandler)
 
     if (self.y + self.h >= window_height)  then
         self.y = window_height - self.h
@@ -78,5 +82,7 @@ end
         left_edge_reached = true
         right_edge_reached = false
     end
+
+    
 
  end
