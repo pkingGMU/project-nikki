@@ -37,8 +37,8 @@ function ShapeHandler:setVelocity(shape --[[object]], positionX --[[int]], goalX
         
     end
     
-    shape.velocityX = (goalX - (positionX )) / staggerTime
-    shape.velocityY = (goalY - (positionY)) / staggerTime
+    shape.velocityX = (goalX - (positionX )) / (staggerTime)
+    shape.velocityY = (goalY - (positionY)) / (staggerTime)
     
 end
 
@@ -48,3 +48,23 @@ function ShapeHandler:update(dt)
 
 end
 
+function ShapeHandler:draw()
+
+    local latest_circle = self.cir_shape_table[1]
+
+    --draw every rectangle
+    if not (#self.cir_shape_table == 0) then
+
+        for key, pair in ipairs(self.cir_shape_table) do
+            love.graphics.setColor(pair.r, pair.g, pair.b)
+            love.graphics.circle("fill", pair.x, pair.y, pair.radius)
+
+            love.graphics.setColor(0,0,1)
+
+            love.graphics.circle("line", pair.x, pair.y, (self.cir_shape_table[key].lifespanTimer:getRemainingTimeFloat() / 1) * 100)
+
+            --love.graphics.rectangle("fill", pair.x -10 , pair.y - 20, (self.cir_shape_table[key].lifespanTimer:getRemainingTimeFloat() / 1) * 100, 2)
+        end
+
+    end
+end
