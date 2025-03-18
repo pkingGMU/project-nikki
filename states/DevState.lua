@@ -5,6 +5,8 @@ require("states.BaseState")
 -- Local imports --
 require("classes.objects.Player")
 require("classes.objects.Enemy")
+require("classes.objects.EntityHandler")
+require("classes.objects.ObjectHandler")
 require("classes.spawn-objects.TileHandler")
 require("states.baseWindow")
 
@@ -22,7 +24,7 @@ local camera = require("libraries.hump-master.camera")
 
 local goal_rect
 local myTimer
-local shapeHandler
+local shapeHandler = ShapeHandler()
 local midiTrigger
 local midiHash
 local gravity
@@ -41,6 +43,10 @@ local pfp_test
 local song
 local cam
 local tileHandler = TileHandler()
+local entityHandler = EntityHandler()
+local objectHandler = ObjectHandler()
+
+
 
 
 DevRoomState = BaseState.new()
@@ -56,33 +62,33 @@ end
 function DevRoomState:enter()
     BaseState.enter(self)
 
+
     self.cam = camera()
     
     window:init()
 
     -- Create a Player --
-    myPlayer = Player({w = 32, h = 32, health = 100, speed = 500})
+    myPlayer = Player({x = 200, w = 32, h = 32, health = 100, speed = 500, can_collide = true}, objectHandler)
+    --entityHandler:addEntity(myPlayer)
 
     -- Create an Enemy --
-    myEnemy = Enemy({w = 32, h = 32})
+    myEnemy = Enemy({w = 32, h = 32, can_collide = true, x = 10}, objectHandler)
+    --entityHandler:addEntity(myEnemy)
 
     -- Create a bottom border for collision detection --
-    bottom_border_platform = Object({x = 0, y = self.window_height, w = self.window_width, h = 20})
-
+    bottom_border_platform = Object({x = 200, y = self.window_height-32, w = 32, h = 32, can_collide = false}, objectHandler)
 
     -- Test Timer --
     myTimer = Timer(200)
     -- Test Midi Trigger --
     midiTrigger = MidiTrigger()
 
-    -- Test object handler --
-    shapeHandler = ShapeHandler()
-
     -- Load test image
     pfp_test = love.graphics.newImage("assets/img/pfp.jpg")
     Num = 0
 
-    midiFile = "sounds/Asgore/midi_training.csv"
+    --midiFile = "sounds/Asgore/midi_training.csv"
+    midiFile = "sounds/song1.csv"
     midiHash = midiFileHandler:readMidi(midiFile)
 
     -- Goal rectangle -- 
@@ -100,7 +106,8 @@ function DevRoomState:enter()
     }
 
 
-    song = love.audio.newSource("sounds/Asgore/Asgore.mp3", "stream")
+    --song = love.audio.newSource("sounds/Asgore/Asgore.mp3", "stream")
+    song = love.audio.newSource("sounds/song1.mp3", "stream")
     song:play()
     music = false
 
@@ -111,6 +118,11 @@ function DevRoomState:enter()
     gravity = 2000
     mass = 1
     force = gravity * mass
+
+    -- Add tiles --
+    tileHandler:addTiles(self.window_height, self.window_width)
+
+    
     
 end
 
@@ -137,48 +149,96 @@ function DevRoomState:update(dt)
     -- Test Player
     myPlayer:updateVelocity(dt)
     myPlayer:update()
+    myPlayer:updateMove(dt, gravity, objectHandler)
+    myPlayer:updatePhysics(self.window_width, self.window_height, objectHandler)
+    
 
     -- Test Enemy --
     myEnemy:updateVelocity(dt, myPlayer)
-    myEnemy:updateMove(dt, gravity)
-    myEnemy:updatePhysics(self.window_width, self.window_height)
     myEnemy:update()
+    myEnemy:updateMove(dt, gravity)
+    myEnemy:updatePhysics(self.window_width, self.window_height, objectHandler)
+    
      
 
-    -- Move Player --
-    myPlayer:updateMove(dt, gravity)
+   
 
     -- Update player physics --
 
-    myPlayer:updatePhysics(self.window_width, self.window_height)
+    
+
+     -- Move Player --
+     
+
+     -- Update Collision --
+     --objectHandler:update(dt)
+
+
     -- Trigger midi notes --
     midiPitch = midiTrigger:findNote(midiHash, myTimer.elapsedTime, 1)
     if not (midiPitch == 'No Notes') and shapeHandler.cir_spawned == false then
         shapeHandler:addCircle(SpawnCircle(myEnemy.x + myEnemy.w /2, myEnemy.y + myEnemy.h / 2, 1, 1-(last_call/250), last_call/250, Timer(1)))
         last_call = last_call + 1
         shapeHandler.cir_spawned = true
+        myPlayer.deflected = false
     elseif midiPitch == 'No Notes' then
         shapeHandler.cir_spawned = false
     end
-    latest_circle = shapeHandler.cir_shape_table[#shapeHandler.cir_shape_table]
+    latest_circle = shapeHandler.cir_shape_table[1]
     latest_circle_idx = #shapeHandler.cir_shape_table
     -- Make every circle move --
     for key, pair in ipairs(shapeHandler.cir_shape_table) do
+
+        local shape_hit = false
+
         current_shape = shapeHandler.cir_shape_table[key]
         current_shape.lifespanTimer:update(dt)
         
+        local start_allowance_timer = .1
+        local end_allowance_timer = .5
         
         
         
         -- Debug --
-        shapeHandler:setVelocity(current_shape, current_shape.x, myPlayer.centerX, current_shape.y, myPlayer.centerY, current_shape.lifespanTimer:getRemainingTimeFloat())
 
-
-        if (((current_shape.x >= myPlayer.x) and (current_shape.x <= myPlayer.x + myPlayer.w)) and ((current_shape.y >= myPlayer.y) and current_shape.y <= myPlayer.y + myPlayer.h)) then
-            myPlayer:takeDamage(1)
-            table.remove(shapeHandler.cir_shape_table, key)
+        if not current_shape == latest_circle then
             goto continue
         end
+
+        if current_shape.after_contact == false then
+            shapeHandler:setVelocity(current_shape, current_shape.x, myPlayer.centerX, current_shape.y, myPlayer.centerY, current_shape.lifespanTimer:getRemainingTimeFloat())
+        end
+        if current_shape.lifespanTimer:getRemainingTimeFloat() <= 0 and current_shape.after_contact == false then
+            current_shape.after_contact = true
+            current_shape.lifespanTimer:addTime(end_allowance_timer)
+            
+            goto continue
+
+        elseif current_shape.lifespanTimer:getRemainingTimeFloat() <= start_allowance_timer and current_shape.after_contact == false and myPlayer.deflect == true then
+            table.remove(shapeHandler.cir_shape_table, key)
+            myPlayer.deflected = true
+            
+            goto continue
+
+        elseif current_shape.after_contact == true and current_shape.lifespanTimer:getRemainingTimeFloat() > 0 and myPlayer.deflect == true then
+            table.remove(shapeHandler.cir_shape_table, key)
+            myPlayer.deflected = true
+            
+            goto continue
+        elseif current_shape.after_contact == true and current_shape.lifespanTimer:getRemainingTimeFloat() <= 0 and myPlayer.deflect == false then
+            table.remove(shapeHandler.cir_shape_table, key)
+            
+            myPlayer:takeDamage(1)
+            goto continue
+        end
+
+        
+
+        --if (((current_shape.x >= myPlayer.x) and (current_shape.x <= myPlayer.x + myPlayer.w)) and ((current_shape.y >= myPlayer.y) and current_shape.y <= myPlayer.y + myPlayer.h)) then
+        --    myPlayer:takeDamage(1)
+        --    table.remove(shapeHandler.cir_shape_table, key)
+        --    goto continue
+        --end
 
 
         if #shapeHandler.cir_shape_table >= 1 then
@@ -205,6 +265,13 @@ function DevRoomState:update(dt)
         self.cam.y = self.window_height / 2
     end
 
+    
+    myPlayer.deflect = false
+
+    
+    
+    
+
 end
 
 
@@ -221,19 +288,11 @@ function DevRoomState:draw()
    bottom_border_platform:draw()
 
    -- Tile Map --
-   tileHandler:draw()
+   tileHandler:draw(self.window_height)
 
- 
-
-   --draw every rectangle
-   if not (#shapeHandler.cir_shape_table == 0) then
-
-        for key, pair in ipairs(shapeHandler.cir_shape_table) do
-            love.graphics.setColor(pair.r, pair.g, pair.b)
-            love.graphics.circle("fill", pair.x, pair.y, pair.radius)
-        end
-
-    end
+   -- Circle Draw --
+   shapeHandler:draw()
+   
    self.cam:detach()
 
 
@@ -259,15 +318,7 @@ function DevRoomState:draw()
    --print(#shapeHandler.shape_table)
    love.graphics.setColor(0,0,0)
 
-   
-
-
-   -- draw the latest_rectangle
-   --if not (#shapeHandler.shape_table == 0) and shapeHandler.spawned == false then
-   --    love.graphics.setColor((#shapeHandler.shape_table/50), 1 - (#shapeHandler.shape_table/50),(#shapeHandler.shape_table/50) + .03)
-   --    love.graphics.rectangle("fill", latest_rectangle.x, latest_rectangle.y, latest_rectangle.width, latest_rectangle.height)
-   --    last_call = #shapeHandler.shape_table
-   --end
+   -- progress bar --
 end
 
 function DevRoomState:keypressed(key)
@@ -283,5 +334,9 @@ function DevRoomState:keyreleased(key)
     if key == "space" then
         myPlayer.yvel = myPlayer.jump_vel
         
+    end
+
+    if key == "j" then
+        myPlayer.deflect = true
     end
 end
