@@ -1,6 +1,9 @@
 local Class = require("libraries.hump-master.class")
 
 -- Local Imports --
+require("classes.objects.ObjectHandler")
+require("classes.objects.Object")
+require("classes.objects.Tile")
 
 
 TileHandler = Class()
@@ -11,6 +14,8 @@ local num_tiles_height
 
 function TileHandler:init()
     self.tile_map = {}
+    self.tile_table = {}
+    self.tile_idx = 0
 
 end
 
@@ -46,8 +51,21 @@ function TileHandler:addTiles(screen_height, screen_width)
 
     table.insert(self.tile_map, temp_table)
 
-    
+  end
 
+end
+
+function TileHandler:createTileObjects(objectHandler)
+
+  for y=1, #self.tile_map do
+    for x=1, #self.tile_map[y] do
+      if self.tile_map[y][x] == 1 then
+
+        Tile({x = (x * 32) - 32, y = (y * 32) - 32, w = 32, h = 32, can_collide = true}, objectHandler, self)
+        
+        
+      end
+    end
   end
 
 end
@@ -64,13 +82,18 @@ function TileHandler:draw(screen_height)
 
     --}
 
-    for y=1, #self.tile_map do
-		for x=1, #self.tile_map[y] do
-			if self.tile_map[y][x] == 1 then
+  --[[ for y=1, #self.tile_map do
+    for x=1, #self.tile_map[y] do
+      if self.tile_map[y][x] == 1 then
         
-				love.graphics.rectangle("line", (x * 32) - 32, (y * 32) - 32, 32, 32)
-			end
-		end
-	end
+        love.graphics.rectangle("line", (x * 32) - 32, (y * 32) - 32, 32, 32)
+      end
+    end
+  end ]]
+  
+  
+  for tile_key, tile in ipairs(self.tile_table) do
+      tile:draw()
+  end
 
 end
