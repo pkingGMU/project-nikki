@@ -54,12 +54,18 @@ end
 
  -- Move Player --
 
- function Enemy:updateMove(dt, gravity)
+ function Enemy:updateMove(dt, gravity, objectHandler)
+
+    self.xvel = self.xvel * (1- math.min(dt*self.friction, 1))
+    self.yvel = self.yvel + gravity * dt
 
     self.x = self.x + self.xvel * dt
+    local collide_list = self:checkCollisions(objectHandler)
+    self.xvel = self:collisionMoveX(collide_list)
+    
     self.y = self.y + dt*(self.yvel + dt*gravity/2)
-    self.yvel = self.yvel + gravity * dt
-    self.xvel = self.xvel * (1- math.min(dt*self.friction, 1))
+    local collide_list = self:checkCollisions(objectHandler)
+    self.yvel = self:collisionMoveY(collide_list)
 
  end
 
