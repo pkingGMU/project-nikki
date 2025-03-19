@@ -14,8 +14,6 @@ function Enemy:init(params, objectHandler)
     Entity.init(self, params, objectHandler)
 
     self.isEnemy = true
-
-    table.insert(self.type, 2)
 end
 
 function Enemy:updateVelocity(dt, myPlayer)
@@ -27,11 +25,11 @@ function Enemy:updateVelocity(dt, myPlayer)
     
 
     if right_edge_reached == true then
-        --self.xvel = self.xvel - self.speed * dt
+        self.xvel = self.xvel - self.speed * dt
     elseif left_edge_reached == true then
-        --self.xvel = self.xvel + self.speed * dt
+        self.xvel = self.xvel + self.speed * dt
     else
-        --self.xvel = self.xvel + self.speed * dt
+        self.xvel = self.xvel + self.speed * dt
 
     end
 
