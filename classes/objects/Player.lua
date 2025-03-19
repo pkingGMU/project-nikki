@@ -15,7 +15,7 @@ function Player:init(params, objectHandler)
     self.canMoveX = true
     self.canMoveY = true
 
-    table.insert(self.type, 1)
+    self.isPlayer = true
 end
 
 function Player:updateVelocity(dt)
@@ -43,79 +43,12 @@ end
     end
 
     self.x = self.x + self.xvel * dt
-
-    local collide_list = {}
-    for other_key, other_object in ipairs(objectHandler.object_table) do
-        
-        if other_object == self then
-            goto continue
-        end
-
-        if self.x < other_object.x + other_object.w and self.x + self.w > other_object.x and self.y < other_object.y + other_object.h and self.y + self.h > other_object.y then
-            table.insert(collide_list, other_object)
-        else
-            
-        end
-
-        ::continue::
-        
-    end
-
-    for other_key, other_object in ipairs(collide_list) do
-
-        if self.x < other_object.x + other_object.w and self.x + self.w > other_object.x then
-            
-            if self.xvel > 0 then
-                self.x = other_object.x - self.w
-            elseif self.xvel < 0 then
-                self.x = other_object.x + other_object.w
-            end
-            self.xvel = 0
-            
-        else
-            
-        end
-    end
-
-
-
-
+    local collide_list = self:checkCollisions(objectHandler)
+    self.xvel = self:collisionMoveX(collide_list)
 
     self.y = self.y + dt*(self.yvel + dt*gravity/2)
-
-    local collide_list = {}
-    for other_key, other_object in ipairs(objectHandler.object_table) do
-        
-        if other_object == self then
-            goto continue
-        end
-
-        if self.x < other_object.x + other_object.w and self.x + self.w > other_object.x and self.y < other_object.y + other_object.h and self.y + self.h > other_object.y then
-            table.insert(collide_list, other_object)
-        else
-            
-        end
-
-        ::continue::
-        
-    end
-
-    for other_key, other_object in ipairs(collide_list) do
-    
-        if self.y < other_object.y + other_object.h and self.y + self.h > other_object.y then
-            
-            if self.yvel > 0 then
-                self.y = other_object.y - self.h
-            elseif self.yvel < 0 then
-                self.y = other_object.y + other_object.h
-            end
-            self.yvel = 0
-            
-        else
-            
-        end
-        
-    end
+    local collide_list = self:checkCollisions(objectHandler)
+    self.yvel = self:collisionMoveY(collide_list)
 
     
 
