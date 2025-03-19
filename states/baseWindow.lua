@@ -4,8 +4,8 @@ local Class = require("libraries.hump-master.class")
 baseWindow = Class()
 
 function baseWindow:init()
-    self.windowHeight = 360
-    self.windowWidth = 640
+    self.windowHeight = 360 * 2
+    self.windowWidth = 640 * 2
 
     love.window.setMode(self.windowWidth, self.windowHeight, {
         resizable=false, 
