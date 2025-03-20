@@ -20,6 +20,12 @@ function Timer:stop()
     self.running = false  -- Stop the timer
 end
 
+function Timer:addTime(duration)
+    self.running = true
+    self.elapsedTime = 0
+    self.duration = duration
+end
+
 -- Method to update the timer each frame
 function Timer:update(dt)
     if self.elapsedTime >= self.duration then

@@ -68,16 +68,15 @@ function gameStateUpdate:update(dt, game)
     -- Test Player
     game.myPlayer:updateVelocity(dt)
 
-    
 
-    
-
-
-    -- Move Player --
+    -- Move Rect --
     game.goal_rect.x = goal_rect.x + goal_rect.xvel * dt
     game.goal_rect.y = goal_rect.y + dt*(goal_rect.yvel + dt*gravity/2)
     game.goal_rect.yvel = goal_rect.yvel + gravity * dt
     game.goal_rect.xvel = goal_rect.xvel * (1- math.min(dt*goal_rect.friction, 1))
+
+    -- Move Player --
+    game.myPlayer:updateMove(dt, gravity)
 
     -- Player Physics -- 
     -- Check if we collided with the bottom of the screen --
@@ -95,6 +94,10 @@ function gameStateUpdate:update(dt, game)
     elseif (goal_rect.x  <= 0) then
         game.goal_rect.x = 0
     end
+
+    -- Update player physics --
+
+    game.myPlayer:updatePhysics(window_width, window_height)
 
     
 
