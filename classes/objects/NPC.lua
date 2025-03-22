@@ -70,11 +70,6 @@ end
 
 function NPC:addToNPCHandler(NPC)
 
---[[     NPCHandler.NPC_idx = NPCHandler.NPC_idx + 1
-    local string_key = 'NPC'.. tostring(NPCHandler.NPC_idx)
-    table.insert(NPCHandler.NPC_table, NPC) ]]
-    
-
 end
 
 
