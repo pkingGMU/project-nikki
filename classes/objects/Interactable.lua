@@ -11,6 +11,7 @@ function Interactable:init(params, objectHandler)
     Object.init(self, params, objectHandler)
 
     self.hovering = false
+    self.collision_action = false
 end
 
 function Interactable:checkCollisions(objectHandler)
@@ -27,8 +28,7 @@ function Interactable:checkCollisions(objectHandler)
         if self.x < other_object.x + other_object.w and self.x + self.w > other_object.x and self.y < other_object.y + other_object.h and self.y + self.h > other_object.y and self.hovering == false then
             table.insert(collide_list, other_object)
 
-            
-
+            self.collision_action = true
             self.hovering = true
         
         elseif not (self.x < other_object.x + other_object.w and self.x + self.w > other_object.x and self.y < other_object.y + other_object.h and self.y + self.h > other_object.y) then
@@ -39,6 +39,7 @@ function Interactable:checkCollisions(objectHandler)
                 objectHandler.object_idx = objectHandler.object_idx - 1
             end
             self.hovering = false
+            self.collision_action = false
 
             
             
@@ -49,6 +50,6 @@ function Interactable:checkCollisions(objectHandler)
     end
 
         ::continue::
-        print(collide_list)
-        return collide_list
+        
+        --return collide_list
 end
