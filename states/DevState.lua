@@ -6,6 +6,7 @@ require("states.BaseState")
 require("classes.objects.Player")
 require("classes.objects.Enemy")
 require("classes.objects.NPC")
+require("classes.objects.Item")
 require("classes.objects.EntityHandler")
 require("classes.objects.ObjectHandler")
 require("classes.spawn-objects.TileHandler")
@@ -41,6 +42,7 @@ local window = baseWindow()
 local bottom_border_platform
 local my_player
 local my_enemy
+local item
 local pfp_test
 local song
 local cam
@@ -84,6 +86,9 @@ function DevRoomState:enter()
 
     -- Create Test NPC --
     npc = NPC({x = 400, y = self.window_height-60, can_collide = false}, object_handler)
+
+    -- Create Test Item --
+    item = Item({x = 450, y = self.window_height-60, can_collide = false}, object_handler)
 
 
     -- Test Timer --
@@ -172,6 +177,9 @@ function DevRoomState:update(dt)
 
     -- Test NPC --
     npc:hoverInteraction(object_handler)
+
+    -- Test Item --
+    item:hoverInteraction(object_handler)
     
      
 
@@ -307,6 +315,7 @@ function DevRoomState:draw()
    tile_handler:draw(self.window_height)
 
    npc:draw()
+   item:draw()
 
    -- Circle Draw --
    shape_handler:draw()
