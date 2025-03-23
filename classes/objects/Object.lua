@@ -58,7 +58,7 @@ function Object:addToHandler(object --[[table]], objectHandler --[[table]])
     table.insert(objectHandler.object_table, object)
 
     print("Inserted " .. string_key)
-    print(object.can_collide)
+    --print(object.can_collide)
 
     return objectHandler.object_idx
 
