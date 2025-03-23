@@ -12,12 +12,18 @@ function Interactable:init(params, objectHandler)
 
     self.hovering = false
     self.collision_action = false
+    
+    
+
+    
 end
 
 function Interactable:checkCollisions(objectHandler)
 
     local collide_list = {}
     for other_key, other_object in ipairs(objectHandler.object_table) do
+
+        
         
         if other_object == self or not other_object.isPlayer == true then
             goto continue
@@ -30,16 +36,15 @@ function Interactable:checkCollisions(objectHandler)
 
             self.collision_action = true
             self.hovering = true
+            
         
         elseif not (self.x < other_object.x + other_object.w and self.x + self.w > other_object.x and self.y < other_object.y + other_object.h and self.y + self.h > other_object.y) then
 
-            if self.hovering == true then
-                print(#objectHandler.object_table)
-                table.remove(objectHandler.object_table, self.npc_text.object_handler_key)
-                objectHandler.object_idx = objectHandler.object_idx - 1
-            end
+            self:leave_collision_area(objectHandler)
+
             self.hovering = false
             self.collision_action = false
+            
 
             
             
@@ -50,6 +55,23 @@ function Interactable:checkCollisions(objectHandler)
     end
 
         ::continue::
+
         
         --return collide_list
+end
+
+function Interactable:hoverInteraction(objectHandler)
+    self:checkCollisions(objectHandler)
+
+    if self.collision_action == false then
+        goto continue
+    end
+
+    -- Default Interaction
+
+    ::continue::
+end
+
+function Interactable:leave_collision_area(objectHandler)    
+
 end
