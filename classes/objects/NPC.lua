@@ -35,6 +35,8 @@ function NPC:hoverInteraction(objectHandler)
 
     
 
+    
+
     -- Create new Text Box --
     local text_box_w = 32 * 4
     local text_box_y = self.y - 50
@@ -66,4 +68,14 @@ function NPC:draw()
         
 
     
+end
+
+function NPC:leave_collision_area(objectHandler)
+
+    if self.hovering == true then
+        print(#objectHandler.object_table)
+        table.remove(objectHandler.object_table, self.npc_text.object_handler_key)
+        objectHandler.object_idx = objectHandler.object_idx - 1
+    end
+
 end
