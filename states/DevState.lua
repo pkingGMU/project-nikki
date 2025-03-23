@@ -171,7 +171,7 @@ function DevRoomState:update(dt)
     my_enemy:updatePhysics(self.window_width, self.window_height, object_handler)
 
     -- Test NPC --
-    npc:checkCollisions(object_handler)
+    npc:hoverInteraction(object_handler)
     
      
 
