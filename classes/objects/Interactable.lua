@@ -60,16 +60,28 @@ function Interactable:checkCollisions(objectHandler)
         --return collide_list
 end
 
-function Interactable:hoverInteraction(objectHandler)
+function Interactable:hoverInteraction(objectHandler, my_player)
     self:checkCollisions(objectHandler)
 
     if self.collision_action == false then
         goto continue
     end
 
-    -- Default Interaction
+    -- Interaction on first hover --
+
+    print("sitting in item")
+
+    self.collision_action = false
+    
 
     ::continue::
+
+    -- Interaction on Hover --
+    if my_player.interact == true and self.hovering == true then
+        print("interacted with interactable")
+    end
+
+    my_player.interact = false
 end
 
 function Interactable:leave_collision_area(objectHandler)    
