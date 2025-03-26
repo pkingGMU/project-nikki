@@ -5,6 +5,10 @@ local Class = require("libraries.hump-master.class")
 require('classes.objects.Interactable')
 require('classes.objects.TextBox')
 
+local text_box_w
+local text_box_x
+local text_box_y
+
 
 -- Parent class Object --
 NPC = Class{__includes = Interactable}
@@ -25,27 +29,35 @@ function NPC:update()
 end
 
 
-function NPC:hoverInteraction(objectHandler)
+function NPC:hoverInteraction(objectHandler, my_player)
 
+    
     self:checkCollisions(objectHandler)
 
     if self.collision_action == false then
         goto continue
     end
 
-    
-
-    
+     
 
     -- Create new Text Box --
-    local text_box_w = 32 * 4
-    local text_box_y = self.y - 50
-    local text_box_x = self.centerX - ((text_box_w) / 2)
+    text_box_w = 32 * 4
+    text_box_y = self.y - 50
+    text_box_x = self.centerX - ((text_box_w) / 2)
     self.npc_text = TextBox({x = text_box_x, y = text_box_y, w = text_box_w, h = 32, text = "Test"}, objectHandler, self)
 
     self.collision_action = false
 
     ::continue::
+
+    -- Interaction on Hover --
+    if my_player.interact == true and self.hovering == true then
+       print("interacted with interactable")
+    end
+
+    
+
+    
 
 end
 
