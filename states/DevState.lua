@@ -121,7 +121,7 @@ function DevRoomState:enter()
 
     --song = love.audio.newSource("sounds/Asgore/Asgore.mp3", "stream")
     song = love.audio.newSource("sounds/song1.mp3", "stream")
-    song:play()
+    --song:play()
     music = false
 
     -- variable that keeps track of rectangles that have spawed --
@@ -176,10 +176,10 @@ function DevRoomState:update(dt)
     my_enemy:updatePhysics(self.window_width, self.window_height, object_handler)
 
     -- Test NPC --
-    npc:hoverInteraction(object_handler)
+    npc:hoverInteraction(object_handler, my_player)
 
     -- Test Item --
-    item:hoverInteraction(object_handler)
+    item:hoverInteraction(object_handler, my_player)
     
      
 
@@ -365,5 +365,9 @@ function DevRoomState:keyreleased(key)
 
     if key == "j" then
         my_player.deflect = true
+    end
+
+    if key == "k" then
+        my_player.interact = true
     end
 end
