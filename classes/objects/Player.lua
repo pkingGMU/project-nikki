@@ -16,6 +16,9 @@ function Player:init(params, objectHandler)
     self.canMoveY = true
 
     self.isPlayer = true
+    self.interact = false
+
+    self.inventory = {}
 end
 
 function Player:updateVelocity(dt)
