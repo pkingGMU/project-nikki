@@ -29,16 +29,8 @@ function NPC:update()
 end
 
 
-function NPC:hoverInteraction(objectHandler, my_player)
 
-    
-    self:checkCollisions(objectHandler)
-
-    if self.collision_action == false then
-        goto continue
-    end
-
-     
+function NPC:firstHoverInteraction(objectHandler)
 
     -- Create new Text Box --
     text_box_w = 32 * 4
@@ -48,16 +40,14 @@ function NPC:hoverInteraction(objectHandler, my_player)
 
     self.collision_action = false
 
-    ::continue::
+end
+
+function NPC:interact(my_player, objectHandler)
 
     -- Interaction on Hover --
     if my_player.interact == true and self.hovering == true then
-       print("interacted with interactable")
-    end
-
-    
-
-    
+        print("interacted with interactable")
+     end
 
 end
 
