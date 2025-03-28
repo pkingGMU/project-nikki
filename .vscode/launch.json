@@ -2,14 +2,27 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Run with LÖVE",
-      "type": "lua",
+      "type": "lua-local",
       "request": "launch",
-      "program": "${workspaceFolder}/main.lua",
-      "runtimeExecutable": "/Applications/love.app/Contents/MacOS/love",
+      "name": "Debug",
+      "program": {
+        "command": "love"
+      },
       "args": [
-        "."
-      ]
-    }
+        ".",
+        "debug"
+      ],
+    },
+    {
+      "type": "lua-local",
+      "request": "launch",
+      "name": "Release",
+      "program": {
+        "command": "love"
+      },
+      "args": [
+        ".",
+      ],
+    },
   ]
 }

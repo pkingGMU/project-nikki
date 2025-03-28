@@ -1,4 +1,11 @@
 ---@diagnostic disable: need-check-nil
+
+-- Debug --
+if arg[2] == "debug" then
+    require("lldebugger").start()
+end
+
+
 -- Global Imports --
 package.path = package.path .. ";/usr/share/lua/5.4/?.lua"
 local Class = require("libraries.hump-master.class")
