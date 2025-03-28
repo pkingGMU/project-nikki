@@ -67,6 +67,8 @@ function NPC:draw()
             self.npc_text:draw()
             
         end
+
+        
         
 
     
@@ -76,8 +78,9 @@ function NPC:leave_collision_area(objectHandler)
 
     if self.hovering == true then
         print(#objectHandler.object_table)
-        table.remove(objectHandler.object_table, self.npc_text.object_handler_key)
-        objectHandler.object_idx = objectHandler.object_idx - 1
+        
+        self.npc_text:destroy(objectHandler)
+
     end
 
 end
