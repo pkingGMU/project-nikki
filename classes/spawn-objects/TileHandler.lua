@@ -21,7 +21,7 @@ end
 
 
 
-function TileHandler:addTiles(screen_height, screen_width)
+function TileHandler:addBorderTiles(screen_height, screen_width)
 
   num_tiles_height = math.floor(screen_height / 32) + 1
   num_tiles_width = math.floor(screen_width / 32)
@@ -55,6 +55,27 @@ function TileHandler:addTiles(screen_height, screen_width)
 
 end
 
+function TileHandler:addMapTiles(game_map, objectHandler)
+
+  
+
+  for type_idx, tile_type in ipairs(game_map.tileInstances) do
+    for tile_idx, tile in ipairs(game_map.tileInstances[type_idx]) do
+
+      local temp_tile = game_map.tileInstances[type_idx][tile_idx]
+      print(temp_tile)
+      Tile({x = temp_tile.x, y = temp_tile.y, w = 32, h = 32, can_collide = true}, objectHandler, self)
+      
+      
+    end
+  end
+
+  
+
+  print(game_map)
+  
+end
+
 function TileHandler:createTileObjects(objectHandler)
 
   for y=1, #self.tile_map do
@@ -72,25 +93,6 @@ end
 
 function TileHandler:draw(screen_height)
 
-    --self.tile_map = {
-      --  {1,1,1,1,1},
-        --{1,0,0,0,0},
-        --{1,0,0,0,0},
-        --{1,0,0,0,0},
-        --{1,0,0,0,0},
-        --{1,0,0,0,0}
-
-    --}
-
-  --[[ for y=1, #self.tile_map do
-    for x=1, #self.tile_map[y] do
-      if self.tile_map[y][x] == 1 then
-        
-        love.graphics.rectangle("line", (x * 32) - 32, (y * 32) - 32, 32, 32)
-      end
-    end
-  end ]]
-  
   
   for tile_key, tile in ipairs(self.tile_table) do
       tile:draw()

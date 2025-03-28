@@ -28,8 +28,7 @@ end
 
 
 function Tile:draw()
-    love.graphics.setColor(1,1,1,.4)
-    love.graphics.rectangle("line", self.x , self.y , self.w, self.h)
+    
 end
 
 
