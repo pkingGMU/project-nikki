@@ -12,6 +12,7 @@ function Interactable:init(params, objectHandler)
 
     self.hovering = false
     self.collision_action = false
+    self.interacted = false
     
     
 
@@ -25,7 +26,7 @@ function Interactable:checkCollisions(objectHandler)
 
         
         
-        if other_object == self or not other_object.isPlayer == true then
+        if other_object == self or not other_object.isPlayer == true or other_object == nil or self == nil then
             goto continue
         end
 
@@ -69,21 +70,35 @@ function Interactable:hoverInteraction(objectHandler, my_player)
 
     -- Interaction on first hover --
 
-    print("sitting in item")
-
-    self.collision_action = false
-    
+    self:firstHoverInteraction(objectHandler)
 
     ::continue::
 
     -- Interaction on Hover --
+
+    self:interact(my_player, objectHandler)
+
+    
+end
+
+function Interactable:firstHoverInteraction(objectHandler)
+    print("sitting in item")
+    self.collision_action = false
+end
+
+function Interactable:interact(my_player, objectHandler)
     if my_player.interact == true and self.hovering == true then
-        print("interacted with interactable")
+        self:interact()
+        self.interacted = true
     end
 
     my_player.interact = false
+    self.interacted = false
+
 end
 
 function Interactable:leave_collision_area(objectHandler)    
+
+    
 
 end
