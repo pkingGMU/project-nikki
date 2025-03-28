@@ -97,8 +97,8 @@ function Interactable:interact(my_player, objectHandler)
 
 end
 
-function Interactable:leave_collision_area(objectHandler)    
-
+function Interactable:leave_collision_area(objectHandler) 
+    
     
 
 end

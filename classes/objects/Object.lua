@@ -127,6 +127,34 @@ function Object:collisionMoveY(collide_list)
     return self.yvel
 end
 
+function Object:destroy(objectHandler)
+    print("Deleting object with key: " .. tostring(self.object_handler_key))
+
+    print(self)
+    print(objectHandler.object_table[self.object_handler_key])
+    print(self.object_handler_key)
+
+    
+    
+    objectHandler.object_table[self.object_handler_key] = nil
+
+    -- Optional: Nullify properties to help garbage collection
+    for k in pairs(self) do
+        self[k] = nil
+    end
+
+    --self = nil
+    print(objectHandler.object_table[self.object_handler_key])
+    print(self.object_handler_key)
+            
+
+    
+
+    print(self)
+
+    collectgarbage("collect") -- Force garbage collection
+end
+
     
 
 

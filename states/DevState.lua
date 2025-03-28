@@ -181,9 +181,9 @@ function DevRoomState:update(dt)
     -- Test Item --
     item:hoverInteraction(object_handler, my_player)
     
-     
-
-   
+    
+    
+    
 
     -- Update player physics --
 
@@ -369,5 +369,9 @@ function DevRoomState:keyreleased(key)
 
     if key == "k" then
         my_player.interact = true
+    end
+
+    if key == "p" then
+        debug_print = true
     end
 end
