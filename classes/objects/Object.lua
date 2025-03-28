@@ -141,9 +141,9 @@ function Object:destroy(objectHandler)
 
     self.to_be_destroyed = true
 
-    print(self)
+    
 
-    collectgarbage("collect") -- Force garbage collection
+    --collectgarbage("collect") -- Force garbage collection
 end
 
     

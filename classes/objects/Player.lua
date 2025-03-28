@@ -21,7 +21,7 @@ function Player:init(params, objectHandler)
     self.inventory = {}
 end
 
-function Player:updateVelocity(dt)
+function Player:updateVelocity(dt, my_player)
 
     if love.keyboard.isDown('a') and (self.xvel <= self.speed) then
         self.xvel = self.xvel - self.speed * dt
