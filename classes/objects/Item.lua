@@ -8,12 +8,19 @@ require('classes.objects.Interactable')
 Item = Class{__includes = Interactable}
 
 function Item:init(params, objectHandler)
-    Object.init(self, params, objectHandler)
+    Interactable.init(self, params, objectHandler)
+end
+
+function Item:update()
+    Object.update(self)
 end
 
 function Item:draw()
+
+    
     love.graphics.setColor(1,1,1,1)
     love.graphics.rectangle("line", self.x , self.y , self.w, self.h)
+    
 end
 
 
@@ -36,7 +43,7 @@ function Item:interact(my_player, objectHandler)
 
     end
 
-    my_player.interact = false
+    
     
 
     
