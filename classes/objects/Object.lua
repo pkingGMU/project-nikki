@@ -16,6 +16,7 @@ function Object:init(params, objectHandler)
     self.rot = params.rot or 0
     self.scaleX = params.scaleX or 1
     self.scaleY = params.scaleY or 1
+    
    
 
     self.centerX = self.x + self.w / 2
@@ -23,8 +24,11 @@ function Object:init(params, objectHandler)
 
     self.can_collide = params.can_collide or false
 
+    self.to_be_destroyed = false
     
-    self.object_handler_key = Object:addToHandler(self, objectHandler)
+
+    
+    self.id = Object:addToHandler(self, objectHandler)
     
     
 
@@ -52,16 +56,11 @@ function Object:testPrint(word --[[string]])
 end
 
 function Object:addToHandler(object --[[table]], objectHandler --[[table]])
-
-    objectHandler.object_idx = objectHandler.object_idx + 1
-    string_key = 'object' .. tostring(objectHandler.object_idx)
     table.insert(objectHandler.object_table, object)
+    objectHandler.object_idx = objectHandler.object_idx + 1
+    local id = objectHandler.object_idx
 
-    print("Inserted " .. string_key)
-    --print(object.can_collide)
-
-    return objectHandler.object_idx
-
+    return id
 end
 
 function Object:checkCollisions(objectHandler)
@@ -128,27 +127,19 @@ function Object:collisionMoveY(collide_list)
 end
 
 function Object:destroy(objectHandler)
-    print("Deleting object with key: " .. tostring(self.object_handler_key))
+   
+    print(#objectHandler.object_table)
 
-    print(self)
-    print(objectHandler.object_table[self.object_handler_key])
-    print(self.object_handler_key)
-
-    
-    
-    objectHandler.object_table[self.object_handler_key] = nil
-
-    -- Optional: Nullify properties to help garbage collection
-    for k in pairs(self) do
-        self[k] = nil
+    for i, obj in ipairs(objectHandler.object_table) do
+        if obj.id == self.id then
+            print(obj.id)
+            print(self.id)
+            print("found")
+            table.remove(objectHandler.object_table, i)
+        end
     end
 
-    --self = nil
-    print(objectHandler.object_table[self.object_handler_key])
-    print(self.object_handler_key)
-            
-
-    
+    self.to_be_destroyed = true
 
     print(self)
 
