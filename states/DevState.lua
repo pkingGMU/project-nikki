@@ -304,19 +304,6 @@ function DevRoomState:draw()
 
     -- Camera --
    self.cam:attach()
-   -- Test Player --
-   love.graphics.setColor(1, 1, 1)
-   --my_player:draw()
-   love.graphics.setColor(1,0,0)
-   --my_enemy:draw()
-   love.graphics.setColor(1,1,1,.4)
-   bottom_border_platform:draw()
-   love.graphics.setColor(1,1,1, .8)
-   -- Tile Map --
-   tile_handler:draw(self.window_height)
-
-   --npc:draw()
-  -- item:draw()
 
   for i, obj in ipairs(object_handler.object_table) do
     obj:draw()

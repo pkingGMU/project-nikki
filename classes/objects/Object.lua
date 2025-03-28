@@ -36,7 +36,7 @@ end
 
 function Object:draw()
     love.graphics.push()
-    
+    love.graphics.setColor(1,1,1,1)
     -- Draw the rectangle (or image for your entity)
     love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
     love.graphics.pop()
