@@ -180,7 +180,7 @@ function DevRoomState:update(dt)
 
     -- Test Item --
     item:hoverInteraction(object_handler, my_player)
-    
+
     
     
     
@@ -291,6 +291,7 @@ function DevRoomState:update(dt)
 
     
     my_player.deflect = false
+    my_player.interact = false
 
     
     
@@ -305,17 +306,21 @@ function DevRoomState:draw()
    self.cam:attach()
    -- Test Player --
    love.graphics.setColor(1, 1, 1)
-   my_player:draw()
+   --my_player:draw()
    love.graphics.setColor(1,0,0)
-   my_enemy:draw()
+   --my_enemy:draw()
    love.graphics.setColor(1,1,1,.4)
    bottom_border_platform:draw()
    love.graphics.setColor(1,1,1, .8)
    -- Tile Map --
    tile_handler:draw(self.window_height)
 
-   npc:draw()
-   item:draw()
+   --npc:draw()
+  -- item:draw()
+
+  for i, obj in ipairs(object_handler.object_table) do
+    obj:draw()
+  end
 
    -- Circle Draw --
    shape_handler:draw()

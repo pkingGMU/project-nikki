@@ -32,6 +32,4 @@ function TextBox:draw()
 
     love.graphics.printf(self.text, self.x, self.y, self.w, 'center')
 
-    
-
 end
