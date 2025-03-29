@@ -170,13 +170,28 @@ function DevRoomState:update(dt)
 
 
     -- Test NPC --
-    npc:hoverInteraction(object_handler, my_player)
+    --npc:hoverInteraction(object_handler, my_player)
 
     -- Test Item --
-    item:hoverInteraction(object_handler, my_player)
+    --item:hoverInteraction(object_handler, my_player)
 
     for idx, obj in ipairs(object_handler.object_table) do
-        obj:update(dt, my_player, gravity, object_handler, self.window_width, self.window_height)
+
+        if obj.type == 'player' then
+            obj:update(dt, gravity, object_handler, self.window_width, self.window_height)
+        elseif obj.type == 'enemy' then
+            obj:update(dt, my_player, gravity, object_handler, self.window_width, self.window_height)
+        elseif obj.type == 'interactable' then
+            obj:update(object_handler, my_player)
+        elseif obj.type == 'item' then
+            obj:update()
+        elseif obj.type == 'tile' then
+            obj:update()
+        else
+            obj:update()
+
+        end
+        
     end
 
     
