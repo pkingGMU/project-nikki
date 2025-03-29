@@ -11,6 +11,8 @@ function Tile:init(params, objectHandler, tileHandler)
     Object.init(self, params, objectHandler)
 
     Tile:addToTileHandler(self, tileHandler)
+
+    self.type = 'tile'
 end
 
 function Tile:update()

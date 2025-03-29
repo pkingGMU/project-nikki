@@ -19,6 +19,7 @@ function Entity:init(params, objectHandler)
 
     self.health = params.health or 100
 
+    self.type = 'entity'
 end
 
 function Entity:update(dt, my_player, gravity, object_handler, window_width, window_height)

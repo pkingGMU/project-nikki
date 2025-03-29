@@ -57,10 +57,18 @@ end
 
 function TileHandler:addMapTiles(game_map, objectHandler)
 
-  
+  print(game_map.tileInstances)
+  print(game_map.tileInstances[2])
 
-  for type_idx, tile_type in ipairs(game_map.tileInstances) do
-    for tile_idx, tile in ipairs(game_map.tileInstances[type_idx]) do
+  for type_idx, tile_type in pairs(game_map.tileInstances) do
+
+    if game_map.tileInstances[type_idx] == nil then
+      goto continue
+    end
+
+    for tile_idx, tile in pairs(game_map.tileInstances[type_idx]) do
+
+      
 
       local temp_tile = game_map.tileInstances[type_idx][tile_idx]
       print(temp_tile)
@@ -68,6 +76,7 @@ function TileHandler:addMapTiles(game_map, objectHandler)
       
       
     end
+      ::continue::
   end
 
   

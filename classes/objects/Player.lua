@@ -19,9 +19,18 @@ function Player:init(params, objectHandler)
     self.interact = false
 
     self.inventory = {}
+
+    self.type = 'player'
 end
 
-function Player:updateVelocity(dt, my_player)
+function Player:update(dt, gravity, object_handler, window_width, window_height)
+    Object.update(self)
+    self:updateVelocity(dt)
+    self:updateMove(dt, gravity, object_handler)
+    self:updatePhysics(window_width, window_height, object_handler)
+end
+
+function Player:updateVelocity(dt)
 
     if love.keyboard.isDown('a') and (self.xvel <= self.speed) then
         self.xvel = self.xvel - self.speed * dt

@@ -29,6 +29,8 @@ function Object:init(params, objectHandler)
 
     
     self.id = Object:addToHandler(self, objectHandler)
+
+    self.type = 'object'
     
     
 
