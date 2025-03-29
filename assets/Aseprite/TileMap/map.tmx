@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="20" height="12" tilewidth="32" tileheight="32" infinite="0" nextlayerid="2" nextobjectid="1">
+ <editorsettings>
+  <export target="map.lua" format="lua"/>
+ </editorsettings>
+ <tileset firstgid="1" name="test_tile_map" tilewidth="32" tileheight="32" tilecount="9" columns="3">
+  <image source="test_tile_map.png" width="96" height="96"/>
+ </tileset>
+ <layer id="1" name="Tile Layer 1" width="20" height="12">
+  <data encoding="csv">
+5,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,5,
+6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,
+6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,
+6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,
+6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,
+6,0,0,0,0,0,0,0,0,1,2,2,2,2,2,2,3,0,0,4,
+6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,
+6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,
+6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,
+6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,
+6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,
+5,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,5
+</data>
+ </layer>
+</map>

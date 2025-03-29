@@ -29,6 +29,8 @@ function Object:init(params, objectHandler)
 
     
     self.id = Object:addToHandler(self, objectHandler)
+
+    self.type = 'object'
     
     
 
@@ -141,9 +143,9 @@ function Object:destroy(objectHandler)
 
     self.to_be_destroyed = true
 
-    print(self)
+    
 
-    collectgarbage("collect") -- Force garbage collection
+    --collectgarbage("collect") -- Force garbage collection
 end
 
     

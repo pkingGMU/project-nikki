@@ -11,9 +11,9 @@ function Item:init(params, objectHandler)
     Interactable.init(self, params, objectHandler)
 end
 
-function Item:update()
-    Object.update(self)
-end
+--function Item:update()
+--    Interactable.update(self)
+--end
 
 function Item:draw()
 

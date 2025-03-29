@@ -19,6 +19,8 @@ require("classes.spawn-objects.SpawnRectangle")
 require("classes.spawn-objects.ShapeHandler")
 require("classes.spawn-objects.SpawnCircle")
 
+local sti = require('libraries.Simple-Tiled-Implementation.sti')
+
 -- Camera --
 local camera = require("libraries.hump-master.camera")
 
@@ -50,6 +52,7 @@ local tile_handler = TileHandler()
 local entity_handler = EntityHandler()
 local object_handler = ObjectHandler()
 local npc
+local game_map
 
 
 
@@ -66,6 +69,9 @@ end
 
 function DevRoomState:enter()
     BaseState.enter(self)
+
+    -- load sti map --
+    game_map = sti('assets/Aseprite/TileMap/map.lua')
 
 
     self.cam = camera()
@@ -133,7 +139,8 @@ function DevRoomState:enter()
     force = gravity * mass
 
     -- Add tiles --
-    tile_handler:addTiles(self.window_height, self.window_width)
+    tile_handler:addBorderTiles(self.window_height, self.window_width)
+    tile_handler:addMapTiles(game_map, object_handler)
     tile_handler:createTileObjects(object_handler)
 
     
@@ -162,24 +169,30 @@ function DevRoomState:update(dt)
      end
 
 
-    -- Test Player
-    my_player:updateVelocity(dt)
-    my_player:update()
-    my_player:updateMove(dt, gravity, object_handler)
-    my_player:updatePhysics(self.window_width, self.window_height, object_handler)
-    
-
-    -- Test Enemy --
-    my_enemy:updateVelocity(dt, my_player)
-    my_enemy:update()
-    my_enemy:updateMove(dt, gravity, object_handler)
-    my_enemy:updatePhysics(self.window_width, self.window_height, object_handler)
-
     -- Test NPC --
-    npc:hoverInteraction(object_handler, my_player)
+    --npc:hoverInteraction(object_handler, my_player)
 
     -- Test Item --
-    item:hoverInteraction(object_handler, my_player)
+    --item:hoverInteraction(object_handler, my_player)
+
+    for idx, obj in ipairs(object_handler.object_table) do
+
+        if obj.type == 'player' then
+            obj:update(dt, gravity, object_handler, self.window_width, self.window_height)
+        elseif obj.type == 'enemy' then
+            obj:update(dt, my_player, gravity, object_handler, self.window_width, self.window_height)
+        elseif obj.type == 'interactable' then
+            obj:update(object_handler, my_player)
+        elseif obj.type == 'item' then
+            obj:update()
+        elseif obj.type == 'tile' then
+            obj:update()
+        else
+            obj:update()
+
+        end
+        
+    end
 
     
     
@@ -228,6 +241,7 @@ function DevRoomState:update(dt)
         end
 
         if current_shape.after_contact == false then
+            
             shape_handler:setVelocity(current_shape, current_shape.x, my_player.centerX, current_shape.y, my_player.centerY, current_shape.lifespanTimer:getRemainingTimeFloat())
         end
         if current_shape.lifespanTimer:getRemainingTimeFloat() <= 0 and current_shape.after_contact == false then
@@ -311,13 +325,14 @@ function DevRoomState:draw()
 
    -- Circle Draw --
    shape_handler:draw()
-   
+
+   love.graphics.setColor(1,1,1,1)
+   game_map:drawLayer(game_map.layers["Tile Layer 1"])
+
    self.cam:detach()
 
+   
 
-   -- Goal rectangle --
-   --love.graphics.setColor(1, 1, 1)
-   --love.graphics.rectangle("fill", goal_rect.x, goal_rect.y, goal_rect.width, goal_rect.height)
    
    love.graphics.setColor(255, 0, 0)
    love.graphics.print(Num, 0, 0)
@@ -330,14 +345,9 @@ function DevRoomState:draw()
        love.graphics.print("Timer finished!", 10, 30)
    end
 
-   -- Draw rectangle from midi --
    
 
    
-   --print(#shape_handler.shape_table)
-   love.graphics.setColor(0,0,0)
-
-   -- progress bar --
 end
 
 function DevRoomState:keypressed(key)

@@ -7,22 +7,26 @@ require('classes.objects.Object')
 -- Parent class Object --
 Interactable = Class{__includes = Object}
 
-function Interactable:init(params, objectHandler)
-    Object.init(self, params, objectHandler)
+function Interactable:init(params, object_handler)
+    Object.init(self, params, object_handler)
 
     self.hovering = false
     self.collision_action = false
     self.interacted = false
     
-    
+    self.type = 'interactable'
 
     
 end
 
-function Interactable:checkCollisions(objectHandler)
+function Interactable:update(object_handler, my_player)
+    self:hoverInteraction(object_handler, my_player)
+end
+
+function Interactable:checkCollisions(object_handler)
 
     local collide_list = {}
-    for other_key, other_object in ipairs(objectHandler.object_table) do
+    for other_key, other_object in ipairs(object_handler.object_table) do
 
         
         
@@ -41,7 +45,7 @@ function Interactable:checkCollisions(objectHandler)
         
         elseif not (self.x < other_object.x + other_object.w and self.x + self.w > other_object.x and self.y < other_object.y + other_object.h and self.y + self.h > other_object.y) then
 
-            self:leave_collision_area(objectHandler)
+            self:leave_collision_area(object_handler)
 
             self.hovering = false
             self.collision_action = false
@@ -61,8 +65,8 @@ function Interactable:checkCollisions(objectHandler)
         --return collide_list
 end
 
-function Interactable:hoverInteraction(objectHandler, my_player)
-    self:checkCollisions(objectHandler)
+function Interactable:hoverInteraction(object_handler, my_player)
+    self:checkCollisions(object_handler)
 
     if self.collision_action == false then
         goto continue
@@ -70,23 +74,23 @@ function Interactable:hoverInteraction(objectHandler, my_player)
 
     -- Interaction on first hover --
 
-    self:firstHoverInteraction(objectHandler)
+    self:firstHoverInteraction(object_handler)
 
     ::continue::
 
     -- Interaction on Hover --
 
-    self:interact(my_player, objectHandler)
+    self:interact(my_player, object_handler)
 
     
 end
 
-function Interactable:firstHoverInteraction(objectHandler)
+function Interactable:firstHoverInteraction(object_handler)
     print("sitting in item")
     self.collision_action = false
 end
 
-function Interactable:interact(my_player, objectHandler)
+function Interactable:interact(my_player, object_handler)
     if my_player.interact == true and self.hovering == true then
         self:interact()
         self.interacted = true
@@ -97,7 +101,7 @@ function Interactable:interact(my_player, objectHandler)
 
 end
 
-function Interactable:leave_collision_area(objectHandler) 
+function Interactable:leave_collision_area(object_handler) 
     
     
 

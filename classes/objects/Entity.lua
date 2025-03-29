@@ -19,10 +19,18 @@ function Entity:init(params, objectHandler)
 
     self.health = params.health or 100
 
+    self.type = 'entity'
 end
 
-function Entity:update()
+function Entity:update(dt, my_player, gravity, object_handler, window_width, window_height)
     Object.update(self)
+
+    self:updateVelocity(dt, my_player)
+    
+    self:updateMove(dt, gravity, object_handler)
+    self:updatePhysics(window_width, window_height, object_handler)
+
+    
 end
 
 function Entity:takeDamage(damage)

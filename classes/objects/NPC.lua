@@ -24,9 +24,9 @@ function NPC:init(params, objectHandler)
     --NPC:addToNPCHandler(self, NPCHandler)
 end
 
-function NPC:update()
-    Object.update(self)
-end
+--function NPC:update()
+--    Object.update(self)
+--end
 
 
 
