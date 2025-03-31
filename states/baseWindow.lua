@@ -1,16 +1,35 @@
 -- Global Imports --
 local Class = require("libraries.hump-master.class")
+local camera
+
+
+
 
 baseWindow = Class()
 
 function baseWindow:init()
-    self.windowHeight = 360 
-    self.windowWidth = 640 
+    self.window_width = 640
+    self.window_height = 360
 
-    love.window.setMode(self.windowWidth, self.windowHeight, {
+    self.scale_factor = 2
+
+    self.target_width = self.window_width * self.scale_factor
+    self.target_height = self.window_height * self.scale_factor
+
+    
+
+    
+
+    love.window.setMode(self.target_width, self.target_height, {
         resizable=false, 
+        fullscreen = false,
         vsync=0, 
-        minwidth=0, 
-        minheight=0})
+        minwidth=self.window_width, 
+        minheight=self.window_height})
+
+    love.graphics.setDefaultFilter('nearest', 'nearest') -- scale everything with nearest neighbor
+
+
+    
 end
 
