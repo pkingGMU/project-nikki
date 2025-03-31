@@ -24,15 +24,22 @@ end
 function BaseState:init()
     
     print("BaseState init")
+
 end
+
 
 function BaseState:enter()
     print("BaseState enter")
 
     --window sizes--
     self.window:init()
-    self.window_height = self.window.windowHeight
-    self.window_width = self.window.windowWidth
+    self.window_height = self.window.window_height
+    self.window_width = self.window.window_width
+    self.scale_factor = self.window.scale_factor
+
+    self.target_width = self.window.target_width
+    self.target_height = self.window.target_height
+    
 end
 
 function BaseState:update(dt)
@@ -40,6 +47,15 @@ function BaseState:update(dt)
 end
 
 function BaseState:draw()
+
+    local point_size = 1
+
+    -- tlfres --
+    --TLfres.beginRendering(self.window_width, self.window_height)
+    --love.graphics.setPointSize(TLfres.getScale()*point_size) -- Point size doesn't scale automatically, so multiply it manually.
+    --love.graphics.points(self.window_width / 2, self.window_height / 2) -- Will draw at the center of the canvas no matter how the screen is resized.
+
+    --TLfres.endRendering() -- Draw black letterbox
     
 end
 
