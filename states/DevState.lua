@@ -22,7 +22,9 @@ require("classes.spawn-objects.SpawnCircle")
 local sti = require('libraries.Simple-Tiled-Implementation.sti')
 
 -- Camera --
-local camera = require("libraries.hump-master.camera")
+local Camera = require("libraries.STALKER-X.Camera")
+
+
 
 
 
@@ -70,18 +72,23 @@ end
 function DevRoomState:enter()
     BaseState.enter(self)
 
+    -- Create a render target
+    self.canvas = love.graphics.newCanvas(self.scale_width, self.scale_height)
+
     -- load sti map --
     game_map = sti('assets/Aseprite/TileMap/map.lua')
 
-
-    self.cam = camera()
-    self.cam:zoom(1)
-    
     window:init()
 
     -- Create a Player --
     my_player = Player({x = 200, y = 100, w = 32, h = 32, health = 100, speed = 500, can_collide = true}, object_handler)
     --entity_handler:addEntity(my_player)
+
+    self.cam = Camera(0,0, self.window_width, self.window_height)
+    self.cam:setFollowLerp(0.2)
+    self.cam:setFollowLead(0)
+    self.cam:setFollowStyle('PLATFORMER')
+    self.cam:setBounds(0,0,self.target_width, self.target_height)
 
     -- Create an Enemy --
     my_enemy = Enemy({x = 150, y = 100, w = 32, h = 32, can_collide = true}, object_handler)
@@ -288,36 +295,42 @@ function DevRoomState:update(dt)
 
         
     end
-    
+
+    --local offset_x = (self.scale_width - self.base_width) / self.scale_factor
+    --local offset_y = (self.scale_height - self.base_height) / self.scale_factor
+
 
     -- Camera Update --
-    self.cam:lookAt(my_player.x + my_player.w / 2, my_player.y + my_player.h / 2)
 
-    if self.cam.x < self.window_width / 2 then
+    self.cam:update(dt)
+    self.cam:follow((my_player.x + my_player.w / 2), (my_player.y + my_player.h / 2))
+
+    --[[ if self.cam.x < self.window_width / 2 then
         self.cam.x = self.window_width / 2
     end
 
-    if self.cam.y < self.window_height / 2 or self.cam.y > self.window_height / 2 then
+    if self.cam.y < self.window_height / 2 then
         self.cam.y = self.window_height / 2
-    end
+    end ]]
 
-    
-
-    
     my_player.deflect = false
     my_player.interact = false
 
     
-    
-    
-
 end
 
 
 function DevRoomState:draw()
 
+    love.graphics.setCanvas(self.canvas)
+    love.graphics.clear(0, 0, 0, 0)
+    
+    
+    
+
     -- Camera --
    self.cam:attach()
+   
 
   for i, obj in ipairs(object_handler.object_table) do
     obj:draw()
@@ -328,11 +341,8 @@ function DevRoomState:draw()
 
    love.graphics.setColor(1,1,1,1)
    game_map:drawLayer(game_map.layers["Tile Layer 1"])
-
-   self.cam:detach()
-
    
-
+   self.cam:detach()
    
    love.graphics.setColor(255, 0, 0)
    love.graphics.print(Num, 0, 0)
@@ -345,9 +355,13 @@ function DevRoomState:draw()
        love.graphics.print("Timer finished!", 10, 30)
    end
 
-   
+   love.graphics.setCanvas()
 
-   
+   love.graphics.setColor(1,1,1)
+   love.graphics.setBlendMode("alpha", "premultiplied")
+   love.graphics.draw(self.canvas, 0, 0, 0, self.scale_factor, self.scale_factor)
+   love.graphics.setBlendMode("alpha")
+
 end
 
 function DevRoomState:keypressed(key)
@@ -377,3 +391,4 @@ function DevRoomState:keyreleased(key)
         debug_print = true
     end
 end
+
