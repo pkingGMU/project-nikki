@@ -73,10 +73,10 @@ function DevRoomState:enter()
     BaseState.enter(self)
 
     -- Create a render target
-    self.canvas = love.graphics.newCanvas(self.scale_width, self.scale_height)
+    self.canvas = love.graphics.newCanvas(self.window_width, self.window_height)
 
     -- load sti map --
-    game_map = sti('assets/Aseprite/TileMap/map.lua')
+    game_map = sti('assets/Aseprite/TileMap/map_scale_2.lua')
 
     window:init()
 
@@ -88,20 +88,20 @@ function DevRoomState:enter()
     self.cam:setFollowLerp(0.2)
     self.cam:setFollowLead(0)
     self.cam:setFollowStyle('PLATFORMER')
-    self.cam:setBounds(0,0,self.target_width, self.target_height)
+    --self.cam:setBounds(0,0,self.target_width, self.target_height)
 
     -- Create an Enemy --
     my_enemy = Enemy({x = 150, y = 100, w = 32, h = 32, can_collide = true}, object_handler)
     --entity_handler:addEntity(my_enemy)
 
     -- Create a bottom border for collision detection --
-    bottom_border_platform = Object({x = 200, y = self.window_height-60, w = 32, h = 32, can_collide = true}, object_handler)
+    --bottom_border_platform = Object({x = 200, y = self.window_height-60, w = 32, h = 32, can_collide = true}, object_handler)
 
     -- Create Test NPC --
     npc = NPC({x = 400, y = self.window_height-60, can_collide = false}, object_handler)
 
     -- Create Test Item --
-    item = Item({x = 450, y = self.window_height-60, can_collide = false}, object_handler)
+    Item({x = 450, y = self.window_height-60, can_collide = false}, object_handler)
 
 
     -- Test Timer --
@@ -185,9 +185,9 @@ function DevRoomState:update(dt)
     for idx, obj in ipairs(object_handler.object_table) do
 
         if obj.type == 'player' then
-            obj:update(dt, gravity, object_handler, self.window_width, self.window_height)
+            obj:update(dt, gravity, object_handler, self.target_width, self.target_height)
         elseif obj.type == 'enemy' then
-            obj:update(dt, my_player, gravity, object_handler, self.window_width, self.window_height)
+            obj:update(dt, my_player, gravity, object_handler, self.target_width, self.target_height)
         elseif obj.type == 'interactable' then
             obj:update(object_handler, my_player)
         elseif obj.type == 'item' then
@@ -330,6 +330,9 @@ function DevRoomState:draw()
 
     -- Camera --
    self.cam:attach()
+
+   love.graphics.setColor(1,1,1,1)
+   game_map:drawLayer(game_map.layers["Tile Layer 1"])
    
 
   for i, obj in ipairs(object_handler.object_table) do
@@ -339,8 +342,7 @@ function DevRoomState:draw()
    -- Circle Draw --
    shape_handler:draw()
 
-   love.graphics.setColor(1,1,1,1)
-   game_map:drawLayer(game_map.layers["Tile Layer 1"])
+   
    
    self.cam:detach()
    
