@@ -81,7 +81,7 @@ function TileHandler:addMapTiles(game_map, objectHandler)
 
   
 
-  print(game_map)
+  
   
 end
 
@@ -91,7 +91,7 @@ function TileHandler:createTileObjects(objectHandler)
     for x=1, #self.tile_map[y] do
       if self.tile_map[y][x] == 1 then
 
-        Tile({x = (x * 32) - 32, y = (y * 32) - 32, w = 32, h = 32, can_collide = true}, objectHandler, self)
+        --Tile({x = (x * 32) - 32, y = (y * 32) - 32, w = 32, h = 32, can_collide = true}, objectHandler, self)
         
         
       end
