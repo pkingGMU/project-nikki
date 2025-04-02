@@ -2,15 +2,19 @@ local Class = require("libraries.hump-master.class")
 
 
 -- Local Imports --
-require('classes.objects.Object')
+require('classes.objects.Interactable')
 require('classes.objects.TextBox')
+
+local text_box_w
+local text_box_x
+local text_box_y
 
 
 -- Parent class Object --
-NPC = Class{__includes = Object}
+NPC = Class{__includes = Interactable}
 
 function NPC:init(params, objectHandler)
-    Object.init(self, params, objectHandler)
+    Interactable.init(self, params, objectHandler)
 
     self.display_text = false
     self.npc_text = {}
@@ -20,60 +24,36 @@ function NPC:init(params, objectHandler)
     --NPC:addToNPCHandler(self, NPCHandler)
 end
 
-function NPC:update()
-    Object.update(self)
+--function NPC:update()
+--    Object.update(self)
+--end
+
+
+
+function NPC:firstHoverInteraction(objectHandler)
+
+    -- Create new Text Box --
+    text_box_w = 32 * 4
+    text_box_y = self.y - 50
+    text_box_x = self.centerX - ((text_box_w) / 2)
+    self.npc_text = TextBox({x = text_box_x, y = text_box_y, w = text_box_w, h = 32, text = "Test"}, objectHandler, self)
+
+    self.collision_action = false
+
 end
 
-function NPC:checkCollisions(objectHandler)
-    local collide_list = {}
-    for other_key, other_object in ipairs(objectHandler.object_table) do
-        
-        if other_object == self or not other_object.isPlayer == true then
-            goto continue
-        end
+function NPC:interact(my_player, objectHandler)
 
-        
+    -- Interaction on Hover --
+    if my_player.interact == true and self.hovering == true then
+        print("interacted with interactable")
+     end
 
-        if self.x < other_object.x + other_object.w and self.x + self.w > other_object.x and self.y < other_object.y + other_object.h and self.y + self.h > other_object.y and self.display_text == false then
-            table.insert(collide_list, other_object)
-            
-            -- Create new Text Box --
-            local text_box_w = 32 * 4
-            local text_box_y = self.y - 50
-            local text_box_x = self.centerX - ((text_box_w) / 2)
-            self.npc_text = TextBox({x = text_box_x, y = text_box_y, w = text_box_w, h = 32}, objectHandler, self)
-
-            self.display_text = true
-        
-        elseif not (self.x < other_object.x + other_object.w and self.x + self.w > other_object.x and self.y < other_object.y + other_object.h and self.y + self.h > other_object.y) then
-
-            if self.display_text == true then
-                print(#objectHandler.object_table)
-                table.remove(objectHandler.object_table, self.npc_text.object_handler_key)
-                objectHandler.object_idx = objectHandler.object_idx - 1
-            end
-            self.display_text = false
-
-            
-            
-        end
-            
-
-            
-    end
-
-        ::continue::
-        
 end
 
     
 
 function NPC:addToNPCHandler(NPC)
-
---[[     NPCHandler.NPC_idx = NPCHandler.NPC_idx + 1
-    local string_key = 'NPC'.. tostring(NPCHandler.NPC_idx)
-    table.insert(NPCHandler.NPC_table, NPC) ]]
-    
 
 end
 
@@ -83,11 +63,24 @@ function NPC:draw()
         love.graphics.setColor(.5,1.2,.5)
         love.graphics.rectangle("line", self.x , self.y , self.w, self.h)
 
-        if self.display_text == true then
+        if self.hovering == true then
             self.npc_text:draw()
             
         end
+
+        
         
 
     
+end
+
+function NPC:leave_collision_area(objectHandler)
+
+    if self.hovering == true then
+        print(#objectHandler.object_table)
+        
+        self.npc_text:destroy(objectHandler)
+
+    end
+
 end

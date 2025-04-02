@@ -16,6 +16,18 @@ function Player:init(params, objectHandler)
     self.canMoveY = true
 
     self.isPlayer = true
+    self.interact = false
+
+    self.inventory = {}
+
+    self.type = 'player'
+end
+
+function Player:update(dt, gravity, object_handler, window_width, window_height)
+    Object.update(self)
+    self:updateVelocity(dt)
+    self:updateMove(dt, gravity, object_handler)
+    self:updatePhysics(window_width, window_height, object_handler)
 end
 
 function Player:updateVelocity(dt)
@@ -60,8 +72,8 @@ end
 
 
     if (self.y + self.h >= window_height)  then
-        self.y = window_height - self.h
-        self.yvel = 0.0
+        --self.y = window_height - self.h
+        --self.yvel = 0.0
         self.can_jump = true
     end
 

@@ -6,6 +6,7 @@ require("states.BaseState")
 require("classes.objects.Player")
 require("classes.objects.Enemy")
 require("classes.objects.NPC")
+require("classes.objects.Item")
 require("classes.objects.EntityHandler")
 require("classes.objects.ObjectHandler")
 require("classes.spawn-objects.TileHandler")
@@ -18,8 +19,12 @@ require("classes.spawn-objects.SpawnRectangle")
 require("classes.spawn-objects.ShapeHandler")
 require("classes.spawn-objects.SpawnCircle")
 
+local sti = require('libraries.Simple-Tiled-Implementation.sti')
+
 -- Camera --
-local camera = require("libraries.hump-master.camera")
+local Camera = require("libraries.STALKER-X.Camera")
+
+
 
 
 
@@ -41,6 +46,7 @@ local window = baseWindow()
 local bottom_border_platform
 local my_player
 local my_enemy
+local item
 local pfp_test
 local song
 local cam
@@ -48,6 +54,7 @@ local tile_handler = TileHandler()
 local entity_handler = EntityHandler()
 local object_handler = ObjectHandler()
 local npc
+local game_map
 
 
 
@@ -65,25 +72,36 @@ end
 function DevRoomState:enter()
     BaseState.enter(self)
 
+    -- Create a render target
+    self.canvas = love.graphics.newCanvas(self.window_width, self.window_height)
 
-    self.cam = camera()
-    self.cam:zoom(1)
-    
+    -- load sti map --
+    game_map = sti('assets/Aseprite/TileMap/map_scale_2.lua')
+
     window:init()
 
     -- Create a Player --
     my_player = Player({x = 200, y = 100, w = 32, h = 32, health = 100, speed = 500, can_collide = true}, object_handler)
     --entity_handler:addEntity(my_player)
 
+    self.cam = Camera(0,0, self.window_width, self.window_height)
+    self.cam:setFollowLerp(0.2)
+    self.cam:setFollowLead(0)
+    self.cam:setFollowStyle('PLATFORMER')
+    --self.cam:setBounds(0,0,self.target_width, self.target_height)
+
     -- Create an Enemy --
     my_enemy = Enemy({x = 150, y = 100, w = 32, h = 32, can_collide = true}, object_handler)
     --entity_handler:addEntity(my_enemy)
 
     -- Create a bottom border for collision detection --
-    bottom_border_platform = Object({x = 200, y = self.window_height-60, w = 32, h = 32, can_collide = true}, object_handler)
+    --bottom_border_platform = Object({x = 200, y = self.window_height-60, w = 32, h = 32, can_collide = true}, object_handler)
 
     -- Create Test NPC --
     npc = NPC({x = 400, y = self.window_height-60, can_collide = false}, object_handler)
+
+    -- Create Test Item --
+    Item({x = 450, y = self.window_height-60, can_collide = false}, object_handler)
 
 
     -- Test Timer --
@@ -116,7 +134,7 @@ function DevRoomState:enter()
 
     --song = love.audio.newSource("sounds/Asgore/Asgore.mp3", "stream")
     song = love.audio.newSource("sounds/song1.mp3", "stream")
-    song:play()
+    --song:play()
     music = false
 
     -- variable that keeps track of rectangles that have spawed --
@@ -128,7 +146,8 @@ function DevRoomState:enter()
     force = gravity * mass
 
     -- Add tiles --
-    tile_handler:addTiles(self.window_height, self.window_width)
+    tile_handler:addBorderTiles(self.window_height, self.window_width)
+    tile_handler:addMapTiles(game_map, object_handler)
     tile_handler:createTileObjects(object_handler)
 
     
@@ -157,25 +176,34 @@ function DevRoomState:update(dt)
      end
 
 
-    -- Test Player
-    my_player:updateVelocity(dt)
-    my_player:update()
-    my_player:updateMove(dt, gravity, object_handler)
-    my_player:updatePhysics(self.window_width, self.window_height, object_handler)
-    
-
-    -- Test Enemy --
-    my_enemy:updateVelocity(dt, my_player)
-    my_enemy:update()
-    my_enemy:updateMove(dt, gravity, object_handler)
-    my_enemy:updatePhysics(self.window_width, self.window_height, object_handler)
-
     -- Test NPC --
-    npc:checkCollisions(object_handler)
-    
-     
+    --npc:hoverInteraction(object_handler, my_player)
 
-   
+    -- Test Item --
+    --item:hoverInteraction(object_handler, my_player)
+
+    for idx, obj in ipairs(object_handler.object_table) do
+
+        if obj.type == 'player' then
+            obj:update(dt, gravity, object_handler, self.target_width, self.target_height)
+        elseif obj.type == 'enemy' then
+            obj:update(dt, my_player, gravity, object_handler, self.target_width, self.target_height)
+        elseif obj.type == 'interactable' then
+            obj:update(object_handler, my_player)
+        elseif obj.type == 'item' then
+            obj:update()
+        elseif obj.type == 'tile' then
+            obj:update()
+        else
+            obj:update()
+
+        end
+        
+    end
+
+    
+    
+    
 
     -- Update player physics --
 
@@ -220,6 +248,7 @@ function DevRoomState:update(dt)
         end
 
         if current_shape.after_contact == false then
+            
             shape_handler:setVelocity(current_shape, current_shape.x, my_player.centerX, current_shape.y, my_player.centerY, current_shape.lifespanTimer:getRemainingTimeFloat())
         end
         if current_shape.lifespanTimer:getRemainingTimeFloat() <= 0 and current_shape.after_contact == false then
@@ -266,57 +295,56 @@ function DevRoomState:update(dt)
 
         
     end
-    
+
+    --local offset_x = (self.scale_width - self.base_width) / self.scale_factor
+    --local offset_y = (self.scale_height - self.base_height) / self.scale_factor
+
 
     -- Camera Update --
-    self.cam:lookAt(my_player.x + my_player.w / 2, my_player.y + my_player.h / 2)
 
-    if self.cam.x < self.window_width / 2 then
+    self.cam:update(dt)
+    self.cam:follow((my_player.x + my_player.w / 2), (my_player.y + my_player.h / 2))
+
+    --[[ if self.cam.x < self.window_width / 2 then
         self.cam.x = self.window_width / 2
     end
 
-    if self.cam.y < self.window_height / 2 or self.cam.y > self.window_height / 2 then
+    if self.cam.y < self.window_height / 2 then
         self.cam.y = self.window_height / 2
-    end
+    end ]]
 
-    
-
-    
     my_player.deflect = false
+    my_player.interact = false
 
     
-    
-    
-
 end
 
 
 function DevRoomState:draw()
 
+    love.graphics.setCanvas(self.canvas)
+    love.graphics.clear(0, 0, 0, 0)
+    
+    
+    
+
     -- Camera --
    self.cam:attach()
-   -- Test Player --
-   love.graphics.setColor(1, 1, 1)
-   my_player:draw()
-   love.graphics.setColor(1,0,0)
-   my_enemy:draw()
-   love.graphics.setColor(1,1,1,.4)
-   bottom_border_platform:draw()
-   love.graphics.setColor(1,1,1, .8)
-   -- Tile Map --
-   tile_handler:draw(self.window_height)
 
-   npc:draw()
+   love.graphics.setColor(1,1,1,1)
+   game_map:drawLayer(game_map.layers["Tile Layer 1"])
+   
+
+  for i, obj in ipairs(object_handler.object_table) do
+    obj:draw()
+  end
 
    -- Circle Draw --
    shape_handler:draw()
+
+   
    
    self.cam:detach()
-
-
-   -- Goal rectangle --
-   --love.graphics.setColor(1, 1, 1)
-   --love.graphics.rectangle("fill", goal_rect.x, goal_rect.y, goal_rect.width, goal_rect.height)
    
    love.graphics.setColor(255, 0, 0)
    love.graphics.print(Num, 0, 0)
@@ -329,14 +357,13 @@ function DevRoomState:draw()
        love.graphics.print("Timer finished!", 10, 30)
    end
 
-   -- Draw rectangle from midi --
-   
+   love.graphics.setCanvas()
 
-   
-   --print(#shape_handler.shape_table)
-   love.graphics.setColor(0,0,0)
+   love.graphics.setColor(1,1,1)
+   love.graphics.setBlendMode("alpha", "premultiplied")
+   love.graphics.draw(self.canvas, 0, 0, 0, self.scale_factor, self.scale_factor)
+   love.graphics.setBlendMode("alpha")
 
-   -- progress bar --
 end
 
 function DevRoomState:keypressed(key)
@@ -357,4 +384,13 @@ function DevRoomState:keyreleased(key)
     if key == "j" then
         my_player.deflect = true
     end
+
+    if key == "k" then
+        my_player.interact = true
+    end
+
+    if key == "p" then
+        debug_print = true
+    end
 end
+

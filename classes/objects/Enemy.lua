@@ -14,6 +14,18 @@ function Enemy:init(params, objectHandler)
     Entity.init(self, params, objectHandler)
 
     self.isEnemy = true
+    self.type = 'enemy'
+end
+
+function Enemy:update(dt, my_player, gravity, object_handler, window_width, window_height)
+    Object.update(self)
+
+    self:updateVelocity(dt, my_player)
+    
+    self:updateMove(dt, gravity, object_handler)
+    self:updatePhysics(window_width, window_height, object_handler)
+
+    
 end
 
 function Enemy:updateVelocity(dt, myPlayer)
@@ -70,8 +82,8 @@ end
  function Enemy:updatePhysics(window_width, window_height, objectHandler)
 
     if (self.y + self.h >= window_height)  then
-        self.y = window_height - self.h
-        self.yvel = 0.0
+        --self.y = window_height - self.h
+        --self.yvel = 0.0
         self.can_jump = true
     elseif (self.y  <= 0) then
         self.y  = 0
