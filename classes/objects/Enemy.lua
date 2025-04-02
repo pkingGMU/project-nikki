@@ -82,8 +82,8 @@ end
  function Enemy:updatePhysics(window_width, window_height, objectHandler)
 
     if (self.y + self.h >= window_height)  then
-        self.y = window_height - self.h
-        self.yvel = 0.0
+        --self.y = window_height - self.h
+        --self.yvel = 0.0
         self.can_jump = true
     elseif (self.y  <= 0) then
         self.y  = 0
