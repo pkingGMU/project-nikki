@@ -24,10 +24,6 @@ local sti = require('libraries.Simple-Tiled-Implementation.sti')
 -- Camera --
 local Camera = require("libraries.STALKER-X.Camera")
 
-
-
-
-
 local goal_rect
 local my_timer
 local shape_handler = ShapeHandler()
@@ -98,11 +94,10 @@ function DevRoomState:enter()
     --bottom_border_platform = Object({x = 200, y = self.window_height-60, w = 32, h = 32, can_collide = true}, object_handler)
 
     -- Create Test NPC --
-    npc = NPC({x = 400, y = self.window_height-60, can_collide = false}, object_handler)
+    NPC({x = 400, y = self.window_height-60, can_collide = false}, object_handler)
 
     -- Create Test Item --
     Item({x = 450, y = self.window_height-60, can_collide = false}, object_handler)
-
 
     -- Test Timer --
     my_timer = Timer(200)
@@ -185,7 +180,7 @@ function DevRoomState:update(dt)
     for idx, obj in ipairs(object_handler.object_table) do
 
         if obj.type == 'player' then
-            obj:update(dt, gravity, object_handler, self.target_width, self.target_height)
+            obj:update(dt, gravity, object_handler, self.c_down, self.target_width, self.target_height)
         elseif obj.type == 'enemy' then
             obj:update(dt, my_player, gravity, object_handler, self.target_width, self.target_height)
         elseif obj.type == 'interactable' then
@@ -367,18 +362,17 @@ function DevRoomState:draw()
 end
 
 function DevRoomState:keypressed(key)
-    -- Handle key presses for the dev room (e.g., add objects, toggle debug mode)
+    
     BaseState.keypressed(self,key)
 
 end
 
 function DevRoomState:keyreleased(key)
-    -- Handle key presses for the dev room (e.g., add objects, toggle debug mode)
+    
     BaseState.keyreleased(self,key)
 
     if key == "space" then
         my_player.yvel = my_player.jump_vel
-        
     end
 
     if key == "j" then
@@ -392,5 +386,10 @@ function DevRoomState:keyreleased(key)
     if key == "p" then
         debug_print = true
     end
+
+    if key == 'c' then
+        my_player.dash = true
+    end
+
 end
 
