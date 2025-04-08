@@ -15,6 +15,7 @@ function BaseState.new()
     self.w_down = false
     self.d_down = false
     self.jump_key = false
+    self.c_down = false
     self.window = baseWindow()
     self.window_height = nil
     self.window_width = nil
@@ -84,6 +85,10 @@ function BaseState:keypressed(key)
     if key == "space" then
         
     end
+
+    if key == 'c' then
+        self.c_down = false
+    end
     
 end
 
@@ -114,6 +119,10 @@ function BaseState:keyreleased(key)
     end
     if key == "space" then
         
+    end
+
+    if key == 'c' then
+        self.c_down = true
     end
     
 end
