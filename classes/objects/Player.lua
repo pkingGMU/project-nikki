@@ -14,31 +14,46 @@ function Player:init(params, objectHandler)
     self.isPlayer = true
     self.canMoveX = true
     self.canMoveY = true
+    self.dash = false
+    self.direction = 'right'
 
     self.isPlayer = true
     self.interact = false
 
     self.inventory = {}
 
-    self.type = 'player'
+    self.type = 'player' 
 end
 
-function Player:update(dt, gravity, object_handler, window_width, window_height)
+function Player:update(dt, gravity, object_handler, c_down, window_width, window_height)
     Object.update(self)
-    self:updateVelocity(dt)
+    self:updateVelocity(dt, c_down)
     self:updateMove(dt, gravity, object_handler)
     self:updatePhysics(window_width, window_height, object_handler)
 end
 
-function Player:updateVelocity(dt)
+function Player:updateVelocity(dt, c_down)
 
-    if love.keyboard.isDown('a') and (self.xvel <= self.speed) then
+    if love.keyboard.isDown('left') and (self.xvel <= self.speed) then
         self.xvel = self.xvel - self.speed * dt
+        self.direction = 'left'
     end
 
-    if love.keyboard.isDown('d') and (self.xvel >= -self.speed)then
+    if love.keyboard.isDown('right') and (self.xvel >= -self.speed)then
         self.xvel = self.xvel + self.speed * dt
+        self.direction = 'right'
     end
+
+    if self.dash and self.direction == 'right' then
+        self.xvel = self.dash_vel
+        self.dash = false
+
+    elseif self.dash and self.direction == 'left' then
+        self.xvel = self.dash_vel * -1
+        self.dash = false
+    end
+
+    
 
 end
 
