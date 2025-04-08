@@ -145,7 +145,7 @@ function Object:destroy(objectHandler)
 
     
 
-    --collectgarbage("collect") -- Force garbage collection
+    collectgarbage("collect") -- Force garbage collection
 end
 
     
