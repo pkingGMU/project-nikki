@@ -26,9 +26,6 @@ require("classes.MidiTrigger")
 require("classes.spawn-objects.SpawnRectangle")
 require("classes.spawn-objects.ShapeHandler")
 require("classes.spawn-objects.SpawnCircle")
-require("classes.menu.menuStateInit")
-require("classes.menu.menuStateDraw")
-require("classes.menu.menuStateUpdate")
 require("classes.objects.Object")
 require("classes.objects.Entity")
 
@@ -48,8 +45,8 @@ local state
 function love.load()
     -- Hump gamestate init --
     Gamestate.registerEvents()
-    Gamestate.push(DevRoomState)
-    
+    --Gamestate.push(DevRoomState)
+    Gamestate.push(MenuState)
 end
 
 state = Gamestate.current()
