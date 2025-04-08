@@ -15,6 +15,7 @@ function Entity:init(params, objectHandler)
     self.friction = params.friction or 5
     self.speed = params.speed or 1500
     self.jump_vel = params.jump_vel or -800
+    self.dash_vel = params.dash_speed or 500
     self.can_jump = params.can_jump or true
 
     self.health = params.health or 100
