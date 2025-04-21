@@ -46,10 +46,8 @@ function Object:draw()
 end
 
 function Object:update()
-
     self.centerX = self.x + self.w / 2
     self.centerY = self.y + self.h / 2
-
 end
 
 

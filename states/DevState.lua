@@ -24,13 +24,11 @@ local sti = require('libraries.Simple-Tiled-Implementation.sti')
 -- Camera --
 local Camera = require("libraries.STALKER-X.Camera")
 
-local goal_rect
 local my_timer
 local shape_handler = ShapeHandler()
 local midi_trigger
 local midi_hash
 local midi_file
-local gravity
 local music
 local last_call
 local midi_pitch
@@ -39,16 +37,12 @@ local current_shape
 local current_shape_x
 local current_shape_y
 local window = baseWindow()
-local bottom_border_platform
 local my_player
 local my_enemy
-local item
-local pfp_test
-local cam
 local tile_handler = TileHandler()
-local entity_handler = EntityHandler()
-local object_handler = ObjectHandler()
 local game_map
+
+-- Commented out below --
 local song
 
 
@@ -59,13 +53,16 @@ function DevRoomState:init()
   print("DevRoomState init")
   local self = BaseState.new()                   -- Call the BaseState constructor
   setmetatable(self, { __index = DevRoomState }) -- Set metatable to DevRoomState
-  -- Define state-specific variables (if needed)
+  
+
   return self
 end
 
 function DevRoomState:enter()
   BaseState.enter(self)
 
+  self.object_handler = ObjectHandler()
+  
   -- Create a render target
   self.canvas = love.graphics.newCanvas(self.window_width, self.window_height)
 
@@ -75,7 +72,7 @@ function DevRoomState:enter()
   window:init()
 
   -- Create a Player --
-  my_player = Player({ x = 200, y = 100, w = 32, h = 32, health = 100, speed = 500, can_collide = true }, object_handler)
+  my_player = Player({ x = 200, y = 100, w = 32, h = 32, health = 100, speed = 500, can_collide = true }, self.object_handler)
   --entity_handler:addEntity(my_player)
 
   self.cam = Camera(0, 0, self.window_width, self.window_height)
@@ -85,17 +82,17 @@ function DevRoomState:enter()
   --self.cam:setBounds(0,0,self.target_width, self.target_height)
 
   -- Create an Enemy --
-  my_enemy = Enemy({ x = 150, y = 100, w = 32, h = 32, can_collide = true }, object_handler)
+  my_enemy = Enemy({ x = 150, y = 100, w = 32, h = 32, can_collide = true }, self.object_handler)
   --entity_handler:addEntity(my_enemy)
 
   -- Create a bottom border for collision detection --
   --bottom_border_platform = Object({x = 200, y = self.window_height-60, w = 32, h = 32, can_collide = true}, object_handler)
 
   -- Create Test NPC --
-  NPC({ x = 400, y = self.window_height - 60, can_collide = false }, object_handler)
+  NPC({ x = 400, y = self.window_height - 60, can_collide = false }, self.object_handler)
 
   -- Create Test Item --
-  Item({ x = 450, y = self.window_height - 10, can_collide = false }, object_handler)
+  Item({ x = 450, y = self.window_height - 10, can_collide = false }, self.object_handler)
 
   -- Test Timer --
   my_timer = Timer(200)
@@ -119,11 +116,11 @@ function DevRoomState:enter()
   last_call = 0
 
   -- Physics --
-  gravity = 2000
+  self.gravity = 2000
   -- Add tiles --
   tile_handler:addBorderTiles(self.window_height, self.window_width)
-  tile_handler:addMapTiles(game_map, object_handler)
-  tile_handler:createTileObjects(object_handler)
+  tile_handler:addMapTiles(game_map, self.object_handler)
+  tile_handler:createTileObjects(self.object_handler)
 end
 
 function DevRoomState:update(dt)
@@ -147,13 +144,13 @@ function DevRoomState:update(dt)
   -- Test Item --
   --item:hoverInteraction(object_handler, my_player)
 
-  for idx, obj in ipairs(object_handler.object_table) do
+  for idx, obj in ipairs(self.object_handler.object_table) do
     if obj.type == 'player' then
-      obj:update(dt, gravity, object_handler, self.c_down, self.target_width, self.target_height)
+      obj:update(dt, self)
     elseif obj.type == 'enemy' then
-      obj:update(dt, my_player, gravity, object_handler, self.target_width, self.target_height)
+      obj:update(dt, my_player, self.gravity, self.object_handler, self.target_width, self.target_height)
     elseif obj.type == 'interactable' then
-      obj:update(object_handler, my_player)
+      obj:update(self.object_handler, my_player)
     elseif obj.type == 'item' then
       obj:update()
     elseif obj.type == 'tile' then
@@ -264,7 +261,7 @@ function DevRoomState:draw()
   love.graphics.setColor(1, 1, 1, 1)
   game_map:drawLayer(game_map.layers["Tile Layer 1"])
 
-  for i, obj in ipairs(object_handler.object_table) do
+  for i, obj in ipairs(self.object_handler.object_table) do
     obj:draw()
   end
 
@@ -316,5 +313,14 @@ function DevRoomState:keyreleased(key)
 
   if key == 'c' then
     my_player.dash = true
+  end
+
+  if key =='d' then
+
+    if self.debug_mode == false then
+      self.debug_mode = true
+    elseif self.debug_mode == true then
+      self.debug_mode = false
+    end
   end
 end

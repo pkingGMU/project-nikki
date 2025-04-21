@@ -25,8 +25,14 @@ function Player:init(params, objectHandler)
   self.type = 'player'
 end
 
-function Player:update(dt, gravity, object_handler, c_down, window_width, window_height)
+function Player:update(dt, DevRoomState)
   Object.update(self)
+
+  local gravity = DevRoomState.gravity
+  local object_handler = DevRoomState.object_handler
+  local c_down = DevRoomState.c_down
+  local window_width = DevRoomState.window_width
+  local window_height =DevRoomState.window_height
   self:updateVelocity(dt, c_down)
   self:updateMove(dt, gravity, object_handler)
   self:updatePhysics(window_width, window_height, object_handler)
