@@ -54,7 +54,7 @@ end
 
 
 function Object:testPrint(word --[[string]])
-    print(word)
+    --print(word)
 end
 
 function Object:addToHandler(object --[[table]], objectHandler --[[table]])
@@ -129,14 +129,14 @@ function Object:collisionMoveY(collide_list)
 end
 
 function Object:destroy(objectHandler)
-   
-    print(#objectHandler.object_table)
+   -- Debug --
+    --print(#objectHandler.object_table)
 
     for i, obj in ipairs(objectHandler.object_table) do
         if obj.id == self.id then
-            print(obj.id)
-            print(self.id)
-            print("found")
+           --print(obj.id)
+           --print(self.id)
+           --print("found")
             table.remove(objectHandler.object_table, i)
         end
     end

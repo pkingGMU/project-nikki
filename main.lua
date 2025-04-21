@@ -18,6 +18,8 @@ require("states.DevState")   -- DevState (state for development/debug mode)
 local csv = require("libraries.lua-csv-master.lua.csv")
 
 
+
+
 -- Local imports --
 require("states.baseWindow")
 require("classes.midiFileHandler")
@@ -46,8 +48,10 @@ function love.load()
     -- Hump gamestate init --
     Gamestate.registerEvents()
     --Gamestate.push(DevRoomState)
-    Gamestate.push(MenuState)
+    Gamestate.push(DevRoomState)
 end
+
+
 
 state = Gamestate.current()
 
@@ -58,7 +62,6 @@ end
 function state:draw(dt)
     state.draw(dt)
 end
-
 
 function love.keypressed(key)
     Gamestate.keypressed(key)
