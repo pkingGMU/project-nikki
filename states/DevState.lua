@@ -59,7 +59,7 @@ function DevRoomState:enter()
   BaseState.enter(self)
 
   self.object_handler = ObjectHandler()
-  self.debug_mode = false
+  self.debug_mode = true
   -- Create a render target
   self.canvas = love.graphics.newCanvas(self.window_width, self.window_height)
 

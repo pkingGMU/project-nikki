@@ -25,17 +25,24 @@ function Player:init(params, objectHandler)
   self.type = 'player'
 end
 
-function Player:update(dt, DevRoomState)
+function Player:update(dt, state)
   Object.update(self)
 
-  local gravity = DevRoomState.gravity
-  local object_handler = DevRoomState.object_handler
-  local c_down = DevRoomState.c_down
-  local window_width = DevRoomState.window_width
-  local window_height =DevRoomState.window_height
-  self:updateVelocity(dt, c_down)
-  self:updateMove(dt, gravity, object_handler)
-  self:updatePhysics(window_width, window_height, object_handler)
+  -- Varibales From State --
+  local gravity = state.gravity
+  local object_handler = state.object_handler
+  local c_down = state.c_down
+  local window_width = state.window_width
+  local window_height =state.window_height
+  -- All local update functions --
+
+  if state.debug_mode == false then
+    self:updateVelocity(dt, c_down)
+    self:updateMove(dt, gravity, object_handler)
+    self:updatePhysics(window_width, window_height, object_handler)
+  elseif state.debug_mode == true then
+    self:debugUpdateMove(dt)
+  end
 end
 
 function Player:updateVelocity(dt, c_down)
@@ -111,5 +118,38 @@ end
 
 function Player:removeFromInventory(item --[[Object]])
     table.remove(self.inventory, item)
+end
+
+function Player:debugUpdateMove(dt)
+ if self.canMoveY == true then
+    self.yvel = self.yvel + 0 * dt
+  end
+
+  if self.canMoveX == true then
+    self.xvel = self.xvel * (1 - math.min(dt * 0, 1))
+  end
+
+  self.x = self.x + self.xvel * dt
+
+  self.y = self.y + dt * (self.yvel + dt * 0 / 2)
+
+end
+
+function Player:debugUpdateMove(dt)
+  if love.keyboard.isDown('left') then
+    self.x = self.x - self.speed * dt
+  end
+
+  if love.keyboard.isDown('right') then
+    self.x = self.x + self.speed * dt
+  end
+
+  if love.keyboard.isDown('up') then
+    self.y = self.y - self.speed * dt
+  end
+
+  if love.keyboard.isDown('down') then
+    self.y = self.y + self.speed * dt
+  end
 end
 
