@@ -17,8 +17,8 @@ function Interactable:init(params, object_handler)
   self.type = 'interactable'
 end
 
-function Interactable:update(object_handler, my_player)
-  self:hoverInteraction(object_handler, my_player)
+function Interactable:update(dt, state)
+  self:hoverInteraction(state.object_handler, state.my_player)
 end
 
 function Interactable:checkCollisions(object_handler)

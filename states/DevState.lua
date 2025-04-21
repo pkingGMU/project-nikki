@@ -37,7 +37,6 @@ local current_shape
 local current_shape_x
 local current_shape_y
 local window = baseWindow()
-local my_player
 local my_enemy
 local tile_handler = TileHandler()
 local game_map
@@ -53,8 +52,6 @@ function DevRoomState:init()
   print("DevRoomState init")
   local self = BaseState.new()                   -- Call the BaseState constructor
   setmetatable(self, { __index = DevRoomState }) -- Set metatable to DevRoomState
-  
-
   return self
 end
 
@@ -62,7 +59,7 @@ function DevRoomState:enter()
   BaseState.enter(self)
 
   self.object_handler = ObjectHandler()
-  
+  self.debug_mode = false
   -- Create a render target
   self.canvas = love.graphics.newCanvas(self.window_width, self.window_height)
 
@@ -72,7 +69,7 @@ function DevRoomState:enter()
   window:init()
 
   -- Create a Player --
-  my_player = Player({ x = 200, y = 100, w = 32, h = 32, health = 100, speed = 500, can_collide = true }, self.object_handler)
+  self.my_player = Player({ x = 200, y = 100, w = 32, h = 32, health = 100, speed = 500, can_collide = true }, self.object_handler)
   --entity_handler:addEntity(my_player)
 
   self.cam = Camera(0, 0, self.window_width, self.window_height)
@@ -124,8 +121,15 @@ function DevRoomState:enter()
 end
 
 function DevRoomState:update(dt)
-  if self.jump_key == true then
-    print("Jumping")
+
+  if self.debug_key == true and self.debug_mode == false then
+    print("Debug Mode On")
+    self.debug_mode = true
+    self.debug_key = false
+  elseif self.debug_key == true and self.debug_mode == true then
+    print("Debug Mode Off")
+    self.debug_mode = false
+    self.debug_key = false
   end
 
   --------------------
@@ -139,25 +143,13 @@ function DevRoomState:update(dt)
   end
 
   -- Test NPC --
-  --npc:hoverInteraction(object_handler, my_player)
+  --npc:hoverInteraction(object_handler, self.my_player)
 
   -- Test Item --
-  --item:hoverInteraction(object_handler, my_player)
+  --item:hoverInteraction(object_handler, self.my_player)
 
   for idx, obj in ipairs(self.object_handler.object_table) do
-    if obj.type == 'player' then
-      obj:update(dt, self)
-    elseif obj.type == 'enemy' then
-      obj:update(dt, my_player, self.gravity, self.object_handler, self.target_width, self.target_height)
-    elseif obj.type == 'interactable' then
-      obj:update(self.object_handler, my_player)
-    elseif obj.type == 'item' then
-      obj:update()
-    elseif obj.type == 'tile' then
-      obj:update()
-    else
-      obj:update()
-    end
+    obj:update(dt, self)
   end
   -- Trigger midi notes --
   midi_pitch = midi_trigger:findNote(midi_hash, my_timer.elapsedTime, 1)
@@ -167,7 +159,7 @@ function DevRoomState:update(dt)
       last_call / 250, Timer(1)))
     last_call = last_call + 1
     shape_handler.cir_spawned = true
-    my_player.deflected = false
+    self.my_player.deflected = false
   elseif midi_pitch == 'No Notes' then
     shape_handler.cir_spawned = false
   end
@@ -189,7 +181,7 @@ function DevRoomState:update(dt)
     end
 
     if current_shape.after_contact == false then
-      shape_handler:setVelocity(current_shape, current_shape.x, my_player.centerX, current_shape.y, my_player.centerY,
+      shape_handler:setVelocity(current_shape, current_shape.x, self.my_player.centerX, current_shape.y, self.my_player.centerY,
         current_shape.lifespanTimer:getRemainingTimeFloat())
     end
     if current_shape.lifespanTimer:getRemainingTimeFloat() <= 0 and current_shape.after_contact == false then
@@ -197,25 +189,25 @@ function DevRoomState:update(dt)
       current_shape.lifespanTimer:addTime(end_allowance_timer)
 
       goto continue
-    elseif current_shape.lifespanTimer:getRemainingTimeFloat() <= start_allowance_timer and current_shape.after_contact == false and my_player.deflect == true then
+    elseif current_shape.lifespanTimer:getRemainingTimeFloat() <= start_allowance_timer and current_shape.after_contact == false and self.my_player.deflect == true then
       table.remove(shape_handler.cir_shape_table, key)
-      my_player.deflected = true
+      self.my_player.deflected = true
 
       goto continue
-    elseif current_shape.after_contact == true and current_shape.lifespanTimer:getRemainingTimeFloat() > 0 and my_player.deflect == true then
+    elseif current_shape.after_contact == true and current_shape.lifespanTimer:getRemainingTimeFloat() > 0 and self.my_player.deflect == true then
       table.remove(shape_handler.cir_shape_table, key)
-      my_player.deflected = true
+      self.my_player.deflected = true
 
       goto continue
-    elseif current_shape.after_contact == true and current_shape.lifespanTimer:getRemainingTimeFloat() <= 0 and my_player.deflect == false then
+    elseif current_shape.after_contact == true and current_shape.lifespanTimer:getRemainingTimeFloat() <= 0 and self.my_player.deflect == false then
       table.remove(shape_handler.cir_shape_table, key)
 
-      my_player:takeDamage(1)
+      self.my_player:takeDamage(1)
       goto continue
     end
 
-    --if (((current_shape.x >= my_player.x) and (current_shape.x <= my_player.x + my_player.w)) and ((current_shape.y >= my_player.y) and current_shape.y <= my_player.y + my_player.h)) then
-    --    my_player:takeDamage(1)
+    --if (((current_shape.x >= self.my_player.x) and (current_shape.x <= self.my_player.x + self.my_player.w)) and ((current_shape.y >= self.my_player.y) and current_shape.y <= self.my_player.y + self.my_player.h)) then
+    --    self.my_player:takeDamage(1)
     --    table.remove(shape_handler.cir_shape_table, key)
     --    goto continue
     --end
@@ -237,7 +229,7 @@ function DevRoomState:update(dt)
   -- Camera Update --
 
   self.cam:update(dt)
-  self.cam:follow((my_player.x + my_player.w / 2), (my_player.y + my_player.h / 2))
+  self.cam:follow((self.my_player.x + self.my_player.w / 2), (self.my_player.y + self.my_player.h / 2))
 
   --[[ if self.cam.x < self.window_width / 2 then
         self.cam.x = self.window_width / 2
@@ -247,8 +239,8 @@ function DevRoomState:update(dt)
         self.cam.y = self.window_height / 2
     end ]]
 
-  my_player.deflect = false
-  my_player.interact = false
+  self.my_player.deflect = false
+  self.my_player.interact = false
 end
 
 function DevRoomState:draw()
@@ -274,7 +266,7 @@ function DevRoomState:draw()
 
   --love.graphics.print(midi_pitch, 60, 20)
   love.graphics.print(my_timer:getRemainingTime(), 20, 20)
-  love.graphics.print("Health: " .. my_player.health, self.window_width - 100, 50)
+  love.graphics.print("Health: " .. self.my_player.health, self.window_width - 100, 50)
 
   if my_timer:isFinished() then
     love.graphics.print("Timer finished!", 10, 30)
@@ -296,15 +288,15 @@ function DevRoomState:keyreleased(key)
   BaseState.keyreleased(self, key)
 
   if key == "space" then
-    my_player.yvel = my_player.jump_vel
+    self.my_player.yvel = self.my_player.jump_vel
   end
 
   if key == "j" then
-    my_player.deflect = true
+    self.my_player.deflect = true
   end
 
   if key == "k" then
-    my_player.interact = true
+    self.my_player.interact = true
   end
 
   if key == "p" then
@@ -312,15 +304,10 @@ function DevRoomState:keyreleased(key)
   end
 
   if key == 'c' then
-    my_player.dash = true
+    self.my_player.dash = true
   end
 
   if key =='d' then
-
-    if self.debug_mode == false then
-      self.debug_mode = true
-    elseif self.debug_mode == true then
-      self.debug_mode = false
-    end
+    self.debug_key = true
   end
 end

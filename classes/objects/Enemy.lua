@@ -17,13 +17,13 @@ function Enemy:init(params, objectHandler)
     self.type = 'enemy'
 end
 
-function Enemy:update(dt, my_player, gravity, object_handler, window_width, window_height)
+function Enemy:update(dt, state)
     Object.update(self)
 
-    self:updateVelocity(dt, my_player)
+    self:updateVelocity(dt, state.my_player)
     
-    self:updateMove(dt, gravity, object_handler)
-    self:updatePhysics(window_width, window_height, object_handler)
+    self:updateMove(dt, state.gravity, state.object_handler)
+    self:updatePhysics(state.window_width, state.window_height, state.object_handler)
 
     
 end

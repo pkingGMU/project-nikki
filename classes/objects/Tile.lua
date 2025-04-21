@@ -15,7 +15,7 @@ function Tile:init(params, objectHandler, tileHandler)
     self.type = 'tile'
 end
 
-function Tile:update()
+function Tile:update(dt, state)
     Object.update(self)
 end
 
@@ -24,7 +24,6 @@ function Tile:addToTileHandler(tile, tileHandler)
     tileHandler.tile_idx = tileHandler.tile_idx + 1
     local string_key = 'tile'.. tostring(tileHandler.tile_idx)
     table.insert(tileHandler.tile_table, tile)
-    
 
 end
 
