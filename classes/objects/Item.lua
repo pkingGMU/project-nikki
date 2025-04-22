@@ -20,15 +20,22 @@ end
 
 function Item:firstHoverInteraction()
   print("sitting in item")
-
+  
   self.collision_action = false
 end
 
 function Item:interact(my_player, objectHandler)
   -- Interaction on Hover --
+  if self.hovering == true and my_player.interact == true then
+    print(self.hovering)
+  end
+
+  
   if my_player.interact == true and self.hovering == true then
     self.interacted = true
 
+    
+    
     --table.insert(my_player.inventory, self)
     print("Added item to inventory" .. #my_player.inventory)
 

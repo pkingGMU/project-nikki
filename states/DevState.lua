@@ -79,9 +79,16 @@ function DevRoomState:enter()
   end
 
   -- Create a Player --
-  self.my_player = Player({ x = spawn_tile.x, y = spawn_tile.y, w = 32, h = 32, health = 100, speed = 500, can_collide = true }, self.object_handler)
-  --entity_handler:addEntity(my_player)
+  Player({ x = spawn_tile.x, y = spawn_tile.y, w = 32, h = 32, health = 100, speed = 500, can_collide = true , tag = 'player' }, self.object_handler)
 
+  
+  for _, obj in ipairs(self.object_handler.object_table) do
+    if obj.tag == 'player' then
+      self.my_player = obj
+      print(self.my_player.x)
+    end
+  end
+  
   self.cam = Camera(0, 0, self.window_width, self.window_height)
   self.cam:setFollowLerp(0.2)
   self.cam:setFollowLead(0)
@@ -89,7 +96,7 @@ function DevRoomState:enter()
   --self.cam:setBounds(0,0,self.target_width, self.target_height)
 
   -- Create an Enemy --
-  my_enemy = Enemy({ x = 150, y = 100, w = 32, h = 32, can_collide = true }, self.object_handler)
+  my_enemy = Enemy({ x = 150, y = 100, w = 32, h = 32, can_collide = true , tag = 'test_enemy'}, self.object_handler)
   --entity_handler:addEntity(my_enemy)
 
   -- Create a bottom border for collision detection --
@@ -150,13 +157,8 @@ function DevRoomState:update(dt)
     music = true
   end
 
-  -- Test NPC --
-  --npc:hoverInteraction(object_handler, self.my_player)
-
-  -- Test Item --
-  --item:hoverInteraction(object_handler, self.my_player)
-
   for idx, obj in ipairs(self.object_handler.object_table) do
+    
     obj:update(dt, self)
   end
 

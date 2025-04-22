@@ -18,43 +18,33 @@ function Interactable:init(params, object_handler)
 end
 
 function Interactable:update(dt, state)
-  Object.update(self)
+  --Object.update(self)
 
   self:hoverInteraction(state.object_handler, state.my_player)
 end
 
-function Interactable:checkCollisions(object_handler)
+function Interactable:checkCollisions(my_player, object_handler)
   local collide_list = {}
-
-  
-  
-  for other_key, other_object in ipairs(object_handler.object_table) do
-
-    if not other_object.type == 'tile' then
-          print(other_object.type)
-    end
-    if other_object == self or not other_object.isPlayer == true or other_object == nil or self == nil then
+    if my_player == self or not my_player.isPlayer == true or my_player == nil or self == nil then
       
       goto continue
     end
     
-    print("Interactble check")
-    
-    if self.x < other_object.x + other_object.w and self.x + self.w > other_object.x and self.y < other_object.y + other_object.h and self.y + self.h > other_object.y and self.hovering == false then
-      table.insert(collide_list, other_object)
+    if self.x < my_player.x + my_player.w and self.x + self.w > my_player.x and self.y < my_player.y + my_player.h and self.y + self.h > my_player.y and self.hovering == false then
+      table.insert(collide_list, my_player)
 
       print("Interacting")
       
       self.collision_action = true
       self.hovering = true
-    elseif not (self.x < other_object.x + other_object.w and self.x + self.w > other_object.x and self.y < other_object.y + other_object.h and self.y + self.h > other_object.y) then
+
+    elseif not (self.x < my_player.x + my_player.w and self.x + self.w > my_player.x and self.y < my_player.y + my_player.h and self.y + self.h > my_player.y) then
       self:leave_collision_area(object_handler)
 
       self.hovering = false
       self.collision_action = false
     end
-  end
-
+  
   ::continue::
 
 
@@ -62,7 +52,7 @@ function Interactable:checkCollisions(object_handler)
 end
 
 function Interactable:hoverInteraction(object_handler, my_player)
-  self:checkCollisions(object_handler)
+  self:checkCollisions(my_player, object_handler)
 
   if self.collision_action == false then
     goto continue
@@ -75,18 +65,18 @@ function Interactable:hoverInteraction(object_handler, my_player)
   ::continue::
 
   -- Interaction on Hover --
-
-  self:interact(my_player, object_handler)
+  if self.hovering == true then
+    self:interact(my_player, object_handler)
+  end
 end
 
-function Interactable:firstHoverInteraction(object_handler)
-  print("sitting in item")
+function Interactable:firstHoverInteraction()
   self.collision_action = false
 end
 
-function Interactable:interact(my_player, object_handler)
+function Interactable:interact(my_player)
+  
   if my_player.interact == true and self.hovering == true then
-    self:interact()
     self.interacted = true
   end
 
@@ -94,6 +84,6 @@ function Interactable:interact(my_player, object_handler)
   self.interacted = false
 end
 
-function Interactable:leave_collision_area(object_handler)
+function Interactable:leave_collision_area()
 
 end
