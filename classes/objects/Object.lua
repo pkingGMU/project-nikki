@@ -16,7 +16,7 @@ function Object:init(params, objectHandler)
     self.rot = params.rot or 0
     self.scaleX = params.scaleX or 1
     self.scaleY = params.scaleY or 1
-    
+    self.tag = params.tag or 'none'
    
 
     self.centerX = self.x + self.w / 2

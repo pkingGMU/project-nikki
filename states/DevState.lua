@@ -65,11 +65,22 @@ function DevRoomState:enter()
 
   -- load sti map --
   game_map = sti('assets/Aseprite/TileMap/map_scale_2.lua')
+  tile_handler:addMapTiles(game_map, self.object_handler)
+  tile_handler:createTileObjects(self.object_handler)
 
   window:init()
 
+  local spawn_tile
+  
+  for _, obj in ipairs(self.object_handler.object_table) do
+    if obj.tag == 'player_spawn' then
+      spawn_tile = obj
+      print(spawn_tile.x)
+    end
+  end
+
   -- Create a Player --
-  self.my_player = Player({ x = 200, y = 100, w = 32, h = 32, health = 100, speed = 500, can_collide = true }, self.object_handler)
+  self.my_player = Player({ x = spawn_tile.x, y = spawn_tile.y, w = 32, h = 32, health = 100, speed = 500, can_collide = true }, self.object_handler)
   --entity_handler:addEntity(my_player)
 
   self.cam = Camera(0, 0, self.window_width, self.window_height)
@@ -115,9 +126,7 @@ function DevRoomState:enter()
   -- Physics --
   self.gravity = 2000
   -- Add tiles --
-  tile_handler:addBorderTiles(self.window_height, self.window_width)
-  tile_handler:addMapTiles(game_map, self.object_handler)
-  tile_handler:createTileObjects(self.object_handler)
+  --tile_handler:addBorderTiles(self.window_height, self.window_width)
 end
 
 function DevRoomState:update(dt)
@@ -252,7 +261,9 @@ function DevRoomState:draw()
 
   love.graphics.setColor(1, 1, 1, 1)
   game_map:drawLayer(game_map.layers["Tile Layer 1"])
-
+  game_map:drawLayer(game_map.layers["Spawn"])
+  game_map:drawLayer(game_map.layers["Object"])
+  
   for i, obj in ipairs(self.object_handler.object_table) do
     obj:draw()
   end
