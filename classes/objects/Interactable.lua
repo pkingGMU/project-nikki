@@ -18,21 +18,33 @@ function Interactable:init(params, object_handler)
 end
 
 function Interactable:update(dt, state)
+  Object.update(self)
+
   self:hoverInteraction(state.object_handler, state.my_player)
 end
 
 function Interactable:checkCollisions(object_handler)
   local collide_list = {}
+
+  
+  
   for other_key, other_object in ipairs(object_handler.object_table) do
+
+    if not other_object.type == 'tile' then
+          print(other_object.type)
+    end
     if other_object == self or not other_object.isPlayer == true or other_object == nil or self == nil then
+      
       goto continue
     end
-
-
-
+    
+    print("Interactble check")
+    
     if self.x < other_object.x + other_object.w and self.x + self.w > other_object.x and self.y < other_object.y + other_object.h and self.y + self.h > other_object.y and self.hovering == false then
       table.insert(collide_list, other_object)
 
+      print("Interacting")
+      
       self.collision_action = true
       self.hovering = true
     elseif not (self.x < other_object.x + other_object.w and self.x + self.w > other_object.x and self.y < other_object.y + other_object.h and self.y + self.h > other_object.y) then

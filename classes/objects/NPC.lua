@@ -24,11 +24,6 @@ function NPC:init(params, objectHandler)
   --NPC:addToNPCHandler(self, NPCHandler)
 end
 
---function NPC:update()
---    Object.update(self)
---end
-
-
 
 function NPC:firstHoverInteraction(objectHandler)
   -- Create new Text Box --
@@ -44,7 +39,7 @@ function NPC:interact(my_player, objectHandler)
   -- Interaction on Hover --
   if my_player.interact == true and self.hovering == true then
     print("interacted with interactable")
-  end
+end
 
 end
 
@@ -53,7 +48,7 @@ function NPC:addToNPCHandler(NPC)
 end
 
 function NPC:draw()
-  love.graphics.setColor(.5, 1.2, .5)
+  love.graphics.setColor(.5, 1.2, .5, 1)
   love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
 
   if self.hovering == true then

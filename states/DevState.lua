@@ -64,9 +64,8 @@ function DevRoomState:enter()
   self.canvas = love.graphics.newCanvas(self.window_width, self.window_height)
 
   -- load sti map --
-  game_map = sti('assets/Aseprite/TileMap/map_scale_2.lua')
+  game_map = sti('assets/Aseprite/TileMap/map_1.lua')
   tile_handler:addMapTiles(game_map, self.object_handler)
-  tile_handler:createTileObjects(self.object_handler)
 
   window:init()
 
@@ -97,10 +96,10 @@ function DevRoomState:enter()
   --bottom_border_platform = Object({x = 200, y = self.window_height-60, w = 32, h = 32, can_collide = true}, object_handler)
 
   -- Create Test NPC --
-  NPC({ x = 400, y = self.window_height - 60, can_collide = false }, self.object_handler)
+  NPC({ x = 400, y = self.window_height - 150, can_collide = false }, self.object_handler)
 
   -- Create Test Item --
-  Item({ x = 450, y = self.window_height - 10, can_collide = false }, self.object_handler)
+  Item({ x = 450, y = self.window_height - 10, can_collide = false, type = 'item' }, self.object_handler)
 
   -- Test Timer --
   my_timer = Timer(200)
@@ -160,6 +159,8 @@ function DevRoomState:update(dt)
   for idx, obj in ipairs(self.object_handler.object_table) do
     obj:update(dt, self)
   end
+
+  
   -- Trigger midi notes --
   midi_pitch = midi_trigger:findNote(midi_hash, my_timer.elapsedTime, 1)
   if not (midi_pitch == 'No Notes') and shape_handler.cir_spawned == false then

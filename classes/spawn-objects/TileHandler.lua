@@ -82,9 +82,11 @@ function TileHandler:addMapTiles(game_map, objectHandler)
     end
 
     if tile_type.name == 'BR_Corner_Grass' then
-      Tile({x = tile_type.x, y = tile_type.y - 32, w = 32, h = 32, can_collide = true, tag = 'BR_Corner_Grass'}, objectHandler, self)
+      Interactable({x = tile_type.x, y = tile_type.y - 32, w = 32, h = 32, can_collide = true, tag = 'BR_Corner_Grass'}, objectHandler, self)
     elseif tile_type.name == 'TR_Corner_Grass' then
       print('TR')
+    elseif tile_type.name == '1_Warp_2' then
+      Interactable({x = tile_type.x, y = tile_type.y - 32, w = 32, h = 32, can_collide = false, tag = 'BR_Corner_Grass'}, objectHandler, self)
     end
     ::continue::
   end
@@ -96,20 +98,6 @@ function TileHandler:addMapTiles(game_map, objectHandler)
     ::continue::
 end
 
-function TileHandler:createTileObjects(objectHandler)
-
-  for y=1, #self.tile_map do
-    for x=1, #self.tile_map[y] do
-      if self.tile_map[y][x] == 1 then
-
-        --Tile({x = (x * 32) - 32, y = (y * 32) - 32, w = 32, h = 32, can_collide = true}, objectHandler, self)
-        
-        
-      end
-    end
-  end
-
-end
 
 function TileHandler:draw(screen_height)
 

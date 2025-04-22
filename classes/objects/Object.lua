@@ -30,7 +30,7 @@ function Object:init(params, objectHandler)
     
     self.id = Object:addToHandler(self, objectHandler)
 
-    self.type = 'object'
+    self.type = params.type or 'object'
     
     
 
@@ -38,7 +38,7 @@ end
 
 function Object:draw()
     love.graphics.push()
-    love.graphics.setColor(1,1,1,1)
+    love.graphics.setColor(1,1,1,0)
     -- Draw the rectangle (or image for your entity)
     love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
     love.graphics.pop()
