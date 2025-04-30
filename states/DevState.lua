@@ -79,7 +79,7 @@ function DevRoomState:enter()
   end
 
   -- Create a Player --
-  Player({ x = spawn_tile.x, y = spawn_tile.y, w = 32, h = 32, health = 100, speed = 500, can_collide = true , tag = 'player' , collide_x_offset = 0, collide_y_offset = 3, collide_w = 32, collide_h = 27}, self.object_handler)
+  Player({ x = spawn_tile.x, y = spawn_tile.y, w = 32, h = 32, health = 100, speed = 500, can_collide = true , tag = 'player' , collide_x_offset = 0, collide_y_offset = 3, collide_w = 32, collide_h = 20}, self.object_handler)
 
   
   for _, obj in ipairs(self.object_handler.object_table) do

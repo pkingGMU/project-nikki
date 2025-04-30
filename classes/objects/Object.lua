@@ -21,8 +21,8 @@ function Object:init(params, objectHandler)
 
     self.collide_x_offset = params.collide_offset_x or 0
     self.collide_y_offset = params.collide_offset_y or 0
-    self.collide_w = params.collide_w or self.w
-    self.collide_h = params.collide_h or self.h
+    self.collide_w = params.collide_w or 32
+    self.collide_h = params.collide_h or 32
     
     self.centerX = self.x + self.w / 2
     self.centerY = self.y + self.h / 2
@@ -77,14 +77,17 @@ function Object:checkCollisions(objectHandler)
             goto continue
         end
 
-        local cur_obj_x
-        local cur_obj_y
-        local cur_obj_w
-        local cur_obj_h
+        local cur_obj_x = self.x + self.collide_x_offset
+        local cur_obj_y = self.y + self.collide_y_offset
+        local cur_obj_w = self.collide_w
+        local cur_obj_h = self.collide_h
 
+        local other_obj_x = other_object.x + other_object.collide_x_offset
+        local other_obj_y = other_object.y + other_object.collide_y_offset
+        local other_obj_w = other_object.collide_w
+        local other_obj_h = other_object.collide_h
         
-
-        if self.x < other_object.x + other_object.w and self.x + self.w > other_object.x and self.y < other_object.y + other_object.h and self.y + self.h > other_object.y then
+        if cur_obj_x < other_obj_x + other_obj_w and cur_obj_x + cur_obj_w > other_obj_x and cur_obj_y < other_obj_y + other_obj_h and cur_obj_y + cur_obj_h > other_obj_y then
             table.insert(collide_list, other_object)
         else
             
@@ -98,19 +101,17 @@ function Object:checkCollisions(objectHandler)
 end
 
 function Object:collisionMoveX(collide_list --[[table]])
-    for other_key, other_object in ipairs(collide_list) do
+  for other_key, other_object in ipairs(collide_list) do
 
-        if self.x < other_object.x + other_object.w and self.x + self.w > other_object.x then
-            
-            if self.xvel > 0 then
-                self.x = other_object.x - self.w
-            elseif self.xvel < 0 then
-                self.x = other_object.x + other_object.w
-            end
+    local cur_obj_x = self.x + self.collide_x_offset
+    local cur_obj_w = self.collide_w
+
+    local other_obj_x = other_object.x + other_object.collide_x_offset
+    local other_obj_w = other_object.collide_w
+
+    if cur_obj_x < other_obj_x + other_obj_w and cur_obj_x + cur_obj_w > other_obj_x then
             self.xvel = 0
-            
         else
-            
         end
     end
 
@@ -119,21 +120,22 @@ function Object:collisionMoveX(collide_list --[[table]])
 end
 
 function Object:collisionMoveY(collide_list)
-    for other_key, other_object in ipairs(collide_list) do
-    
-        if self.y < other_object.y + other_object.h and self.y + self.h > other_object.y then
+  for other_key, other_object in ipairs(collide_list) do
+
+        local cur_obj_y = self.y + self.collide_y_offset
+        local cur_obj_h = self.collide_h
+
+        local other_obj_y = other_object.y + other_object.collide_y_offset
+        local other_obj_h = other_object.collide_h
+        if cur_obj_y < other_obj_y + other_obj_h and cur_obj_y + cur_obj_h > other_obj_y then
+
+          if self.isPlayer == true then
             
-            if self.yvel > 0 then
-                self.y = other_object.y - self.h
-            elseif self.yvel < 0 then
-                self.y = other_object.y + other_object.h
-            end
+          end
             self.yvel = 0
-            
+
         else
-            
         end
-        
     end
 
     return self.yvel

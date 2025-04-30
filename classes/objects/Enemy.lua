@@ -66,21 +66,29 @@ end
 
  function Enemy:updateMove(dt, gravity, objectHandler)
 
-    self.xvel = self.xvel * (1- math.min(dt*self.friction, 1))
-    self.yvel = self.yvel + gravity * dt
-
+local old_y = self.y
+  
+  if self.canMoveX then
+    self.xvel = self.xvel * (1 - math.min(dt * self.friction, 1))
     self.x = self.x + self.xvel * dt
-    self.collide_x = self.collide_x_offset + self.x
-    
+
     local collide_list = self:checkCollisions(objectHandler)
     self.xvel = self:collisionMoveX(collide_list)
-    
-    self.y = self.y + dt*(self.yvel + dt*gravity/2)
-    self.collide_y = self.collide_y_offset + self.y
+  end
 
-    local collide_list = self:checkCollisions(objectHandler)
-    self.yvel = self:collisionMoveY(collide_list)
+  if self.canMoveY then
+    self.yvel = self.yvel + gravity * dt
+  end
 
+  self.y = self.y + self.yvel * dt
+
+  local collide_list = self:checkCollisions(objectHandler)
+  self.yvel = self:collisionMoveY(collide_list)
+
+  if self.yvel == 0 then
+    self.y = old_y
+  else
+  end
  end
 
  function Enemy:updatePhysics(window_width, window_height, objectHandler)

@@ -71,21 +71,33 @@ end
 -- Move Player --
 
 function Player:updateMove(dt, gravity, objectHandler)
-  if self.canMoveY == true then
+
+  local old_y = self.y
+  
+  if self.canMoveX then
+    self.xvel = self.xvel * (1 - math.min(dt * self.friction, 1))
+    self.x = self.x + self.xvel * dt
+
+    local collide_list = self:checkCollisions(objectHandler)
+    self.xvel = self:collisionMoveX(collide_list)
+  end
+
+  if self.canMoveY then
     self.yvel = self.yvel + gravity * dt
   end
 
-  if self.canMoveX == true then
-    self.xvel = self.xvel * (1 - math.min(dt * self.friction, 1))
-  end
+  self.y = self.y + self.yvel * dt
 
-  self.x = self.x + self.xvel * dt
-  local collide_list = self:checkCollisions(objectHandler)
-  self.xvel = self:collisionMoveX(collide_list)
-
-  self.y = self.y + dt * (self.yvel + dt * gravity / 2)
   local collide_list = self:checkCollisions(objectHandler)
   self.yvel = self:collisionMoveY(collide_list)
+
+  if self.yvel == 0 then
+    self.y = old_y
+    self.y = math.ceil(self.y)
+
+  else
+  end
+
 end
 
 function Player:updatePhysics(window_width, window_height, objectHandler)
@@ -93,10 +105,6 @@ function Player:updatePhysics(window_width, window_height, objectHandler)
     --self.y = window_height - self.h
     --self.yvel = 0.0
     self.can_jump = true
-  end
-
-  if (self.x + self.w >= window_width) then
-    --self.x = window_width - self.w
   end
 end
 
