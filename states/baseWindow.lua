@@ -11,7 +11,7 @@ function baseWindow:init()
     self.window_width = 640
     self.window_height = 360
 
-    self.scale_factor = 1
+    self.scale_factor = 2
 
     self.target_width = self.window_width * self.scale_factor
     self.target_height = self.window_height * self.scale_factor

@@ -57,7 +57,7 @@ end
 
 function DevRoomState:enter()
   BaseState.enter(self)
-
+  
   self.object_handler = ObjectHandler()
   self.debug_mode = true
   -- Create a render target
@@ -79,7 +79,7 @@ function DevRoomState:enter()
   end
 
   -- Create a Player --
-  Player({ x = spawn_tile.x, y = spawn_tile.y, w = 32, h = 32, health = 100, speed = 500, can_collide = true , tag = 'player' }, self.object_handler)
+  Player({ x = spawn_tile.x, y = spawn_tile.y, w = 32, h = 32, health = 100, speed = 500, can_collide = true , tag = 'player' , collide_x_offset = 0, collide_y_offset = 3, collide_w = 32, collide_h = 27}, self.object_handler)
 
   
   for _, obj in ipairs(self.object_handler.object_table) do
@@ -93,6 +93,7 @@ function DevRoomState:enter()
   self.cam:setFollowLerp(0.2)
   self.cam:setFollowLead(0)
   self.cam:setFollowStyle('PLATFORMER')
+  self.cam.scale = 2;
   --self.cam:setBounds(0,0,self.target_width, self.target_height)
 
   -- Create an Enemy --
@@ -242,7 +243,7 @@ function DevRoomState:update(dt)
 
   self.cam:update(dt)
   self.cam:follow((self.my_player.x + self.my_player.w / 2), (self.my_player.y + self.my_player.h / 2))
-
+  
   --[[ if self.cam.x < self.window_width / 2 then
         self.cam.x = self.window_width / 2
     end

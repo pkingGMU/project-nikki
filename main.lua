@@ -1,9 +1,12 @@
 ---@diagnostic disable: need-check-nil
 
 -- Debug --
-if arg[2] == "debug" then
-    require("lldebugger").start()
-end
+--if arg[2] == "debug" then
+--    require("lldebugger").start()
+--end
+
+-- LUME Debug tables --
+--local lume = require "lume/lume.lua"
 
 
 -- Global Imports --
@@ -48,6 +51,8 @@ local state
 function love.load()
     -- Hump gamestate init --
     Gamestate.registerEvents()
+
+
     --Gamestate.push(DevRoomState)
     Gamestate.push(DevRoomState)
 end

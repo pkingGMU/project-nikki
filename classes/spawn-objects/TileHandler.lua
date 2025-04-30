@@ -86,15 +86,11 @@ function TileHandler:addMapTiles(game_map, objectHandler)
     elseif tile_type.name == 'TR_Corner_Grass' then
       print('TR')
     elseif tile_type.name == '1_Warp_2' then
-      Interactable({x = tile_type.x, y = tile_type.y - 32, w = 32, h = 32, can_collide = false, tag = 'BR_Corner_Grass'}, objectHandler, self)
+      Interactable({x = tile_type.x, y = tile_type.y - 32, w = 32, h = 32, can_collide = false, tag = 'warp'}, objectHandler, self)
     end
     ::continue::
   end
 
-  
-
-  
-  
     ::continue::
 end
 

@@ -70,10 +70,14 @@ end
     self.yvel = self.yvel + gravity * dt
 
     self.x = self.x + self.xvel * dt
+    self.collide_x = self.collide_x_offset + self.x
+    
     local collide_list = self:checkCollisions(objectHandler)
     self.xvel = self:collisionMoveX(collide_list)
     
     self.y = self.y + dt*(self.yvel + dt*gravity/2)
+    self.collide_y = self.collide_y_offset + self.y
+
     local collide_list = self:checkCollisions(objectHandler)
     self.yvel = self:collisionMoveY(collide_list)
 

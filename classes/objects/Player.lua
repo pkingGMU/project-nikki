@@ -23,6 +23,9 @@ function Player:init(params, objectHandler)
   self.inventory = {}
 
   self.type = 'player'
+
+  self.sprite = love.graphics.newImage("assets/Aseprite/Character_Sprites/character.png")
+
 end
 
 function Player:update(dt, state)
@@ -101,12 +104,8 @@ function Player:draw()
     love.graphics.push()
     love.graphics.setColor(1, 1, 1)
 
-    if self.deflected == true then
-        love.graphics.setColor(0, 1, 0)
-    end
-
-    -- Draw the rectangle (or image for your entity)
-    love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
+    love.graphics.draw(self.sprite, self.x, self.y)
+    
     love.graphics.pop()
 end
 
