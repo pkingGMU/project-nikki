@@ -24,7 +24,11 @@ function Player:init(params, objectHandler)
 
   self.type = 'player'
 
-  self.animation = self:newAnimation(love.graphics.newImage("assets/Aseprite/Character_Sprites/character.png"), 32, 32, 1, 2, 8)
+  -- Animations --
+  self.sprite_sheet = love.graphics.newImage("assets/Aseprite/Character_Sprites/character.png")
+  self.idle_anim = self:newAnimation(self.sprite_sheet, 32, 32, 1, 2, 8)
+  self.current_anim = self.idle_anim
+  
 
 end
 
@@ -52,11 +56,15 @@ function Player:updateVelocity(dt, c_down)
   if love.keyboard.isDown('left') and (self.xvel <= self.speed) then
     self.xvel = self.xvel - self.speed * dt
     self.direction = 'left'
+    self.draw_direction = -1
+    self.draw_x_offset = self.w
   end
 
   if love.keyboard.isDown('right') and (self.xvel >= -self.speed) then
     self.xvel = self.xvel + self.speed * dt
     self.direction = 'right'
+    self.draw_direction = 1
+    self.draw_x_offset = 0
   end
 
   if self.dash and self.direction == 'right' then
@@ -73,15 +81,22 @@ end
 function Player:updateMove(dt, gravity, objectHandler)
 
   local old_y = self.y
+  local old_x = self.x
   
   if self.canMoveX then
     self.xvel = self.xvel * (1 - math.min(dt * self.friction, 1))
-    self.x = self.x + self.xvel * dt
-
-    local collide_list = self:checkCollisions(objectHandler)
-    self.xvel = self:collisionMoveX(collide_list)
   end
 
+  self.x = self.x + self.xvel * dt      
+  local collide_list = self:checkCollisions(objectHandler)
+  self.xvel = self:collisionMoveX(collide_list)
+
+
+  if self.xvel == 0 then
+    self.x = old_x
+    self.x = math.ceil(self.x)
+  end
+  
   if self.canMoveY then
     self.yvel = self.yvel + gravity * dt
   end
@@ -98,6 +113,8 @@ function Player:updateMove(dt, gravity, objectHandler)
   else
   end
 
+  
+  
 end
 
 function Player:updatePhysics(window_width, window_height, objectHandler)
@@ -110,10 +127,10 @@ end
 
 function Player:draw()
   love.graphics.push()
-  local frameCount = self.animation.endFrame - self.animation.startFrame + 1
+  local frameCount = self.current_anim.endFrame - self.current_anim.startFrame + 1
   love.graphics.setColor(1,1,1,1)
-  local spriteNum = math.floor(self.animation.currentTime / self.animation.duration * frameCount) + self.animation.startFrame
-  love.graphics.draw(self.animation.spriteSheet, self.animation.quads[spriteNum], self.x, self.y)
+  local spriteNum = math.floor(self.current_anim.currentTime / self.current_anim.duration * frameCount) + self.current_anim.startFrame
+  love.graphics.draw(self.current_anim.spriteSheet, self.current_anim.quads[spriteNum], self.x, self.y, nil, self.draw_direction, 1, self.draw_x_offset, 0)
     love.graphics.pop()
 end
 

@@ -58,10 +58,6 @@ end
 function DevRoomState:enter()
   BaseState.enter(self)
   
-  self.object_handler = ObjectHandler()
-  self.debug_mode = true
-  -- Create a render target
-  self.canvas = love.graphics.newCanvas(self.window_width, self.window_height)
 
   -- load sti map --
   game_map = sti('assets/Aseprite/TileMap/map_1.lua')
@@ -79,21 +75,7 @@ function DevRoomState:enter()
   end
 
   -- Create a Player --
-  Player({ x = spawn_tile.x, y = spawn_tile.y, w = 32, h = 32, health = 100, speed = 500, can_collide = true , tag = 'player' , collide_x_offset = 8, collide_y_offset = 3, collide_w = 20, collide_h = 32}, self.object_handler)
-
-  
-  for _, obj in ipairs(self.object_handler.object_table) do
-    if obj.tag == 'player' then
-      self.my_player = obj
-      print(self.my_player.x)
-    end
-  end
-  
-  self.cam = Camera(0, 0, self.window_width, self.window_height)
-  self.cam:setFollowLerp(0.2)
-  self.cam:setFollowLead(0)
-  self.cam:setFollowStyle('PLATFORMER')
-  self.cam.scale = 2;
+  Player({ x = spawn_tile.x, y = spawn_tile.y, w = 32, h = 32, health = 100, speed = 500, can_collide = true , tag = 'player' , collide_x_offset = 15, collide_y_offset = 3, collide_w = 20, collide_h = 32}, self.object_handler)
   --self.cam:setBounds(0,0,self.target_width, self.target_height)
 
   -- Create an Enemy --
@@ -129,24 +111,12 @@ function DevRoomState:enter()
 
   -- variable that keeps track of rectangles that have spawed --
   last_call = 0
-
-  -- Physics --
-  self.gravity = 2000
   -- Add tiles --
   --tile_handler:addBorderTiles(self.window_height, self.window_width)
 end
 
 function DevRoomState:update(dt)
 
-  if self.debug_key == true and self.debug_mode == false then
-    print("Debug Mode On")
-    self.debug_mode = true
-    self.debug_key = false
-  elseif self.debug_key == true and self.debug_mode == true then
-    print("Debug Mode Off")
-    self.debug_mode = false
-    self.debug_key = false
-  end
 
   --------------------
   -- test for timer
@@ -158,10 +128,6 @@ function DevRoomState:update(dt)
     music = true
   end
 
-  for idx, obj in ipairs(self.object_handler.object_table) do
-    
-    obj:update(dt, self)
-  end
 
   
   -- Trigger midi notes --
@@ -302,9 +268,6 @@ end
 function DevRoomState:keyreleased(key)
   BaseState.keyreleased(self, key)
 
-  if key == "space" then
-    self.my_player.yvel = self.my_player.jump_vel
-  end
 
   if key == "j" then
     self.my_player.deflect = true
@@ -318,11 +281,7 @@ function DevRoomState:keyreleased(key)
     debug_print = true
   end
 
-  if key == 'c' then
-    self.my_player.dash = true
-  end
 
   if key =='d' then
-    self.debug_key = true
   end
 end

@@ -19,8 +19,8 @@ function Object:init(params, objectHandler)
     self.tag = params.tag or 'none'
    
 
-    self.collide_x_offset = params.collide_offset_x or 0
-    self.collide_y_offset = params.collide_offset_y or 0
+    self.collide_x_offset = params.collide_x_offset or 0
+    self.collide_y_offset = params.collide_y_offset or 0
     self.collide_w = params.collide_w or 32
     self.collide_h = params.collide_h or 32
     
@@ -51,16 +51,15 @@ function Object:draw()
 end
 
 function Object:update(dt, state)
-    self.centerX = self.x + self.w / 2
-    self.centerY = self.y + self.h / 2
+  self.centerX = self.x + self.w / 2
+  self.centerY = self.y + self.h / 2
 
-    if self.animation then
-      self.animation.currentTime = self.animation.currentTime + dt
-    if self.animation.currentTime >= self.animation.duration then
-      self.animation.currentTime = self.animation.currentTime - self.animation.duration
+  if self.current_anim then
+    self.current_anim.currentTime = self.current_anim.currentTime + dt
+    if self.current_anim.currentTime >= self.current_anim.duration then
+      self.current_anim.currentTime = self.current_anim.currentTime - self.current_anim.duration
     end
-
-    end
+  end
 end
 
 
@@ -118,10 +117,10 @@ function Object:collisionMoveX(collide_list --[[table]])
     local other_obj_w = other_object.collide_w
 
     if cur_obj_x < other_obj_x + other_obj_w and cur_obj_x + cur_obj_w > other_obj_x then
-            self.xvel = 0
-        else
-        end
+      self.xvel = 0
+    else
     end
+  end
 
     return self.xvel
 
