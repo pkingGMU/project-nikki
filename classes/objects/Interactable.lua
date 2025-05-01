@@ -25,12 +25,22 @@ end
 
 function Interactable:checkCollisions(my_player, object_handler)
   local collide_list = {}
+
+  local cur_obj_x = self.x + self.collide_x_offset
+  local cur_obj_y = self.y + self.collide_y_offset
+  local cur_obj_w = self.collide_w
+  local cur_obj_h = self.collide_h
+
+  local other_obj_x = my_player.x + my_player.collide_x_offset
+  local other_obj_y = my_player.y + my_player.collide_y_offset
+  local other_obj_w = my_player.collide_w
+  local other_obj_h = my_player.collide_h
     if my_player == self or not my_player.isPlayer == true or my_player == nil or self == nil then
       
       goto continue
     end
     
-    if self.x < my_player.x + my_player.w and self.x + self.w > my_player.x and self.y < my_player.y + my_player.h and self.y + self.h > my_player.y and self.hovering == false then
+    if cur_obj_x < other_obj_x + other_obj_w and cur_obj_x + cur_obj_w > other_obj_x and cur_obj_y < other_obj_y + other_obj_h and cur_obj_y + cur_obj_h > other_obj_y and self.hovering == false then
       table.insert(collide_list, my_player)
 
       print("Interacting")
@@ -38,7 +48,7 @@ function Interactable:checkCollisions(my_player, object_handler)
       self.collision_action = true
       self.hovering = true
 
-    elseif not (self.x < my_player.x + my_player.w and self.x + self.w > my_player.x and self.y < my_player.y + my_player.h and self.y + self.h > my_player.y) then
+    elseif not (cur_obj_x < other_obj_x + other_obj_w and cur_obj_x + cur_obj_w > other_obj_x and cur_obj_y < other_obj_y + other_obj_h and cur_obj_y + cur_obj_h > other_obj_y) then
       self:leave_collision_area(object_handler)
 
       self.hovering = false

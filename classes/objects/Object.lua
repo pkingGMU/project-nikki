@@ -53,6 +53,14 @@ end
 function Object:update(dt, state)
     self.centerX = self.x + self.w / 2
     self.centerY = self.y + self.h / 2
+
+    if self.animation then
+      self.animation.currentTime = self.animation.currentTime + dt
+    if self.animation.currentTime >= self.animation.duration then
+      self.animation.currentTime = self.animation.currentTime - self.animation.duration
+    end
+
+    end
 end
 
 
@@ -161,6 +169,24 @@ function Object:destroy(objectHandler)
     collectgarbage("collect") -- Force garbage collection
 end
 
-    
+
+function Object:newAnimation(image, width, height, duration, startFrame, endFrame)
+    local animation = {}
+    animation.spriteSheet = image;
+    animation.quads = {};
+
+    for y = 0, image:getHeight() - height, height do
+        for x = 0, image:getWidth() - width, width do
+            table.insert(animation.quads, love.graphics.newQuad(x, y, width, height, image:getDimensions()))
+        end
+    end
+
+    animation.duration = duration or 1
+    animation.currentTime = 0
+    animation.startFrame = startFrame or 1
+    animation.endFrame = endFrame or 1
+
+    return animation
+end 
 
 

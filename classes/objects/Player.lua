@@ -24,12 +24,12 @@ function Player:init(params, objectHandler)
 
   self.type = 'player'
 
-  self.sprite = love.graphics.newImage("assets/Aseprite/Character_Sprites/character.png")
+  self.animation = self:newAnimation(love.graphics.newImage("assets/Aseprite/Character_Sprites/character.png"), 32, 32, 1, 2, 8)
 
 end
 
 function Player:update(dt, state)
-  Object.update(self)
+  Object.update(self, dt, state)
 
   -- Varibales From State --
   local gravity = state.gravity
@@ -109,11 +109,11 @@ function Player:updatePhysics(window_width, window_height, objectHandler)
 end
 
 function Player:draw()
-    love.graphics.push()
-    love.graphics.setColor(1, 1, 1)
-
-    love.graphics.draw(self.sprite, self.x, self.y)
-    
+  love.graphics.push()
+  local frameCount = self.animation.endFrame - self.animation.startFrame + 1
+  love.graphics.setColor(1,1,1,1)
+  local spriteNum = math.floor(self.animation.currentTime / self.animation.duration * frameCount) + self.animation.startFrame
+  love.graphics.draw(self.animation.spriteSheet, self.animation.quads[spriteNum], self.x, self.y)
     love.graphics.pop()
 end
 
