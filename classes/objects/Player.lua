@@ -28,6 +28,8 @@ function Player:init(params, objectHandler)
   self.sprite_sheet = love.graphics.newImage("assets/Aseprite/Character_Sprites/character.png")
   self.idle_anim = self:newAnimation(self.sprite_sheet, 32, 32, 1, 2, 8)
   self.current_anim = self.idle_anim
+
+  self.walk_anim = self:newAnimation(self.sprite_sheet, 32, 32, 1, 9, 12)
   
 
 end
@@ -55,16 +57,23 @@ end
 function Player:updateVelocity(dt, c_down)
   if love.keyboard.isDown('left') and (self.xvel <= self.speed) then
     self.xvel = self.xvel - self.speed * dt
+    self.current_anim = self.walk_anim
     self.direction = 'left'
     self.draw_direction = -1
     self.draw_x_offset = self.w
+    self.speed = 100
   end
 
   if love.keyboard.isDown('right') and (self.xvel >= -self.speed) then
     self.xvel = self.xvel + self.speed * dt
+    self.current_anim = self.walk_anim
     self.direction = 'right'
     self.draw_direction = 1
     self.draw_x_offset = 0
+  end
+
+  if not love.keyboard.isDown('right') and not love.keyboard.isDown('left') then
+    self.current_anim = self.idle_anim
   end
 
   if self.dash and self.direction == 'right' then
@@ -127,6 +136,7 @@ end
 
 function Player:draw()
   love.graphics.push()
+
   local frameCount = self.current_anim.endFrame - self.current_anim.startFrame + 1
   love.graphics.setColor(1,1,1,1)
   local spriteNum = math.floor(self.current_anim.currentTime / self.current_anim.duration * frameCount) + self.current_anim.startFrame
@@ -162,6 +172,7 @@ end
 function Player:debugUpdateMove(dt)
   if love.keyboard.isDown('left') then
     self.x = self.x - self.speed * dt
+    
   end
 
   if love.keyboard.isDown('right') then
