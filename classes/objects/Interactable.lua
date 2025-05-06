@@ -3,6 +3,7 @@ local Class = require("libraries.hump-master.class")
 
 -- Local Imports --
 require('classes.objects.Object')
+require('helper_functions.mysplit')
 
 -- Parent class Object --
 Interactable = Class { __includes = Object }
@@ -15,6 +16,7 @@ function Interactable:init(params, object_handler)
   self.interacted = false
 
   self.type = 'interactable'
+  self.warp_tag = params.warp_tag or nil
 end
 
 function Interactable:update(dt, state)
@@ -70,7 +72,7 @@ function Interactable:hoverInteraction(object_handler, my_player)
 
   -- Interaction on first hover --
 
-  self:firstHoverInteraction(object_handler)
+  self:firstHoverInteraction()
 
   ::continue::
 
@@ -86,10 +88,18 @@ end
 
 function Interactable:interact(my_player)
   
-  if my_player.interact == true and self.hovering == true then
-    self.interacted = true
+  if my_player.interact == false or self.hovering == false then
+    goto continue
   end
 
+  self.interacted = true
+  
+  if self.warp_tag then
+    local warp_parse = mysplit(self.warp_tag, '_')
+    print(warp_parse)
+  end
+
+  ::continue::
   my_player.interact = false
   self.interacted = false
 end
@@ -97,3 +107,5 @@ end
 function Interactable:leave_collision_area()
 
 end
+
+

@@ -115,6 +115,19 @@ end
 
 function Level1:keypressed(key)
   BaseState.keypressed(self, key)
+
+  if key == 'right' then
+    self.my_player.direction = 'right'
+  end
+
+  if key == 'left' then
+    self.my_player.direction = 'left'
+  end
+
+  
+  if key == "k" then
+    self.my_player.interact = true
+  end
 end
 
 function Level1:keyreleased(key)

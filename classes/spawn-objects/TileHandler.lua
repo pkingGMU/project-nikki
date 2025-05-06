@@ -64,7 +64,7 @@ function TileHandler:addMapTiles(game_map, objectHandler)
       local env_tile = game_map.tileInstances[type_idx][tile_idx]
 
       if env_tile.layer.name == 'Object' then
-
+        -- Layers --
       elseif env_tile.layer.name == 'Spawn' then
 	print('Spawn Tile')
         Tile({x = env_tile.x, y = env_tile.y, w = 32, h = 32, can_collide = false, tag = 'player_spawn'}, objectHandler, self)
@@ -80,7 +80,7 @@ function TileHandler:addMapTiles(game_map, objectHandler)
     if tile_type == nil then
       goto continue
     end
-
+    -- Objects --
     if tile_type.name == 'BR_Corner_Grass' then
       Interactable({x = tile_type.x, y = tile_type.y - 32, w = 32, h = 32, can_collide = true, tag = 'BR_Corner_Grass'}, objectHandler, self)
     elseif tile_type.name == 'TR_Corner_Grass' then

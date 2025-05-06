@@ -45,6 +45,14 @@ function Player:update(dt, state)
   local window_height =state.window_height
   -- All local update functions --
 
+  if self.direction == 'left' then
+    self.draw_direction = -1
+    self.draw_x_offset = self.w
+  elseif self.direction == 'right' then
+    self.draw_direction = 1
+    self.draw_x_offset = 0
+  end
+  
   if state.debug_mode == false then
     self:updateVelocity(dt, c_down)
     self:updateMove(dt, gravity, object_handler)
@@ -57,19 +65,14 @@ end
 function Player:updateVelocity(dt, c_down)
   if love.keyboard.isDown('left') and (self.xvel <= self.speed) then
     self.xvel = self.xvel - self.speed * dt
-    self.current_anim = self.walk_anim
-    self.direction = 'left'
-    self.draw_direction = -1
-    self.draw_x_offset = self.w
-    self.speed = 100
+    self.current_anim = self.walk_anim    
+    self.speed = 200
   end
 
   if love.keyboard.isDown('right') and (self.xvel >= -self.speed) then
     self.xvel = self.xvel + self.speed * dt
     self.current_anim = self.walk_anim
-    self.direction = 'right'
-    self.draw_direction = 1
-    self.draw_x_offset = 0
+    self.speed = 200
   end
 
   if not love.keyboard.isDown('right') and not love.keyboard.isDown('left') then
