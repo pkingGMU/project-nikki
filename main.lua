@@ -16,26 +16,9 @@ local Class = require("libraries.hump-master.class")
 local Gamestate = require "libraries.hump-master.gamestate"
 -- Load the necessary state files
 require("states.BaseState")  -- Base state with common methods
-require("states.MenuState")  -- MenuState (state for the main menu)
-require("states.DevState")  -- DevState (state for development/debug mode)
+--require("states.MenuState")  -- MenuState (state for the main menu)
+--require("states.DevState")  -- DevState (state for development/debug mode)
 require("states.Level1")
-local csv = require("libraries.lua-csv-master.lua.csv")
-
-
-
-
--- Local imports --
-require("states.baseWindow")
-require("classes.midiFileHandler")
-require("classes.Timer")
-require("classes.MidiTrigger")
-require("classes.spawn-objects.SpawnRectangle")
-require("classes.spawn-objects.ShapeHandler")
-require("classes.spawn-objects.SpawnCircle")
-require("classes.objects.Object")
-require("classes.objects.Entity")
-
-
 
 
 

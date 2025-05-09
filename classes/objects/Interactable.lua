@@ -16,7 +16,8 @@ function Interactable:init(params, object_handler)
   self.interacted = false
 
   self.type = 'interactable'
-  self.warp_tag = params.warp_tag or nil
+
+  
 end
 
 function Interactable:update(dt, state)
@@ -94,11 +95,6 @@ function Interactable:interact(my_player)
 
   self.interacted = true
   
-  if self.warp_tag then
-    local warp_parse = mysplit(self.warp_tag, '_')
-    print(warp_parse)
-  end
-
   ::continue::
   my_player.interact = false
   self.interacted = false

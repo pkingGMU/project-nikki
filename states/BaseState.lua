@@ -4,7 +4,7 @@ BaseState.__index = BaseState
 
 
 require("states.baseWindow")
-
+local Gamestate = require("libraries.hump-master.gamestate")
 
 function BaseState.new()
     local self = setmetatable({}, BaseState)
@@ -19,6 +19,7 @@ function BaseState.new()
     self.window = baseWindow()
     self.window_height = nil
     self.window_width = nil
+    self.window = baseWindow()
     return self
 end
 
@@ -156,4 +157,14 @@ end
 
 function BaseState:mousereleased(mx, my, mbutton)
     
+end
+
+function BaseState:warp(state)
+  require("states.Level2")
+  require("states.Level1")
+
+  print("Warp Stuff")
+  print(state)
+  print(_G[state])
+  Gamestate.switch(_G[state], self.my_player, self.window)
 end

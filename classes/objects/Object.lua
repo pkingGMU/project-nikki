@@ -60,6 +60,7 @@ function Object:update(dt, state)
       self.current_anim.currentTime = self.current_anim.currentTime - self.current_anim.duration
     end
   end
+  
 end
 
 

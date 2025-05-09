@@ -1,4 +1,3 @@
-
 require("states.BaseState")
 
 -- Local imports --
@@ -19,7 +18,6 @@ local sti = require('libraries.Simple-Tiled-Implementation.sti')
 -- Camera --
 local Camera = require("libraries.STALKER-X.Camera")
 
-local window = baseWindow()
 local tile_handler = TileHandler()
 
 
@@ -27,17 +25,17 @@ Level1 = BaseState.new()
 function Level1:init()
   print("Level: 1")
   local self = BaseState.new()                   -- Call the BaseState constructor
-  setmetatable(self, { __index = DevRoomState }) -- Set metatable to DevRoomState
+  setmetatable(self, { __index = Level1 }) -- Set metatable to DevRoomState
   return self
 end
 
 function Level1:enter()
   BaseState.enter(self)
+  
   self.object_handler = ObjectHandler()
   
-  game_map = sti('assets/Aseprite/TileMap/map_1.lua')
+  game_map = sti('assets/Aseprite/TileMap/level_1.lua')
   tile_handler:addMapTiles(game_map, self.object_handler)
-  window:init()
 
   for _, obj in ipairs(self.object_handler.object_table) do
     if obj.tag == 'player_spawn' then
@@ -46,18 +44,12 @@ function Level1:enter()
     end
   end
   -- Create a Player --
-  Player({ x = spawn_tile.x, y = spawn_tile.y, w = 32, h = 32, health = 100, speed = 500, can_collide = true , tag = 'player' , collide_x_offset = 12, collide_y_offset = 3, collide_w = 10, collide_h = 29}, self.object_handler)
+  self.my_player = Player({ x = spawn_tile.x, y = spawn_tile.y, w = 32, h = 32, health = 100, speed = 500, can_collide = true , tag = 'player' , collide_x_offset = 12, collide_y_offset = 3, collide_w = 10, collide_h = 29}, self.object_handler)
 
     self.debug_mode = true
     -- Create a render target
     self.canvas = love.graphics.newCanvas(self.window_width, self.window_height)
 
-    for _, obj in ipairs(self.object_handler.object_table) do
-      if obj.tag == 'player' then
-        self.my_player = obj
-        print(self.my_player.x)
-      end
-    end
   
     self.cam = Camera(0, 0, self.window_width, self.window_height)
     self.cam:setFollowLerp(0.2)
@@ -79,7 +71,6 @@ function Level1:update(dt)
   self.cam:follow((self.my_player.x + self.my_player.w / 2), (self.my_player.y + self.my_player.h / 2))
   self.my_player.deflect = false
   self.my_player.interact = false
-
 
 end
 
