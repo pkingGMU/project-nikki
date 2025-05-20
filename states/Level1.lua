@@ -19,8 +19,11 @@ local sti = require('libraries.Simple-Tiled-Implementation.sti')
 -- Camera --
 local Camera = require("libraries.STALKER-X.Camera")
 
-local tile_handler = TileHandler()
+-- GameState --
+local Gamestate = require "libraries.hump-master.gamestate"
+require("states.Level2")
 
+local tile_handler = TileHandler()
 
 Level1 = BaseState.new()
 function Level1:init()
@@ -32,24 +35,9 @@ end
 
 function Level1:enter(prev, window)
 
-  --local window = baseWindow()
-  --window:init()
-
-  print(window)
+  self.window = window
   
-    --window sizes--
-  self.window_height = window.window_height
-  self.window_width = window.window_width
-  self.scale_factor = window.scale_factor
-  
-  self.target_width = window.target_width
-  self.target_height = window.target_height
-
-    -- Physics --
-  self.gravity = 2000
-
-
-  print(test_x)
+  BaseState.enter(self, window)
   
   self.object_handler = ObjectHandler()
   
@@ -138,6 +126,10 @@ function Level1:keyreleased(key)
 
   if key == "space" then
     self.my_player.yvel = self.my_player.jump_vel
+  end
+
+  if key == "=" then
+    Gamestate.switch(Level2, self.window, self.my_player)
   end
 end
 

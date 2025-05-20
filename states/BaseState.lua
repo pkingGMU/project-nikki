@@ -22,9 +22,23 @@ function BaseState.new()
 end
 
 function BaseState:init()
-    
     print("BaseState init")
+end
 
+function BaseState:enter(window)
+
+    --window sizes--
+  self.window_height = window.window_height
+  self.window_width = window.window_width
+  self.scale_factor = window.scale_factor
+  
+  self.target_width = window.target_width
+  self.target_height = window.target_height
+
+    -- Physics --
+  self.gravity = 2000
+
+  
 end
 
 
@@ -38,6 +52,10 @@ function BaseState:update(dt)
     self.debug_mode = false
     self.debug_key = false
   end
+end
+
+function BaseState:draw()
+
 end
 
 function BaseState:keypressed(key)
