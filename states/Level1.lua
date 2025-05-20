@@ -19,7 +19,6 @@ local sti = require('libraries.Simple-Tiled-Implementation.sti')
 -- Camera --
 local Camera = require("libraries.STALKER-X.Camera")
 
-local window = baseWindow()
 local tile_handler = TileHandler()
 
 
@@ -32,12 +31,30 @@ function Level1:init()
 end
 
 function Level1:enter()
-  BaseState.enter(self)
+
+  local window = baseWindow()
+  window:init()
+
+  print(window)
+  
+    --window sizes--
+  self.window_height = window.window_height
+  self.window_width = window.window_width
+  self.scale_factor = window.scale_factor
+  
+  self.target_width = window.target_width
+  self.target_height = window.target_height
+
+    -- Physics --
+  self.gravity = 2000
+
+
+  print(test_x)
+  
   self.object_handler = ObjectHandler()
   
   game_map = sti('assets/Aseprite/TileMap/map_1.lua')
   tile_handler:addMapTiles(game_map, self.object_handler)
-  window:init()
 
   for _, obj in ipairs(self.object_handler.object_table) do
     if obj.tag == 'player_spawn' then
@@ -84,7 +101,6 @@ function Level1:update(dt)
 end
 
 function Level1:draw()
-  BaseState.draw(self)
   love.graphics.setCanvas(self.canvas)
   love.graphics.clear(0, 0, 0, 0)
 

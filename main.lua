@@ -19,6 +19,7 @@ require("states.BaseState")  -- Base state with common methods
 require("states.MenuState")  -- MenuState (state for the main menu)
 require("states.DevState")  -- DevState (state for development/debug mode)
 require("states.Level1")
+require("states.baseWindow") -- Base Window
 local csv = require("libraries.lua-csv-master.lua.csv")
 
 
@@ -53,9 +54,10 @@ function love.load()
     -- Hump gamestate init --
     Gamestate.registerEvents()
 
+    local window = baseWindow()
 
     --Gamestate.push(DevRoomState)
-    Gamestate.push(Level1)
+    Gamestate.switch(Level1, window)
 end
 
 
