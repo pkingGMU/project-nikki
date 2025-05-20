@@ -30,10 +30,10 @@ function Level1:init()
   return self
 end
 
-function Level1:enter()
+function Level1:enter(prev, window)
 
-  local window = baseWindow()
-  window:init()
+  --local window = baseWindow()
+  --window:init()
 
   print(window)
   
