@@ -142,3 +142,17 @@ end
 function BaseState:mousereleased(mx, my, mbutton)
     
 end
+
+function BaseState:warp(state)
+  local Gamestate = require("libraries.hump-master.gamestate")
+  Level2 = require("states.Level2")
+  Level1 = require("states.Level1")
+  print(_G[state])
+  return Gamestate.switch(_G[state], self.window, self.my_player)
+  --if state == 'Level1' then
+  --  Gamestate.switch(Level1, self.my_player, self.window)
+
+--  elseif state == 'Level2' then
+  --  Gamestate.switch(Level2, self.my_player, self.window)
+  --end
+end

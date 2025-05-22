@@ -19,7 +19,6 @@ end
 
 function Interactable:update(dt, state)
   --Object.update(self)
-
   self:hoverInteraction(state.object_handler, state.my_player)
 end
 

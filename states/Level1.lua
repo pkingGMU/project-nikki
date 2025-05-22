@@ -41,7 +41,7 @@ function Level1:enter(prev, window)
   
   self.object_handler = ObjectHandler()
   
-  game_map = sti('assets/Aseprite/TileMap/map_1.lua')
+  game_map = sti('assets/Aseprite/TileMap/level_1.lua')
   tile_handler:addMapTiles(game_map, self.object_handler)
 
   for _, obj in ipairs(self.object_handler.object_table) do
@@ -129,10 +129,15 @@ function Level1:keyreleased(key)
   end
 
   if key == "=" then
-    Gamestate.switch(Level2, self.window, self.my_player)
+    local test_passthrough =
+      {
+        x = 10
+      }
+    return Gamestate.switch(Level2, self.window, self.my_player, test_passthrough)
   end
 end
 
+return Level1
 
 
 

@@ -4,7 +4,7 @@ local Class = require("libraries.hump-master.class")
 require("classes.objects.ObjectHandler")
 require("classes.objects.Object")
 require("classes.objects.Tile")
-
+require("classes.objects.Warp")
 
 TileHandler = Class()
 
@@ -85,8 +85,8 @@ function TileHandler:addMapTiles(game_map, objectHandler)
       Interactable({x = tile_type.x, y = tile_type.y - 32, w = 32, h = 32, can_collide = true, tag = 'BR_Corner_Grass'}, objectHandler, self)
     elseif tile_type.name == 'TR_Corner_Grass' then
       print('TR')
-    elseif string.find(tile_type.name, 'Warp') then
-      Interactable({x = tile_type.x, y = tile_type.y - 32, w = 32, h = 32, can_collide = false, tag = 'warp', warp_tag = tile_type.name}, objectHandler, self)
+    elseif string.find(tile_type.name, 'Level') then
+      Warp({x = tile_type.x, y = tile_type.y - 32, w = 32, h = 32, can_collide = false, tag = 'warp', warp_tag = tile_type.name}, objectHandler, self)
     end
     ::continue::
   end
