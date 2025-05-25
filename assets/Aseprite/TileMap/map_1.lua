@@ -10,7 +10,7 @@ return {
   tilewidth = 32,
   tileheight = 32,
   nextlayerid = 4,
-  nextobjectid = 4,
+  nextobjectid = 8,
   properties = {},
   tilesets = {
     {
@@ -52,6 +52,35 @@ return {
       margin = 0,
       columns = 10,
       image = "wood.png",
+      imagewidth = 320,
+      imageheight = 320,
+      objectalignment = "unspecified",
+      tilerendersize = "tile",
+      fillmode = "stretch",
+      tileoffset = {
+        x = 0,
+        y = 0
+      },
+      grid = {
+        orientation = "orthogonal",
+        width = 32,
+        height = 32
+      },
+      properties = {},
+      wangsets = {},
+      tilecount = 100,
+      tiles = {}
+    },
+    {
+      name = "tile_map",
+      firstgid = 110,
+      class = "",
+      tilewidth = 32,
+      tileheight = 32,
+      spacing = 0,
+      margin = 0,
+      columns = 10,
+      image = "tile_map.png",
       imagewidth = 320,
       imageheight = 320,
       objectalignment = "unspecified",
@@ -122,14 +151,14 @@ return {
       encoding = "lua",
       data = {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 31, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 118, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
       }
     },
@@ -157,7 +186,7 @@ return {
           width = 32,
           height = 32,
           rotation = 0,
-          gid = 9,
+          gid = 138,
           visible = true,
           properties = {}
         },
@@ -171,7 +200,35 @@ return {
           width = 32,
           height = 32,
           rotation = 0,
-          gid = 1,
+          gid = 139,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 6,
+          name = "1_Warp_2",
+          type = "",
+          shape = "rectangle",
+          x = 608,
+          y = 288,
+          width = 32,
+          height = 32,
+          rotation = 0,
+          gid = 126,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 7,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 160,
+          y = 128,
+          width = 32,
+          height = 32,
+          rotation = 0,
+          gid = 138,
           visible = true,
           properties = {}
         }

@@ -4,7 +4,7 @@ local Class = require("libraries.hump-master.class")
 require("classes.objects.ObjectHandler")
 require("classes.objects.Object")
 require("classes.objects.Tile")
-
+require("classes.objects.Warp")
 
 TileHandler = Class()
 
@@ -56,49 +56,44 @@ function TileHandler:addBorderTiles(screen_height, screen_width)
 end
 
 function TileHandler:addMapTiles(game_map, objectHandler)
-
-  print(game_map.tileInstances)
-  print(game_map.tileInstances[2])
-
   for type_idx, tile_type in pairs(game_map.tileInstances) do
-
     if game_map.tileInstances[type_idx] == nil then
       goto continue
     end
-
     for tile_idx, tile in pairs(game_map.tileInstances[type_idx]) do
+      local env_tile = game_map.tileInstances[type_idx][tile_idx]
 
-      
+      if env_tile.layer.name == 'Object' then
 
-      local temp_tile = game_map.tileInstances[type_idx][tile_idx]
-      print(temp_tile)
-      Tile({x = temp_tile.x, y = temp_tile.y, w = 32, h = 32, can_collide = true}, objectHandler, self)
-      
-      
+      elseif env_tile.layer.name == 'Spawn' then
+	print('Spawn Tile')
+        Tile({x = env_tile.x, y = env_tile.y, w = 32, h = 32, can_collide = false, tag = 'player_spawn'}, objectHandler, self)
+      else
+        Tile({x = env_tile.x, y = env_tile.y, w = 32, h = 32, can_collide = true}, objectHandler, self)
+
+      end
     end
       ::continue::
   end
 
-  
-
-  
-  
-end
-
-function TileHandler:createTileObjects(objectHandler)
-
-  for y=1, #self.tile_map do
-    for x=1, #self.tile_map[y] do
-      if self.tile_map[y][x] == 1 then
-
-        --Tile({x = (x * 32) - 32, y = (y * 32) - 32, w = 32, h = 32, can_collide = true}, objectHandler, self)
-        
-        
-      end
+  for tile_idx, tile_type in pairs(game_map.objects) do
+    if tile_type == nil then
+      goto continue
     end
+
+    if tile_type.name == 'BR_Corner_Grass' then
+      Interactable({x = tile_type.x, y = tile_type.y - 32, w = 32, h = 32, can_collide = true, tag = 'BR_Corner_Grass'}, objectHandler, self)
+    elseif tile_type.name == 'TR_Corner_Grass' then
+      print('TR')
+    elseif string.find(tile_type.name, 'Level') then
+      Warp({x = tile_type.x, y = tile_type.y - 32, w = 32, h = 32, can_collide = false, tag = 'warp', warp_tag = tile_type.name}, objectHandler, self)
+    end
+    ::continue::
   end
 
+    ::continue::
 end
+
 
 function TileHandler:draw(screen_height)
 

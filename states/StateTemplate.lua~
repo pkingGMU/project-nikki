@@ -1,0 +1,42 @@
+
+require("states.BaseState")
+
+-- Local imports --
+require("classes.objects.Player")
+require("classes.objects.Enemy")
+require("classes.objects.NPC")
+require("classes.objects.Item")
+require("classes.objects.EntityHandler")
+require("classes.objects.ObjectHandler")
+require("classes.spawn-objects.TileHandler")
+require("states.baseWindow")
+
+require("classes.midiFileHandler")
+require("classes.Timer")
+require("classes.MidiTrigger")
+
+local sti = require('libraries.Simple-Tiled-Implementation.sti')
+
+
+Level1 = BaseState.new()
+function Level1:init()
+  print("Level: 1")
+  local self = BaseState.new()                   -- Call the BaseState constructor
+  setmetatable(self, { __index = DevRoomState }) -- Set metatable to DevRoomState
+  return self
+end
+
+function Level1:enter()
+
+end
+
+function Level1:update(dt)
+
+end
+
+function Level1:draw()
+end
+
+
+
+

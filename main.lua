@@ -1,9 +1,12 @@
 ---@diagnostic disable: need-check-nil
 
 -- Debug --
-if arg[2] == "debug" then
-    require("lldebugger").start()
-end
+--if arg[2] == "debug" then
+--    require("lldebugger").start()
+--end
+
+-- LUME Debug tables --
+--local lume = require "lume/lume.lua"
 
 
 -- Global Imports --
@@ -14,8 +17,12 @@ local Gamestate = require "libraries.hump-master.gamestate"
 -- Load the necessary state files
 require("states.BaseState")  -- Base state with common methods
 require("states.MenuState")  -- MenuState (state for the main menu)
-require("states.DevState")   -- DevState (state for development/debug mode)
+require("states.DevState")  -- DevState (state for development/debug mode)
+require("states.Level1")
+require("states.baseWindow") -- Base Window
 local csv = require("libraries.lua-csv-master.lua.csv")
+
+
 
 
 -- Local imports --
@@ -26,11 +33,9 @@ require("classes.MidiTrigger")
 require("classes.spawn-objects.SpawnRectangle")
 require("classes.spawn-objects.ShapeHandler")
 require("classes.spawn-objects.SpawnCircle")
-require("classes.menu.menuStateInit")
-require("classes.menu.menuStateDraw")
-require("classes.menu.menuStateUpdate")
 require("classes.objects.Object")
 require("classes.objects.Entity")
+
 
 
 
@@ -48,9 +53,30 @@ local state
 function love.load()
     -- Hump gamestate init --
     Gamestate.registerEvents()
-    Gamestate.push(DevRoomState)
     
+    -- Load Object Handler --
+    local object_handler = ObjectHandler()
+    
+    -- Load Player --
+    local player = Player({ x = nil, y = nil, w = 32, h = 32, health = 100, speed = 500, can_collide = true , tag = 'player' , collide_x_offset = 12, collide_y_offset = 3, collide_w = 10, collide_h = 29}, object_handler)
+
+    -- Load Window --
+    local window = baseWindow()
+
+    
+    -- Persistent variables --
+
+    local persistent = {
+      window = window,
+      player = player,
+      object_handler = object_handler
+    }
+    
+    --Gamestate.push(DevRoomState)
+    Gamestate.switch(Level1, persistent)
 end
+
+
 
 state = Gamestate.current()
 
@@ -61,7 +87,6 @@ end
 function state:draw(dt)
     state.draw(dt)
 end
-
 
 function love.keypressed(key)
     Gamestate.keypressed(key)
