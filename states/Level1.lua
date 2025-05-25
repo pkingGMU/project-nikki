@@ -62,7 +62,7 @@ function Level1:enter(prev, persistent)
   self.cam:setFollowLerp(0.2)
   self.cam:setFollowLead(0)
   self.cam:setFollowStyle('PLATFORMER')
-  self.cam.scale = 2;
+  self.cam.scale = 1;
 
 end
 

@@ -34,30 +34,17 @@ end
 function Level2:enter(prev, persistent)
   BaseState.enter(self, persistent, "Level2")
 
-  for _, obj in ipairs(self.object_handler.object_table) do
-    if obj.tag == 'object' then
-      table.remove(self.object_handler.object_table, obj.id)
-    end
-  end
-
-  
   game_map = sti('assets/Aseprite/TileMap/level_2.lua')
   tile_handler:addMapTiles(game_map, self.object_handler)
 
-
-  -- Spawn Player at Spawn Tile --
   for _, obj in ipairs(self.object_handler.object_table) do
     if obj.tag == 'player_spawn' then
       spawn_tile = obj
+      print(spawn_tile.x)
     end
   end
-
-  self.my_player.x = spawn_tile.x
-  self.my_player.y = spawn_tile.y
-
   
-  
-  self.debug_mode = false
+  self.debug_mode = true
   -- Create a render target
   self.canvas = love.graphics.newCanvas(self.window_width, self.window_height)
 

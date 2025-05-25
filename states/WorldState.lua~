@@ -1,9 +1,7 @@
 WorldState = {
     Level1 = {
         default = {
-          objects = {
-            { class = "Enemy", type = "Enemy" },
-            { class = "Object", type = "Object", x = 20, y = 20, h = 500, w = 100 }
+            objects = {
             }
         },
         current = {
@@ -22,5 +20,3 @@ WorldState = {
         }
     }
 }
-
-return WorldState

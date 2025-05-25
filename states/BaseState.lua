@@ -10,6 +10,8 @@ require("states.baseWindow")
 local WorldState = require("states.WorldState")
 local ObjectFactory = require("classes.objects.ObjectFactory")
 
+-- Deepcopy Util --
+require("helper_functions.deepcopy")
 
 function BaseState.new()
     local self = setmetatable({}, BaseState)
@@ -32,15 +34,12 @@ end
 
 function BaseState:enter(persistent, level)
 
-  -- init object handler --
+
+  
+
+    -- init object handler --
   self.object_handler = persistent.object_handler
 
-  -- remove everything except persistent objects --
-  for _, obj in ipairs(self.object_handler.object_table) do
-    if obj.tag ~= 'player' then
-      table.remove(self.object_handler.object_table, obj.id)
-    end
-  end
   -- init player --
   self.my_player = persistent.player
   -- init window --
@@ -56,7 +55,6 @@ function BaseState:enter(persistent, level)
   for _, obj_params in ipairs(WorldState[level].default.objects) do
     local instance = ObjectFactory.create(obj_params, self.object_handler)
 
-    print(instance)
     
     table.insert(WorldState[level].current.objects, instance)
   end
@@ -72,7 +70,9 @@ function BaseState:enter(persistent, level)
     -- Physics --
   self.gravity = 2000
 
-  
+  -- Create Current List to Reference --
+  WorldState[level].current.objects = deepcopy(WorldState[level].default.objects)
+
 end
 
 
@@ -181,8 +181,18 @@ function BaseState:warp(state)
   local Gamestate = require("libraries.hump-master.gamestate")
   Level2 = require("states.Level2")
   Level1 = require("states.Level1")
-  print(_G[state])
 
+  local temp_table = {}
+  
+  -- remove everything except persistent objects --
+  for i, obj in ipairs(self.object_handler.object_table) do
+    if obj.tag == 'player' then
+      table.insert(temp_table, obj)
+    end
+  end
+
+  print(#temp_table .. "number in temp table")
+  self.object_handler.object_table = temp_table
 
   
     local persistent = {
