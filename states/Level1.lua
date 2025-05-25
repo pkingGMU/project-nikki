@@ -23,6 +23,7 @@ local Camera = require("libraries.STALKER-X.Camera")
 local Gamestate = require "libraries.hump-master.gamestate"
 require("states.Level2")
 
+local level = "Level1"
 
 
 local tile_handler = TileHandler()
@@ -36,11 +37,11 @@ function Level1:init()
 end
 
 function Level1:enter(prev, persistent)
-  BaseState.enter(self, persistent, "Level1")
+  self.game_map = sti('assets/Aseprite/TileMap/level_1.lua')
 
-  game_map = sti('assets/Aseprite/TileMap/level_1.lua')
-  tile_handler:addMapTiles(game_map, self.object_handler)
+  BaseState.enter(self, persistent, level)
 
+  
   
   for _, obj in ipairs(self.object_handler.object_table) do
     if obj.tag == 'player_spawn' then
@@ -67,7 +68,7 @@ function Level1:enter(prev, persistent)
 end
 
 function Level1:update(dt)
-  BaseState.update(self, dt)
+  BaseState.update(self, dt, level)
 
   
 
@@ -90,9 +91,9 @@ function Level1:draw()
   self.cam:attach()
 
   love.graphics.setColor(1, 1, 1, 1)
-  game_map:drawLayer(game_map.layers["Tile Layer 1"])
-  game_map:drawLayer(game_map.layers["Spawn"])
-  game_map:drawLayer(game_map.layers["Object"])
+  self.game_map:drawLayer(self.game_map.layers["Tile Layer 1"])
+  self.game_map:drawLayer(self.game_map.layers["Spawn"])
+  self.game_map:drawLayer(self.game_map.layers["Object"])
   
   for i, obj in ipairs(self.object_handler.object_table) do
     obj:draw()

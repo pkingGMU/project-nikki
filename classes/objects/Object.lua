@@ -4,6 +4,8 @@ local Class = require("libraries.hump-master.class")
 
 local string_key
 
+-- WorldState --
+local WorldState = require("states.WorldState")
 
 Object = Class()
 
@@ -17,7 +19,7 @@ function Object:init(params, objectHandler)
     self.scaleX = params.scaleX or 1
     self.scaleY = params.scaleY or 1
     self.tag = params.tag or 'none'
-   
+    self.persistent = params.persistent or false
 
     self.collide_x_offset = params.collide_x_offset or 0
     self.collide_y_offset = params.collide_y_offset or 0
@@ -34,6 +36,7 @@ function Object:init(params, objectHandler)
 
     
     self.id = Object:addToHandler(self, objectHandler)
+    
 
     self.type = params.type or 'object'
     
@@ -137,7 +140,6 @@ function Object:collisionMoveY(collide_list)
         if cur_obj_y < other_obj_y + other_obj_h and cur_obj_y + cur_obj_h > other_obj_y then
 
           if self.isPlayer == true then
-            
           end
             self.yvel = 0
 
@@ -148,24 +150,33 @@ function Object:collisionMoveY(collide_list)
     return self.yvel
 end
 
-function Object:destroy(objectHandler)
+function Object:destroy(objectHandler, level)
    -- Debug --
     --print(#objectHandler.object_table)
+  
+  for i = #objectHandler.object_table, 1, -1 do
 
-    for i, obj in ipairs(objectHandler.object_table) do
-        if obj.id == self.id then
-           --print(obj.id)
-           --print(self.id)
-           --print("found")
-            table.remove(objectHandler.object_table, i)
-        end
+    print(objectHandler.object_table[i].id)
+    
+      if objectHandler.object_table[i].id == self.id then
+        table.remove(objectHandler.object_table, i)
+      end
     end
 
+    local current_world_obj = WorldState[level].current.objects
+
+    for i = #current_world_obj, 1, -1 do
+      if current_world_obj[i].id == self.id then
+        table.remove(current_world_obj, i)
+      end
+    end
+
+    WorldState[level].current.objects = current_world_obj
+
     self.to_be_destroyed = true
+    collectgarbage("collect") -- Force garbage collection
 
     
-
-    collectgarbage("collect") -- Force garbage collection
 end
 
 

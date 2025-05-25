@@ -19,6 +19,7 @@ local sti = require('libraries.Simple-Tiled-Implementation.sti')
 local Camera = require("libraries.STALKER-X.Camera")
 
 
+local level = "Level2"
 
 local tile_handler = TileHandler()
 
@@ -32,18 +33,15 @@ function Level2:init()
 end
 
 function Level2:enter(prev, persistent)
-  BaseState.enter(self, persistent, "Level2")
+  self.game_map = sti('assets/Aseprite/TileMap/level_2.lua')
+
+  BaseState.enter(self, persistent, level)
 
   for _, obj in ipairs(self.object_handler.object_table) do
     if obj.tag == 'object' then
       table.remove(self.object_handler.object_table, obj.id)
     end
   end
-
-  
-  game_map = sti('assets/Aseprite/TileMap/level_2.lua')
-  tile_handler:addMapTiles(game_map, self.object_handler)
-
 
   -- Spawn Player at Spawn Tile --
   for _, obj in ipairs(self.object_handler.object_table) do
@@ -71,7 +69,7 @@ function Level2:enter(prev, persistent)
 end
 
 function Level2:update(dt)
-  BaseState.update(self, dt)
+  BaseState.update(self, dt, level)
 
 
   for _, obj in ipairs(self.object_handler.object_table) do
@@ -95,9 +93,9 @@ function Level2:draw()
   self.cam:attach()
 
   love.graphics.setColor(1, 1, 1, 1)
-  game_map:drawLayer(game_map.layers["Tile Layer 1"])
-  game_map:drawLayer(game_map.layers["Spawn"])
-  game_map:drawLayer(game_map.layers["Object"])
+  self.game_map:drawLayer(self.game_map.layers["Tile Layer 1"])
+  self.game_map:drawLayer(self.game_map.layers["Spawn"])
+  self.game_map:drawLayer(self.game_map.layers["Object"])
   
   for i, obj in ipairs(self.object_handler.object_table) do
     obj:draw()

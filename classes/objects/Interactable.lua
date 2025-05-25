@@ -14,7 +14,7 @@ function Interactable:init(params, object_handler)
   self.collision_action = false
   self.interacted = false
 
-  self.type = 'interactable'
+  self.type = 'Interactable'
 end
 
 function Interactable:update(dt, state)

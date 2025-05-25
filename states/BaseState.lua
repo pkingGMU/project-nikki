@@ -5,6 +5,8 @@ BaseState.__index = BaseState
 
 require("states.baseWindow")
 
+-- Inspection --
+require("helper_functions.dump")
 
 -- WorldState --
 local WorldState = require("states.WorldState")
@@ -12,6 +14,10 @@ local ObjectFactory = require("classes.objects.ObjectFactory")
 
 -- Deepcopy Util --
 require("helper_functions.deepcopy")
+
+require("classes.spawn-objects.TileHandler")
+local tile_handler = TileHandler()
+
 
 function BaseState.new()
     local self = setmetatable({}, BaseState)
@@ -25,6 +31,9 @@ function BaseState.new()
     self.c_down = false
     self.window_height = nil
     self.window_width = nil
+
+    self.use_default_objects = true
+    self.world_reset = false
     return self
 end
 
@@ -49,15 +58,55 @@ function BaseState:enter(persistent, level)
   
   print(level)
   -- Reset Current World State --
-  WorldState[level].current.objects = {}
 
-  -- Create Default Objects --
-  for _, obj_params in ipairs(WorldState[level].default.objects) do
-    local instance = ObjectFactory.create(obj_params, self.object_handler)
+
+  
+  if self.use_default_objects == true then
+    WorldState[level].current.objects = {}
+    -- Create Default Objects --
+    for _, obj_params in ipairs(WorldState[level].default.objects) do
+      local instance = ObjectFactory.create(obj_params, self.object_handler)
+      table.insert(WorldState[level].current.objects, instance)
+      self.use_default_objects = false
+    end
+
+    WorldState[level].current.objects = deepcopy(WorldState[level].default.objects)
+
+    tile_handler:addMapTiles(self.game_map, self.object_handler, level)
+
+
+
+
+  elseif self.use_default_objects == false then
+
 
     
-    table.insert(WorldState[level].current.objects, instance)
+    -- Create Current Objects --
+
+    for _, obj_params in ipairs(WorldState[level].current.objects) do
+      --dump(WorldState[level].current.objects)
+      ObjectFactory.create(obj_params, self.object_handler)
+    end
+
+
+    
+    -- Test Destroy Object --
+    for i = #self.object_handler.object_table, 1, -1 do
+      local obj = self.object_handler.object_table[i]
+      if obj.type == "Enemy" then
+        obj:destroy(self.object_handler, level)
+      end
+    end
+
+
+    --tile_handler:addMapTiles(self.game_map, self.object_handler, level)
+
+    --dump(self.object_handler.object_table)
+    
+
   end
+
+
 
     --window sizes--
   self.window_height = self.window.window_height
@@ -71,12 +120,11 @@ function BaseState:enter(persistent, level)
   self.gravity = 2000
 
   -- Create Current List to Reference --
-  WorldState[level].current.objects = deepcopy(WorldState[level].default.objects)
 
 end
 
 
-function BaseState:update(dt)
+function BaseState:update(dt, level)
   if self.debug_key == true and self.debug_mode == false then
     print("Debug Mode On")
     self.debug_mode = true
@@ -86,6 +134,36 @@ function BaseState:update(dt)
     self.debug_mode = false
     self.debug_key = false
   end
+
+  if self.world_reset == true then
+    WorldState[level].current.objects = {}
+
+    local temp_table = {}
+
+    
+    -- remove everything except persistent objects --
+    for i, obj in ipairs(self.object_handler.object_table) do
+      if obj.tag == 'player' then
+        table.insert(temp_table, obj)
+      end
+    end
+
+    self.object_handler.object_table = temp_table
+
+    WorldState[level].current.objects = deepcopy(WorldState[level].default.objects)
+    
+    -- Create Default Objects --
+    for _, obj_params in ipairs(WorldState[level].default.objects) do
+      local instance = ObjectFactory.create(obj_params, self.object_handler)
+      table.insert(WorldState[level].current.objects, instance)
+    end
+    tile_handler:addMapTiles(self.game_map, self.object_handler, level)
+
+    self.use_default_objects = false
+    self.world_reset = false
+   
+  end
+  
 end
 
 function BaseState:draw()
@@ -166,6 +244,10 @@ function BaseState:keyreleased(key)
     if key == 'c' then
         self.c_down = true
     end
+
+    if key =="]" then
+      self.world_reset = true
+    end
     
 end
 
@@ -191,9 +273,11 @@ function BaseState:warp(state)
     end
   end
 
-  print(#temp_table .. "number in temp table")
   self.object_handler.object_table = temp_table
 
+  -- Reset Player Momentum --
+  self.my_player.xvel = 0
+  self.my_player.yvel = 0
   
     local persistent = {
       window = self.window,

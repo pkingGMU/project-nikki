@@ -14,7 +14,7 @@ function Enemy:init(params, objectHandler)
     Entity.init(self, params, objectHandler)
 
     self.isEnemy = true
-    self.type = 'enemy'
+    self.type = 'Enemy'
 end
 
 function Enemy:update(dt, state)

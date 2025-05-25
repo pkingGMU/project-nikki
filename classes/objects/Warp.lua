@@ -13,6 +13,7 @@ function Warp:init(params, object_handler)
 
     self.warp_tag = params.warp_tag or nil
     self.warping = false
+    self.type = "Warp"
 end
 
 

@@ -7,12 +7,11 @@ require('classes.objects.Object')
 -- Parent class Object --
 Tile = Class{__includes = Object}
 
-function Tile:init(params, objectHandler, tileHandler)
+function Tile:init(params, objectHandler)
     Object.init(self, params, objectHandler)
 
-    Tile:addToTileHandler(self, tileHandler)
-
-    self.type = 'tile'
+    self.persistent = true
+    self.type = 'Tile'
 end
 
 function Tile:update(dt, state)
