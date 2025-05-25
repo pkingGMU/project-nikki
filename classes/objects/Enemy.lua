@@ -45,6 +45,7 @@ function Enemy:updateVelocity(dt, myPlayer)
 
     end
 
+    
     if math.abs((self.x) - (myPlayer.x)) < vector_threshold then
 
         if self.x >= myPlayer.x and self.y - 10 <= myPlayer.y then

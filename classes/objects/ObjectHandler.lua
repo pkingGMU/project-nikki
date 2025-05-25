@@ -1,6 +1,6 @@
 -- Local Imports --
 local Class = require("libraries.hump-master.class")
-
+require("states.WorldState")
 
 ObjectHandler = Class()
 

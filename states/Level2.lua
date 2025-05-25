@@ -1,4 +1,3 @@
-
 require("states.BaseState")
 
 -- Local imports --
@@ -19,61 +18,59 @@ local sti = require('libraries.Simple-Tiled-Implementation.sti')
 -- Camera --
 local Camera = require("libraries.STALKER-X.Camera")
 
--- GameState --
-local Gamestate = require "libraries.hump-master.gamestate"
-require("states.Level2")
-
 
 
 local tile_handler = TileHandler()
 
-Level1 = BaseState.new()
-function Level1:init()
-  print("Level: 1")
+
+Level2 = BaseState.new()
+function Level2:init()
+  print("Level: 2")
   local self = BaseState.new()                   -- Call the BaseState constructor
-  setmetatable(self, { __index = DevRoomState }) -- Set metatable to DevRoomState
+  setmetatable(self, { __index = Level2 }) -- Set metatable to 
   return self
 end
 
-function Level1:enter(prev, persistent)
-  BaseState.enter(self, persistent, "Level1")
+function Level2:enter(prev, persistent)
+  BaseState.enter(self, persistent, "Level2")
 
-  game_map = sti('assets/Aseprite/TileMap/level_1.lua')
+  game_map = sti('assets/Aseprite/TileMap/level_2.lua')
   tile_handler:addMapTiles(game_map, self.object_handler)
 
-  
+
+  -- Spawn Player at Spawn Tile --
   for _, obj in ipairs(self.object_handler.object_table) do
     if obj.tag == 'player_spawn' then
       spawn_tile = obj
     end
   end
 
-  
   self.my_player.x = spawn_tile.x
   self.my_player.y = spawn_tile.y
 
   
+  
   self.debug_mode = false
   -- Create a render target
   self.canvas = love.graphics.newCanvas(self.window_width, self.window_height)
-  
+
   
   self.cam = Camera(0, 0, self.window_width, self.window_height)
   self.cam:setFollowLerp(0.2)
   self.cam:setFollowLead(0)
   self.cam:setFollowStyle('PLATFORMER')
   self.cam.scale = 2;
-
+  
 end
 
-function Level1:update(dt)
+function Level2:update(dt)
   BaseState.update(self, dt)
 
-  
 
   for _, obj in ipairs(self.object_handler.object_table) do
     obj:update(dt, self)
   end
+  
   self.cam:update(dt)
   self.cam:follow((self.my_player.x + self.my_player.w / 2), (self.my_player.y + self.my_player.h / 2))
   self.my_player.deflect = false
@@ -82,7 +79,8 @@ function Level1:update(dt)
 
 end
 
-function Level1:draw()
+function Level2:draw()
+  BaseState.draw(self)
   love.graphics.setCanvas(self.canvas)
   love.graphics.clear(0, 0, 0, 0)
 
@@ -111,28 +109,26 @@ function Level1:draw()
 
 end
 
-function Level1:keypressed(key)
+function Level2:keypressed(key)
   BaseState.keypressed(self, key)
 end
 
-function Level1:keyreleased(key)
+function Level2:keyreleased(key)
   BaseState.keyreleased(self, key)
 
   if key == "space" then
     self.my_player.yvel = self.my_player.jump_vel
   end
 
+  
   if key == "=" then
-    return Gamestate.switch(Level2, persistent)
+    -- GameState --
+    local Gamestate = require "libraries.hump-master.gamestate"
+    require("states.Level2")
+
+    Gamestate.switch(Level1, self.window, self.my_player)
   end
 end
 
-return Level1
 
-
-
-
-
-
-
-
+return Level2

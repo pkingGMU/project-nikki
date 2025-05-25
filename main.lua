@@ -53,11 +53,27 @@ local state
 function love.load()
     -- Hump gamestate init --
     Gamestate.registerEvents()
+    
+    -- Load Object Handler --
+    local object_handler = ObjectHandler()
+    
+    -- Load Player --
+    local player = Player({ x = nil, y = nil, w = 32, h = 32, health = 100, speed = 500, can_collide = true , tag = 'player' , collide_x_offset = 12, collide_y_offset = 3, collide_w = 10, collide_h = 29}, object_handler)
 
+    -- Load Window --
     local window = baseWindow()
 
+    
+    -- Persistent variables --
+
+    local persistent = {
+      window = window,
+      player = player,
+      object_handler = object_handler
+    }
+    
     --Gamestate.push(DevRoomState)
-    Gamestate.switch(Level1, window)
+    Gamestate.switch(Level1, persistent)
 end
 
 

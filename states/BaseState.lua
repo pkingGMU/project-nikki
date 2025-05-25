@@ -6,6 +6,11 @@ BaseState.__index = BaseState
 require("states.baseWindow")
 
 
+-- WorldState --
+local WorldState = require("states.WorldState")
+local ObjectFactory = require("classes.objects.ObjectFactory")
+
+
 function BaseState.new()
     local self = setmetatable({}, BaseState)
     self.game = nil
@@ -25,15 +30,44 @@ function BaseState:init()
     print("BaseState init")
 end
 
-function BaseState:enter(window)
+function BaseState:enter(persistent, level)
+
+  -- init object handler --
+  self.object_handler = persistent.object_handler
+
+  -- remove everything except persistent objects --
+  for _, obj in ipairs(self.object_handler.object_table) do
+    if obj.tag ~= 'player' then
+      table.remove(self.object_handler.object_table, obj.id)
+    end
+  end
+  -- init player --
+  self.my_player = persistent.player
+  -- init window --
+  self.window = persistent.window
+  
+  
+  
+  print(level)
+  -- Reset Current World State --
+  WorldState[level].current.objects = {}
+
+  -- Create Default Objects --
+  for _, obj_params in ipairs(WorldState[level].default.objects) do
+    local instance = ObjectFactory.create(obj_params, self.object_handler)
+
+    print(instance)
+    
+    table.insert(WorldState[level].current.objects, instance)
+  end
 
     --window sizes--
-  self.window_height = window.window_height
-  self.window_width = window.window_width
-  self.scale_factor = window.scale_factor
+  self.window_height = self.window.window_height
+  self.window_width = self.window.window_width
+  self.scale_factor = self.window.scale_factor
   
-  self.target_width = window.target_width
-  self.target_height = window.target_height
+  self.target_width = self.window.target_width
+  self.target_height = self.window.target_height
 
     -- Physics --
   self.gravity = 2000
@@ -148,11 +182,15 @@ function BaseState:warp(state)
   Level2 = require("states.Level2")
   Level1 = require("states.Level1")
   print(_G[state])
-  return Gamestate.switch(_G[state], self.window, self.my_player)
-  --if state == 'Level1' then
-  --  Gamestate.switch(Level1, self.my_player, self.window)
 
---  elseif state == 'Level2' then
-  --  Gamestate.switch(Level2, self.my_player, self.window)
-  --end
+
+  
+    local persistent = {
+      window = self.window,
+      player = self.my_player,
+      object_handler = self.object_handler
+    }
+  
+  return Gamestate.switch(_G[state], persistent)
+  
 end
