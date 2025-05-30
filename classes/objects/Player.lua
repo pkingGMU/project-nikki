@@ -147,7 +147,7 @@ end
 function Player:addToInventory(item --[[Object]])
   table.insert(self.inventory, item)
   -- Debug Player Inventory --
-  print(self.inventory)
+  --print(self.inventory)
 end
 
 function Player:removeFromInventory(item --[[Object]])

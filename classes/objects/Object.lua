@@ -46,7 +46,7 @@ end
 
 function Object:draw()
     love.graphics.push()
-    love.graphics.setColor(1,1,1,1)
+    love.graphics.setColor(1,1,1,0)
     -- Draw the rectangle (or image for your entity)
     love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
     love.graphics.pop()
@@ -156,7 +156,6 @@ function Object:destroy(objectHandler, level)
   
   for i = #objectHandler.object_table, 1, -1 do
 
-    print(objectHandler.object_table[i].id)
     
       if objectHandler.object_table[i].id == self.id then
         table.remove(objectHandler.object_table, i)

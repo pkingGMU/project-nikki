@@ -26,7 +26,6 @@ local tile_handler = TileHandler()
 
 Level2 = BaseState.new()
 function Level2:init()
-  print("Level: 2")
   local self = BaseState.new()                   -- Call the BaseState constructor
   setmetatable(self, { __index = Level2 }) -- Set metatable to 
   return self

@@ -30,7 +30,6 @@ function TileHandler:addBorderTiles(screen_height, screen_width)
   num_tiles_height = math.floor(screen_height / 32) + 1
   num_tiles_width = math.floor(screen_width / 32)
 
-  print(num_tiles_height - 3)
 
 
   for y_tile=1, num_tiles_height do
@@ -70,7 +69,6 @@ function TileHandler:addMapTiles(game_map, objectHandler, level)
       if env_tile.layer.name == 'Object' then
 
       elseif env_tile.layer.name == 'Spawn' then
-	print('Spawn Tile')
         --Tile({x = env_tile.x, y = env_tile.y, w = 32, h = 32, can_collide = false, tag = 'player_spawn'}, objectHandler, self)
         local obj_params = {class = "Tile", type = "Tile", x = env_tile.x, y = env_tile.y, w = 32, h = 32, can_collide = false, tag = 'player_spawn', soft_reset = true}
         local instance = ObjectFactory.create(obj_params, objectHandler)
@@ -99,7 +97,6 @@ function TileHandler:addMapTiles(game_map, objectHandler, level)
       table.insert(WorldState[level].default.objects, instance)
 
     elseif tile_type.name == 'TR_Corner_Grass' then
-      print('TR')
     elseif string.find(tile_type.name, 'Level') then
       --Warp({x = tile_type.x, y = tile_type.y - 32, w = 32, h = 32, can_collide = false, tag = 'warp', warp_tag = tile_type.name, persistent = true}, objectHandler, self)
       local obj_params = {class = "Warp", type = "Warp", x = tile_type.x, y = tile_type.y - 32, w = 32, h = 32, can_collide = false, tag = 'warp', warp_tag = tile_type.name, soft_reset = true}

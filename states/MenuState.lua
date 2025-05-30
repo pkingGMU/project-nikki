@@ -52,7 +52,6 @@ MenuState = BaseState.new()
 -- Menu Init (Load) --
 function MenuState:init()
 
-    print('MenuState init')
     local self = BaseState.new() -- BaseState Constructor
     setmetatable(self, {__index = MenuState})
 

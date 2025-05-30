@@ -21,7 +21,6 @@ function Warp:update(dt, state)
 
   Interactable.update(self, dt, state)
   if self.warping == true then
-    print(self.warp_tag)
     state:warp(self.warp_tag)
     self.warping = false
   end

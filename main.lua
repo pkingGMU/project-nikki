@@ -77,10 +77,8 @@ function love.load()
     }
   }
 
-  print(#level_maps)
   
   for _, level in pairs(level_maps) do
-    print(_)
     tile_handler:addMapTiles(level.map, object_handler, level.name)
   end
 

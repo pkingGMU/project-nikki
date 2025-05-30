@@ -24,7 +24,6 @@ function ObjectFactory.create(params, object_handler)
     class = _G[params.type]
   end
 
- print(params.type)
 
  
     

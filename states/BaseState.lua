@@ -38,7 +38,6 @@ function BaseState.new()
 end
 
 function BaseState:init()
-    print("BaseState init")
 end
 
 function BaseState:enter(persistent, level)
@@ -56,7 +55,6 @@ function BaseState:enter(persistent, level)
   
   
   
-  print(level)
   -- Reset Current World State --
 
 
@@ -74,7 +72,7 @@ function BaseState:enter(persistent, level)
 
     --tile_handler:addMapTiles(self.game_map, self.object_handler, level)
 
-    dump(WorldState[level].default.objects)
+    --dump(WorldState[level].default.objects)
 
 
   elseif self.use_default_objects == false then
