@@ -70,11 +70,11 @@ function BaseState:enter(persistent, level)
       self.use_default_objects = false
     end
 
-    WorldState[level].current.objects = deepcopy(WorldState[level].default.objects)
+    --WorldState[level].current.objects = deepcopy(WorldState[level].default.objects)
 
-    tile_handler:addMapTiles(self.game_map, self.object_handler, level)
+    --tile_handler:addMapTiles(self.game_map, self.object_handler, level)
 
-
+    dump(WorldState[level].default.objects)
 
 
   elseif self.use_default_objects == false then
@@ -88,7 +88,11 @@ function BaseState:enter(persistent, level)
       ObjectFactory.create(obj_params, self.object_handler)
     end
 
-
+    for _,obj_params in ipairs(WorldState[level].default.objects) do
+      if obj_params.soft_reset == true then
+	ObjectFactory.create(obj_params, self.object_handler)
+      end
+    end
     
     -- Test Destroy Object --
     for i = #self.object_handler.object_table, 1, -1 do
@@ -157,7 +161,7 @@ function BaseState:update(dt, level)
       local instance = ObjectFactory.create(obj_params, self.object_handler)
       table.insert(WorldState[level].current.objects, instance)
     end
-    tile_handler:addMapTiles(self.game_map, self.object_handler, level)
+    --tile_handler:addMapTiles(self.game_map, self.object_handler, level)
 
     self.use_default_objects = false
     self.world_reset = false
@@ -167,6 +171,14 @@ function BaseState:update(dt, level)
 end
 
 function BaseState:draw()
+
+end
+
+function BaseState:SoftReset()
+
+end
+
+function BaseState:HardReset()
 
 end
 

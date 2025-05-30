@@ -36,6 +36,12 @@ require("classes.spawn-objects.SpawnCircle")
 require("classes.objects.Object")
 require("classes.objects.Entity")
 
+-- STI --
+local sti = require('libraries.Simple-Tiled-Implementation.sti')
+
+-- Tile Handler --
+require("classes.spawn-objects.TileHandler")
+local tile_handler = TileHandler()
 
 
 
@@ -51,29 +57,52 @@ local state
 --Called once upon opening
 
 function love.load()
-    -- Hump gamestate init --
-    Gamestate.registerEvents()
-    
-    -- Load Object Handler --
-    local object_handler = ObjectHandler()
-    
-    -- Load Player --
-    local player = Player({ x = nil, y = nil, w = 32, h = 32, health = 100, speed = 500, can_collide = true , tag = 'player' , collide_x_offset = 12, collide_y_offset = 3, collide_w = 10, collide_h = 29}, object_handler)
 
-    -- Load Window --
-    local window = baseWindow()
+  -- Hump gamestate init --
+  Gamestate.registerEvents()
 
+  -- Load Object Handler --
+  local object_handler = ObjectHandler()
+
+  -- Load Map Information --
+  local level_maps = {
+    level1 = {
+      map = sti('assets/Aseprite/TileMap/level_1.lua'),
+      name = 'Level1'
+    },
     
-    -- Persistent variables --
-
-    local persistent = {
-      window = window,
-      player = player,
-      object_handler = object_handler
+    level2 = {
+      map = sti('assets/Aseprite/TileMap/level_2.lua'),
+      name = 'Level2'
     }
+  }
+
+  print(#level_maps)
+  
+  for _, level in pairs(level_maps) do
+    print(_)
+    tile_handler:addMapTiles(level.map, object_handler, level.name)
+  end
+
+  
+
+  -- Load Player --
+  local player = Player({ x = nil, y = nil, w = 32, h = 32, health = 100, speed = 500, can_collide = true , tag = 'player' , collide_x_offset = 12, collide_y_offset = 3, collide_w = 10, collide_h = 29}, object_handler)
+
+  -- Load Window --
+  local window = baseWindow()
+
+  
+  -- Persistent variables --
+  
+  local persistent = {
+    window = window,
+    player = player,
+    object_handler = object_handler
+  }
     
-    --Gamestate.push(DevRoomState)
-    Gamestate.switch(Level1, persistent)
+  --Gamestate.push(DevRoomState)
+  Gamestate.switch(Level1, persistent)
 end
 
 

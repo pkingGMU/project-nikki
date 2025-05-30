@@ -72,15 +72,15 @@ function TileHandler:addMapTiles(game_map, objectHandler, level)
       elseif env_tile.layer.name == 'Spawn' then
 	print('Spawn Tile')
         --Tile({x = env_tile.x, y = env_tile.y, w = 32, h = 32, can_collide = false, tag = 'player_spawn'}, objectHandler, self)
-        local obj_params = {class = "Tile", type = "Tile", x = env_tile.x, y = env_tile.y, w = 32, h = 32, can_collide = false, tag = 'player_spawn'}
+        local obj_params = {class = "Tile", type = "Tile", x = env_tile.x, y = env_tile.y, w = 32, h = 32, can_collide = false, tag = 'player_spawn', soft_reset = true}
         local instance = ObjectFactory.create(obj_params, objectHandler)
-        table.insert(WorldState[level].current.objects, instance)
+        table.insert(WorldState[level].default.objects, instance)
         
       else
         --Tile({x = env_tile.x, y = env_tile.y, w = 32, h = 32, can_collide = true}, objectHandler, self)
-        local obj_params = {class = "Tile", type = "Tile", x = env_tile.x, y = env_tile.y, w = 32, h = 32, can_collide = true}
+        local obj_params = {class = "Tile", type = "Tile", x = env_tile.x, y = env_tile.y, w = 32, h = 32, can_collide = true, soft_reset = true}
         local instance = ObjectFactory.create(obj_params, objectHandler)
-        table.insert(WorldState[level].current.objects, instance)
+        table.insert(WorldState[level].default.objects, instance)
 
       end
     end
@@ -94,17 +94,17 @@ function TileHandler:addMapTiles(game_map, objectHandler, level)
 
     if tile_type.name == 'BR_Corner_Grass' then
       --Interactable({x = tile_type.x, y = tile_type.y - 32, w = 32, h = 32, can_collide = true, tag = 'BR_Corner_Grass', persistent = true}, objectHandler, self)
-      local obj_params = {class = "Interactable", type = "Interactable", x = tile_type.x, y = tile_type.y - 32, w = 32, h = 32, can_collide = true, tag = 'BR_Corner_Grass', persistent = true}
+      local obj_params = {class = "Interactable", type = "Interactable", x = tile_type.x, y = tile_type.y - 32, w = 32, h = 32, can_collide = true, tag = 'BR_Corner_Grass', soft_reset = true}
       local instance = ObjectFactory.create(obj_params, objectHandler)
-      table.insert(WorldState[level].current.objects, instance)
+      table.insert(WorldState[level].default.objects, instance)
 
     elseif tile_type.name == 'TR_Corner_Grass' then
       print('TR')
     elseif string.find(tile_type.name, 'Level') then
       --Warp({x = tile_type.x, y = tile_type.y - 32, w = 32, h = 32, can_collide = false, tag = 'warp', warp_tag = tile_type.name, persistent = true}, objectHandler, self)
-      local obj_params = {class = "Warp", type = "Warp", x = tile_type.x, y = tile_type.y - 32, w = 32, h = 32, can_collide = false, tag = 'warp', warp_tag = tile_type.name, persistent = true}
+      local obj_params = {class = "Warp", type = "Warp", x = tile_type.x, y = tile_type.y - 32, w = 32, h = 32, can_collide = false, tag = 'warp', warp_tag = tile_type.name, soft_reset = true}
       local instance = ObjectFactory.create(obj_params, objectHandler)
-      table.insert(WorldState[level].current.objects, instance)
+      table.insert(WorldState[level].default.objects, instance)
     end
     ::continue::
   end

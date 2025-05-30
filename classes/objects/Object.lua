@@ -19,8 +19,8 @@ function Object:init(params, objectHandler)
     self.scaleX = params.scaleX or 1
     self.scaleY = params.scaleY or 1
     self.tag = params.tag or 'none'
-    self.persistent = params.persistent or false
-
+    self.soft_reset = params.soft_reset or false
+    
     self.collide_x_offset = params.collide_x_offset or 0
     self.collide_y_offset = params.collide_y_offset or 0
     self.collide_w = params.collide_w or 32
