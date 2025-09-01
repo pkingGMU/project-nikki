@@ -83,6 +83,13 @@ function love.load()
   end
 
   
+  for i = #object_handler.object_table, 1, -1 do
+    if object_handler.object_table[i].level ~= 'Level1' then
+      table.remove(object_handler.object_table, i)
+    end
+  end
+
+  print(#object_handler.object_table)
 
   -- Load Player --
   local player = Player({ x = nil, y = nil, w = 32, h = 32, health = 100, speed = 500, can_collide = true , tag = 'player' , collide_x_offset = 12, collide_y_offset = 3, collide_w = 10, collide_h = 29}, object_handler)

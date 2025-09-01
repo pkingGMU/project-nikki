@@ -72,7 +72,7 @@ function Level1:update(dt)
   
 
   for _, obj in ipairs(self.object_handler.object_table) do
-    obj:update(dt, self)
+    obj:update(dt, self, level)
   end
   self.cam:update(dt)
   self.cam:follow((self.my_player.x + self.my_player.w / 2), (self.my_player.y + self.my_player.h / 2))

@@ -17,9 +17,9 @@ function Interactable:init(params, object_handler)
   self.type = 'Interactable'
 end
 
-function Interactable:update(dt, state)
+function Interactable:update(dt, state, level)
   --Object.update(self)
-  self:hoverInteraction(state.object_handler, state.my_player)
+  self:hoverInteraction(state.object_handler, state.my_player, level)
 end
 
 function Interactable:checkCollisions(my_player, object_handler)
@@ -60,7 +60,7 @@ function Interactable:checkCollisions(my_player, object_handler)
   --return collide_list
 end
 
-function Interactable:hoverInteraction(object_handler, my_player)
+function Interactable:hoverInteraction(object_handler, my_player, level)
   self:checkCollisions(my_player, object_handler)
 
   if self.collision_action == false then
@@ -75,7 +75,7 @@ function Interactable:hoverInteraction(object_handler, my_player)
 
   -- Interaction on Hover --
   if self.hovering == true then
-    self:interact(my_player, object_handler)
+    self:interact(my_player, object_handler, level)
   end
 end
 

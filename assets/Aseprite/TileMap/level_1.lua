@@ -9,8 +9,8 @@ return {
   height = 10,
   tilewidth = 32,
   tileheight = 32,
-  nextlayerid = 4,
-  nextobjectid = 9,
+  nextlayerid = 5,
+  nextobjectid = 10,
   properties = {},
   tilesets = {
     {
@@ -21,10 +21,10 @@ return {
       tileheight = 32,
       spacing = 0,
       margin = 0,
-      columns = 3,
+      columns = 10,
       image = "test_tile_map.png",
-      imagewidth = 96,
-      imageheight = 96,
+      imagewidth = 320,
+      imageheight = 320,
       objectalignment = "unspecified",
       tilerendersize = "tile",
       fillmode = "stretch",
@@ -39,12 +39,12 @@ return {
       },
       properties = {},
       wangsets = {},
-      tilecount = 9,
+      tilecount = 100,
       tiles = {}
     },
     {
       name = "wood",
-      firstgid = 10,
+      firstgid = 101,
       class = "",
       tilewidth = 32,
       tileheight = 32,
@@ -73,7 +73,7 @@ return {
     },
     {
       name = "tile_map",
-      firstgid = 110,
+      firstgid = 201,
       class = "",
       tilewidth = 32,
       tileheight = 32,
@@ -158,7 +158,7 @@ return {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 118, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 209, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
       }
     },
@@ -186,7 +186,7 @@ return {
           width = 32,
           height = 32,
           rotation = 0,
-          gid = 138,
+          gid = 229,
           visible = true,
           properties = {}
         },
@@ -200,7 +200,7 @@ return {
           width = 32,
           height = 32,
           rotation = 0,
-          gid = 139,
+          gid = 230,
           visible = true,
           properties = {}
         },
@@ -214,21 +214,7 @@ return {
           width = 32,
           height = 32,
           rotation = 0,
-          gid = 126,
-          visible = true,
-          properties = {}
-        },
-        {
-          id = 7,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 160,
-          y = 128,
-          width = 32,
-          height = 32,
-          rotation = 0,
-          gid = 138,
+          gid = 217,
           visible = true,
           properties = {}
         },
@@ -242,11 +228,26 @@ return {
           width = 32,
           height = 32,
           rotation = 0,
-          gid = 124,
+          gid = 215,
           visible = true,
           properties = {}
         }
       }
+    },
+    {
+      type = "objectgroup",
+      draworder = "topdown",
+      id = 4,
+      name = "Item",
+      class = "",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      parallaxx = 1,
+      parallaxy = 1,
+      properties = {},
+      objects = {}
     }
   }
 }

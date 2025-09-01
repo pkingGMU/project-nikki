@@ -45,15 +45,15 @@ function Object:init(params, objectHandler)
 end
 
 function Object:draw()
-    love.graphics.push()
-    love.graphics.setColor(1,1,1,0)
+    --love.graphics.push()
+    --love.graphics.setColor(1,1,1,0)
     -- Draw the rectangle (or image for your entity)
-    love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
-    love.graphics.pop()
+    --love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
+    --love.graphics.pop()
 
 end
 
-function Object:update(dt, state)
+function Object:update(dt, state, level)
   self.centerX = self.x + self.w / 2
   self.centerY = self.y + self.h / 2
 
@@ -155,25 +155,23 @@ function Object:destroy(objectHandler, level)
     --print(#objectHandler.object_table)
   
   for i = #objectHandler.object_table, 1, -1 do
-
-    
-      if objectHandler.object_table[i].id == self.id then
-        table.remove(objectHandler.object_table, i)
-      end
+    if objectHandler.object_table[i].id == self.id then
+      table.remove(objectHandler.object_table, i)
     end
+  end
 
-    local current_world_obj = WorldState[level].current.objects
-
-    for i = #current_world_obj, 1, -1 do
-      if current_world_obj[i].id == self.id then
-        table.remove(current_world_obj, i)
-      end
+  local current_world_obj = WorldState[level].current.objects
+  
+  for i = #current_world_obj, 1, -1 do
+    if current_world_obj[i].id == self.id then
+      table.remove(current_world_obj, i)
     end
+  end
 
-    WorldState[level].current.objects = current_world_obj
+  WorldState[level].current.objects = current_world_obj
 
-    self.to_be_destroyed = true
-    collectgarbage("collect") -- Force garbage collection
+  self.to_be_destroyed = true
+  collectgarbage("collect") -- Force garbage collection
 
     
 end

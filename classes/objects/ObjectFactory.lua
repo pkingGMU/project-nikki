@@ -4,6 +4,7 @@ local Interactable = require("classes.objects.Interactable")
 local Warp = require("classes.objects.Warp")
 local Enemy = require("classes.objects.Enemy")
 local Tile = require("classes.objects.Tile")
+local Item = require("classes.objects.Item")
 
 local ObjectFactory = {}
 
@@ -13,20 +14,15 @@ ObjectFactory.registry = {
     interactable = Interactable,
     warp = Warp,
     enemy = Enemy,
-    tile = Tile
+    tile = Tile,
+    item = Item
 }
 
 function ObjectFactory.create(params, object_handler)
-
-  
   local class = _G[params.class]
   if not class then
     class = _G[params.type]
   end
-
-
- 
-    
  return class(params, object_handler)
 end
 

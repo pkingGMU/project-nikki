@@ -1,3 +1,4 @@
+
 local Class = require("libraries.hump-master.class")
 
 -- Local Imports --
@@ -59,6 +60,9 @@ function TileHandler:addBorderTiles(screen_height, screen_width)
 end
 
 function TileHandler:addMapTiles(game_map, objectHandler, level)
+
+
+  
   for type_idx, tile_type in pairs(game_map.tileInstances) do
     if game_map.tileInstances[type_idx] == nil then
       goto continue
@@ -66,17 +70,17 @@ function TileHandler:addMapTiles(game_map, objectHandler, level)
     for tile_idx, tile in pairs(game_map.tileInstances[type_idx]) do
       local env_tile = game_map.tileInstances[type_idx][tile_idx]
 
-      if env_tile.layer.name == 'Object' then
+      if env_tile.layer.name == 'Object' or env_tile.layer.name == 'Item' then
 
       elseif env_tile.layer.name == 'Spawn' then
         --Tile({x = env_tile.x, y = env_tile.y, w = 32, h = 32, can_collide = false, tag = 'player_spawn'}, objectHandler, self)
-        local obj_params = {class = "Tile", type = "Tile", x = env_tile.x, y = env_tile.y, w = 32, h = 32, can_collide = false, tag = 'player_spawn', soft_reset = true}
+        local obj_params = {class = "Tile", type = "Tile", level = level, x = env_tile.x, y = env_tile.y, w = 32, h = 32, can_collide = false, tag = 'player_spawn', soft_reset = true}
         local instance = ObjectFactory.create(obj_params, objectHandler)
         table.insert(WorldState[level].default.objects, instance)
         
       else
         --Tile({x = env_tile.x, y = env_tile.y, w = 32, h = 32, can_collide = true}, objectHandler, self)
-        local obj_params = {class = "Tile", type = "Tile", x = env_tile.x, y = env_tile.y, w = 32, h = 32, can_collide = true, soft_reset = true}
+        local obj_params = {class = "Tile", type = "Tile", level = level, x = env_tile.x, y = env_tile.y, w = 32, h = 32, can_collide = true, soft_reset = true}
         local instance = ObjectFactory.create(obj_params, objectHandler)
         table.insert(WorldState[level].default.objects, instance)
 
@@ -85,21 +89,26 @@ function TileHandler:addMapTiles(game_map, objectHandler, level)
       ::continue::
   end
 
+
+  
   for tile_idx, tile_type in pairs(game_map.objects) do
     if tile_type == nil then
       goto continue
     end
-
     if tile_type.name == 'BR_Corner_Grass' then
       --Interactable({x = tile_type.x, y = tile_type.y - 32, w = 32, h = 32, can_collide = true, tag = 'BR_Corner_Grass', persistent = true}, objectHandler, self)
-      local obj_params = {class = "Interactable", type = "Interactable", x = tile_type.x, y = tile_type.y - 32, w = 32, h = 32, can_collide = true, tag = 'BR_Corner_Grass', soft_reset = true}
+      local obj_params = {class = "Interactable", type = "Interactable", level = level, x = tile_type.x, y = tile_type.y - 32, w = 32, h = 32, can_collide = true, tag = 'BR_Corner_Grass', soft_reset = true}
       local instance = ObjectFactory.create(obj_params, objectHandler)
       table.insert(WorldState[level].default.objects, instance)
 
     elseif tile_type.name == 'TR_Corner_Grass' then
     elseif string.find(tile_type.name, 'Level') then
       --Warp({x = tile_type.x, y = tile_type.y - 32, w = 32, h = 32, can_collide = false, tag = 'warp', warp_tag = tile_type.name, persistent = true}, objectHandler, self)
-      local obj_params = {class = "Warp", type = "Warp", x = tile_type.x, y = tile_type.y - 32, w = 32, h = 32, can_collide = false, tag = 'warp', warp_tag = tile_type.name, soft_reset = true}
+      local obj_params = {class = "Warp", type = "Warp", level = level, x = tile_type.x, y = tile_type.y - 32, w = 32, h = 32, can_collide = false, tag = 'warp', warp_tag = tile_type.name, soft_reset = true}
+      local instance = ObjectFactory.create(obj_params, objectHandler)
+      table.insert(WorldState[level].default.objects, instance)
+    elseif string.find(tile_type.name, 'Item') then
+      local obj_params = {class = "Item", type = "Item", level = level,  x = tile_type.x, y = tile_type.y - 32, w = 32, h = 32, can_collide = false, tag = 'item', warp_tag = tile_type.name, soft_reset = false}
       local instance = ObjectFactory.create(obj_params, objectHandler)
       table.insert(WorldState[level].default.objects, instance)
     end

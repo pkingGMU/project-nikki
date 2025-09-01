@@ -42,12 +42,9 @@ end
 
 function BaseState:enter(persistent, level)
 
-
-  
-
     -- init object handler --
   self.object_handler = persistent.object_handler
-
+  
   -- init player --
   self.my_player = persistent.player
   -- init window --
@@ -248,9 +245,7 @@ function BaseState:keyreleased(key)
 
     if key == 'w' then
         self.w_down = true
-    end
-
-    
+    end    
     if key == 'c' then
         self.c_down = true
     end
@@ -258,6 +253,12 @@ function BaseState:keyreleased(key)
     if key =="]" then
       self.world_reset = true
     end
+
+    
+  if key == "k" then
+    self.my_player.interact = true
+  end
+
     
 end
 

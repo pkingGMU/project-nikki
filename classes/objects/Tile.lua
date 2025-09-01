@@ -27,8 +27,4 @@ function Tile:addToTileHandler(tile, tileHandler)
 end
 
 
-function Tile:draw()
-    
-end
-
 

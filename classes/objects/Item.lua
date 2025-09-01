@@ -12,8 +12,9 @@ function Item:init(params, objectHandler)
 end
 
 function Item:draw()
-    love.graphics.setColor(1, 1, 1, 1)
-    love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
+  love.graphics.setColor(1, 1, 1, 1)
+  print("Here")
+  love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
 end
 
 
@@ -24,7 +25,7 @@ function Item:firstHoverInteraction()
   self.collision_action = false
 end
 
-function Item:interact(my_player, objectHandler)
+function Item:interact(my_player, objectHandler, level)
   -- Interaction on Hover --
   if self.hovering == true and my_player.interact == true then
     print(self.hovering)
@@ -42,6 +43,6 @@ function Item:interact(my_player, objectHandler)
     my_player:addToInventory(self)
 
     -- Last thing to do
-    self:destroy(objectHandler)
+    self:destroy(objectHandler, level)
   end
 end
