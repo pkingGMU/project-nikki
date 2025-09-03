@@ -2,15 +2,15 @@ return {
   version = "1.10",
   luaversion = "5.1",
   tiledversion = "1.11.2",
-  class = "",
+  class = "level1",
   orientation = "orthogonal",
   renderorder = "right-down",
   width = 20,
   height = 10,
   tilewidth = 32,
   tileheight = 32,
-  nextlayerid = 5,
-  nextobjectid = 10,
+  nextlayerid = 6,
+  nextobjectid = 14,
   properties = {},
   tilesets = {
     {
@@ -133,36 +133,6 @@ return {
       }
     },
     {
-      type = "tilelayer",
-      x = 0,
-      y = 0,
-      width = 20,
-      height = 10,
-      id = 2,
-      name = "Spawn",
-      class = "",
-      visible = true,
-      opacity = 1,
-      offsetx = 0,
-      offsety = 0,
-      parallaxx = 1,
-      parallaxy = 1,
-      properties = {},
-      encoding = "lua",
-      data = {
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 209, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-      }
-    },
-    {
       type = "objectgroup",
       draworder = "topdown",
       id = 3,
@@ -247,7 +217,66 @@ return {
       parallaxx = 1,
       parallaxy = 1,
       properties = {},
-      objects = {}
+      objects = {
+        {
+          id = 10,
+          name = "TEST_ITEM",
+          type = "",
+          shape = "rectangle",
+          x = 192,
+          y = 288,
+          width = 32,
+          height = 32,
+          rotation = 0,
+          gid = 41,
+          visible = true,
+          properties = {}
+        }
+      }
+    },
+    {
+      type = "objectgroup",
+      draworder = "topdown",
+      id = 5,
+      name = "Player_Spawn",
+      class = "",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      parallaxx = 1,
+      parallaxy = 1,
+      properties = {},
+      objects = {
+        {
+          id = 11,
+          name = "Player_Spawn_Right",
+          type = "",
+          shape = "rectangle",
+          x = 352,
+          y = 288,
+          width = 32,
+          height = 32,
+          rotation = 0,
+          gid = 9,
+          visible = false,
+          properties = {}
+        },
+        {
+          id = 13,
+          name = "Player_Spawn_Right",
+          type = "",
+          shape = "rectangle",
+          x = 384,
+          y = 288,
+          width = 32,
+          height = 32,
+          rotation = 0,
+          gid = 9,
+          visible = false,
+          properties = {}
+        }
+      }
     }
   }
 }

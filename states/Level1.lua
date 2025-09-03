@@ -1,138 +1,84 @@
-
 require("states.BaseState")
 
 -- Local imports --
-require("classes.objects.Player")
-require("classes.objects.Enemy")
-require("classes.objects.NPC")
-require("classes.objects.Item")
-require("classes.objects.EntityHandler")
-require("classes.objects.ObjectHandler")
-require("classes.spawn-objects.TileHandler")
-require("states.baseWindow")
-
-require("classes.midiFileHandler")
-require("classes.Timer")
-require("classes.MidiTrigger")
-
-local sti = require('libraries.Simple-Tiled-Implementation.sti')
+local sti = require("libraries.Simple-Tiled-Implementation.sti")
 -- Camera --
 local Camera = require("libraries.STALKER-X.Camera")
 
 -- GameState --
-local Gamestate = require "libraries.hump-master.gamestate"
-require("states.Level2")
+local Gamestate = require("libraries.hump-master.gamestate")
 
-local level = "Level1"
+-- Tile Handler
+require("classes.spawn-objects.TileHandler")
 
-
-local tile_handler = TileHandler()
+-- Dump
+require("helper_functions.dump")
 
 Level1 = BaseState.new()
 function Level1:init()
-  local self = BaseState.new()                   -- Call the BaseState constructor
-  setmetatable(self, { __index = DevRoomState }) -- Set metatable to DevRoomState
-  return self
+	local self = BaseState.new() -- Call the BaseState constructor
+	setmetatable(self, { __index = Level1 }) -- Set metatable to DevRoomState
+	return self
 end
 
 function Level1:enter(prev, persistent)
-  self.game_map = sti('assets/Aseprite/TileMap/level_1.lua')
+	self.game_map = sti("assets/Aseprite/TileMap/level_1.lua")
+	BaseState.enter(self, persistent)
 
-  BaseState.enter(self, persistent, level)
+	self.canvas = love.graphics.newCanvas(self.config.WINDOW_WIDTH, self.config.WINDOW_HEIGHT)
 
-  
-  
-  for _, obj in ipairs(self.object_handler.object_table) do
-    if obj.tag == 'player_spawn' then
-      spawn_tile = obj
-    end
-  end
+	self.cam = Camera(0, 0, self.config.WINDOW_WIDTH, self.config.WINDOW_HEIGHT)
+	self.cam:setFollowLerp(0.2)
+	self.cam:setFollowLead(0)
+	self.cam:setFollowStyle("PLATFORMER")
+	self.cam.scale = 1
 
-  
-  self.my_player.x = spawn_tile.x
-  self.my_player.y = spawn_tile.y
+	--Using STI to either Create a new map state file or read in an existing map state file
+	tile_handler = TileHandler()
+	local map_state = tile_handler:addMapTiles(self.game_map)
 
-  
-  self.debug_mode = false
-  -- Create a render target
-  self.canvas = love.graphics.newCanvas(self.window_width, self.window_height)
-  
-  
-  self.cam = Camera(0, 0, self.window_width, self.window_height)
-  self.cam:setFollowLerp(0.2)
-  self.cam:setFollowLead(0)
-  self.cam:setFollowStyle('PLATFORMER')
-  self.cam.scale = 1;
+	--Create Game Objects
+	for key, layer in pairs(map_state) do
+		print(key)
+	end
 
+	--TODO--Serialize.saveToFile(persistence_file_name, self.map_state)
 end
 
 function Level1:update(dt)
-  BaseState.update(self, dt, level)
+	BaseState.update(self, dt)
 
-  
-
-  for _, obj in ipairs(self.object_handler.object_table) do
-    obj:update(dt, self, level)
-  end
-  self.cam:update(dt)
-  self.cam:follow((self.my_player.x + self.my_player.w / 2), (self.my_player.y + self.my_player.h / 2))
-  self.my_player.deflect = false
-  self.my_player.interact = false
-
-
+	self.cam:update(dt)
+	self.cam:follow(0, 0)
+	--self.cam:follow((self.my_player.x + self.my_player.w / 2), (self.my_player.y + self.my_player.h / 2))
 end
 
 function Level1:draw()
-  love.graphics.setCanvas(self.canvas)
-  love.graphics.clear(0, 0, 0, 0)
+	love.graphics.setCanvas(self.canvas)
+	love.graphics.clear(0, 0, 0, 0)
 
-  -- Camera --
-  self.cam:attach()
+	-- Camera --
+	-- self.cam:attach()
 
-  love.graphics.setColor(1, 1, 1, 1)
-  self.game_map:drawLayer(self.game_map.layers["Tile Layer 1"])
-  self.game_map:drawLayer(self.game_map.layers["Spawn"])
-  self.game_map:drawLayer(self.game_map.layers["Object"])
-  
-  for i, obj in ipairs(self.object_handler.object_table) do
-    obj:draw()
-  end
+	love.graphics.setColor(1, 1, 1, 1)
+	self.game_map:drawLayer(self.game_map.layers["Tile Layer 1"])
 
-  self.cam:detach()
+	-- self.cam:detach()
 
+	love.graphics.setCanvas()
 
-
-  love.graphics.setCanvas()
-
-  love.graphics.setColor(1, 1, 1)
-  love.graphics.setBlendMode("alpha", "premultiplied")
-  love.graphics.draw(self.canvas, 0, 0, 0, self.scale_factor, self.scale_factor)
-  love.graphics.setBlendMode("alpha")
-
+	love.graphics.setColor(1, 1, 1)
+	love.graphics.setBlendMode("alpha", "premultiplied")
+	love.graphics.draw(self.canvas, 0, 0, 0, self.config.SCALE_FACTOR, self.config.SCALE_FACTOR)
+	love.graphics.setBlendMode("alpha")
 end
 
 function Level1:keypressed(key)
-  BaseState.keypressed(self, key)
+	BaseState.keypressed(self, key)
 end
 
 function Level1:keyreleased(key)
-  BaseState.keyreleased(self, key)
-
-  if key == "space" then
-    self.my_player.yvel = self.my_player.jump_vel
-  end
-
-  if key == "=" then
-    return Gamestate.switch(Level2, persistent)
-  end
+	BaseState.keyreleased(self, key)
 end
 
 return Level1
-
-
-
-
-
-
-
-

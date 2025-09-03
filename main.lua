@@ -1,142 +1,67 @@
 ---@diagnostic disable: need-check-nil
 
--- Debug --
---if arg[2] == "debug" then
---    require("lldebugger").start()
---end
-
--- LUME Debug tables --
---local lume = require "lume/lume.lua"
-
-
 -- Global Imports --
 package.path = package.path .. ";/usr/share/lua/5.4/?.lua"
 local Class = require("libraries.hump-master.class")
 -- main.lua
-local Gamestate = require "libraries.hump-master.gamestate"
+local Gamestate = require("libraries.hump-master.gamestate")
 -- Load the necessary state files
-require("states.BaseState")  -- Base state with common methods
-require("states.MenuState")  -- MenuState (state for the main menu)
-require("states.DevState")  -- DevState (state for development/debug mode)
-require("states.Level1")
-require("states.baseWindow") -- Base Window
 local csv = require("libraries.lua-csv-master.lua.csv")
 
-
-
-
 -- Local imports --
-require("states.baseWindow")
-require("classes.midiFileHandler")
-require("classes.Timer")
-require("classes.MidiTrigger")
-require("classes.spawn-objects.SpawnRectangle")
-require("classes.spawn-objects.ShapeHandler")
-require("classes.spawn-objects.SpawnCircle")
-require("classes.objects.Object")
-require("classes.objects.Entity")
-
--- STI --
-local sti = require('libraries.Simple-Tiled-Implementation.sti')
-
--- Tile Handler --
+local Object = require("objects.Object")
+local Serialize = require("helper_functions.serialize")
 require("classes.spawn-objects.TileHandler")
-local tile_handler = TileHandler()
+require("states.Level1")
+require("states.BaseWindow")
+-- STI --
+local sti = require("libraries.Simple-Tiled-Implementation.sti")
 
-
-
-
--- Gamestate variables --
---local menuState = {}
---local gameState = {}
-
--- Main Objects --
 local state
 
---Callback function love.load 
---Called once upon opening
-
 function love.load()
+	-- Hump gamestate init --
+	Gamestate.registerEvents()
 
-  -- Hump gamestate init --
-  Gamestate.registerEvents()
+	-- Create Window --
+	local window = BaseWindow()
 
-  -- Load Object Handler --
-  local object_handler = ObjectHandler()
+	local object = Object("id_01", {})
 
-  -- Load Map Information --
-  local level_maps = {
-    level1 = {
-      map = sti('assets/Aseprite/TileMap/level_1.lua'),
-      name = 'Level1'
-    },
-    
-    level2 = {
-      map = sti('assets/Aseprite/TileMap/level_2.lua'),
-      name = 'Level2'
-    }
-  }
+	local tile_handler = TileHandler()
 
-  
-  for _, level in pairs(level_maps) do
-    tile_handler:addMapTiles(level.map, object_handler, level.name)
-  end
+	Serialize.saveToFile("test_save.txt", object:serialize())
 
-  
-  for i = #object_handler.object_table, 1, -1 do
-    if object_handler.object_table[i].level ~= 'Level1' then
-      table.remove(object_handler.object_table, i)
-    end
-  end
+	object:load(Serialize.loadFromFile("test_save.txt"))
 
-  print(#object_handler.object_table)
-
-  -- Load Player --
-  local player = Player({ x = nil, y = nil, w = 32, h = 32, health = 100, speed = 500, can_collide = true , tag = 'player' , collide_x_offset = 12, collide_y_offset = 3, collide_w = 10, collide_h = 29}, object_handler)
-
-  -- Load Window --
-  local window = baseWindow()
-
-  
-  -- Persistent variables --
-  
-  local persistent = {
-    window = window,
-    player = player,
-    object_handler = object_handler
-  }
-    
-  --Gamestate.push(DevRoomState)
-  Gamestate.switch(Level1, persistent)
+	persistent = { window = window }
+	Gamestate.switch(Level1, persistent)
 end
-
-
 
 state = Gamestate.current()
 
 function state:update(dt)
-    state.update(dt)
+	state.update(dt)
 end
 
 function state:draw(dt)
-    state.draw(dt)
+	state.draw(dt)
 end
 
 function love.keypressed(key)
-    Gamestate.keypressed(key)
+	Gamestate.keypressed(key)
 end
 
 function love.keyreleased(key)
-    Gamestate.keyreleased(key)
+	Gamestate.keyreleased(key)
 end
 
 function love.mousepressed(mx, my, mbutton)
-    Gamestate.mousepressed(mx, my, mbutton)
+	Gamestate.mousepressed(mx, my, mbutton)
 end
 
 function love.mousereleased(mx, my, mbutton)
-    Gamestate.mousereleased(mx, my, mbutton)
+	Gamestate.mousereleased(mx, my, mbutton)
 end
 
 ----------------------------------------- MENU ----------------------------------------------
-
