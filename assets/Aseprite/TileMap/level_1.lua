@@ -9,8 +9,8 @@ return {
   height = 10,
   tilewidth = 32,
   tileheight = 32,
-  nextlayerid = 6,
-  nextobjectid = 14,
+  nextlayerid = 7,
+  nextobjectid = 16,
   properties = {},
   tilesets = {
     {
@@ -237,8 +237,8 @@ return {
     {
       type = "objectgroup",
       draworder = "topdown",
-      id = 5,
-      name = "Player_Spawn",
+      id = 6,
+      name = "PlayerSpawn",
       class = "",
       visible = true,
       opacity = 1,
@@ -249,8 +249,8 @@ return {
       properties = {},
       objects = {
         {
-          id = 11,
-          name = "Player_Spawn_Right",
+          id = 15,
+          name = "PlayerSpawn",
           type = "",
           shape = "rectangle",
           x = 352,
@@ -259,22 +259,10 @@ return {
           height = 32,
           rotation = 0,
           gid = 9,
-          visible = false,
-          properties = {}
-        },
-        {
-          id = 13,
-          name = "Player_Spawn_Right",
-          type = "",
-          shape = "rectangle",
-          x = 384,
-          y = 288,
-          width = 32,
-          height = 32,
-          rotation = 0,
-          gid = 9,
-          visible = false,
-          properties = {}
+          visible = true,
+          properties = {
+            ["TP"] = "BRUH"
+          }
         }
       }
     }

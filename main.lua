@@ -26,14 +26,6 @@ function love.load()
 	-- Create Window --
 	local window = BaseWindow()
 
-	local object = Object("id_01", {})
-
-	local tile_handler = TileHandler()
-
-	Serialize.saveToFile("test_save.txt", object:serialize())
-
-	object:load(Serialize.loadFromFile("test_save.txt"))
-
 	persistent = { window = window }
 	Gamestate.switch(Level1, persistent)
 end

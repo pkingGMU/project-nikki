@@ -22,7 +22,14 @@ function Level1:init()
 end
 
 function Level1:enter(prev, persistent)
+	-- TEMP object lists
+	self.object_handler = {
+		active_objects = {},
+		inactive_objects = {},
+	}
+
 	self.game_map = sti("assets/Aseprite/TileMap/level_1.lua")
+
 	BaseState.enter(self, persistent)
 
 	self.canvas = love.graphics.newCanvas(self.config.WINDOW_WIDTH, self.config.WINDOW_HEIGHT)
@@ -35,11 +42,13 @@ function Level1:enter(prev, persistent)
 
 	--Using STI to either Create a new map state file or read in an existing map state file
 	tile_handler = TileHandler()
-	local map_state = tile_handler:addMapTiles(self.game_map)
+	local map_state = tile_handler:addMapTiles(self.game_map, self.object_handler)
 
 	--Create Game Objects
 	for key, layer in pairs(map_state) do
-		print(key)
+		if key == "Item" then
+		elseif key == "Spawn" then
+		end
 	end
 
 	--TODO--Serialize.saveToFile(persistence_file_name, self.map_state)
