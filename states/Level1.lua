@@ -14,6 +14,9 @@ require("classes.spawn-objects.TileHandler")
 -- Dump
 require("helper_functions.dump")
 
+-- Player Spawn Present
+PlayerSpawn = require("objects.PlayerSpawn")
+
 Level1 = BaseState.new()
 function Level1:init()
 	local self = BaseState.new() -- Call the BaseState constructor
@@ -45,9 +48,14 @@ function Level1:enter(prev, persistent)
 	local map_state = tile_handler:addMapTiles(self.game_map, self.object_handler)
 
 	--Create Game Objects
-	for key, layer in pairs(map_state) do
-		if key == "Item" then
-		elseif key == "Spawn" then
+	for layer, value in pairs(map_state) do
+		if layer == "PlayerSpawn" then
+			for object, value in pairs(value) do
+				if object == "PlayerSpawn" then
+					self.player = PlayerSpawn(value)
+					print(self.player.properties.TP)
+				end
+			end
 		end
 	end
 

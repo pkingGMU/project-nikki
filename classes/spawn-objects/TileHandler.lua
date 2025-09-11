@@ -40,11 +40,12 @@ function TileHandler:addMapTiles(game_map)
 			local layer_state = {}
 			if layer.type == "objectgroup" then
 				for obj_idx, obj in pairs(layer.objects) do
-					local constructor = ObjectConstructors[obj.name]
-					if constructor then
-						local instance = constructor(obj)
-						layer_state[obj.name] = copyNoCyclesNoFunctions(instance)
-					end
+					-- 	local constructor = ObjectConstructors[obj.name]
+					-- 	if constructor then
+					-- 		local instance = constructor(obj)
+					-- 		layer_state[obj.name] = copyNoCyclesNoFunctions(instance)
+					-- 	end
+					layer_state[obj.name] = copyNoCyclesNoFunctions(obj)
 				end
 			end
 
@@ -84,7 +85,7 @@ function copyNoCyclesNoFunctions(obj, seen)
 
 	local t = {}
 	for k, v in pairs(obj) do
-		if type(k) ~= "function" or type(k) ~= "userdata" then
+		if type(k) ~= "function" and type(k) ~= "userdata" and k ~= "layer" then
 			local val = copyNoCyclesNoFunctions(v, seen)
 			if val ~= nil then
 				t[k] = val
