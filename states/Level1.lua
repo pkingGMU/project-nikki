@@ -14,6 +14,8 @@ require("classes.spawn-objects.TileHandler")
 -- Dump
 require("helper_functions.dump")
 
+-- Draw Functions
+require("objects.DrawFunctions")
 -- Player Spawn Present
 PlayerSpawn = require("objects.PlayerSpawn")
 
@@ -41,7 +43,7 @@ function Level1:enter(prev, persistent)
 	self.cam:setFollowLerp(0.2)
 	self.cam:setFollowLead(0)
 	self.cam:setFollowStyle("PLATFORMER")
-	self.cam.scale = 1
+	self.cam.scale = 2
 
 	--Using STI to either Create a new map state file or read in an existing map state file
 	tile_handler = TileHandler()
@@ -53,7 +55,7 @@ function Level1:enter(prev, persistent)
 			for object, value in pairs(value) do
 				if object == "PlayerSpawn" then
 					self.player = PlayerSpawn(value)
-					print(self.player.properties.TP)
+					table.insert(self.object_handler.active_objects, player)
 				end
 			end
 		end
@@ -67,7 +69,13 @@ function Level1:update(dt)
 
 	self.cam:update(dt)
 	self.cam:follow(0, 0)
-	--self.cam:follow((self.my_player.x + self.my_player.w / 2), (self.my_player.y + self.my_player.h / 2))
+	self.cam:follow((self.player.x + self.player.w / 2), (self.player.y + self.player.h / 2))
+
+	-- Update Active Objects
+	for objIdx, obj in ipairs(self.object_handler.active_objects) do
+		-- Update Animations
+		UpdateAnimation(dt, obj)
+	end
 end
 
 function Level1:draw()
@@ -75,12 +83,17 @@ function Level1:draw()
 	love.graphics.clear(0, 0, 0, 0)
 
 	-- Camera --
-	-- self.cam:attach()
+	self.cam:attach()
 
 	love.graphics.setColor(1, 1, 1, 1)
 	self.game_map:drawLayer(self.game_map.layers["Tile Layer 1"])
 
-	-- self.cam:detach()
+	-- Draw Active Objects
+	for objIdx, obj in ipairs(self.object_handler.active_objects) do
+		DrawAnim(obj)
+	end
+
+	self.cam:detach()
 
 	love.graphics.setCanvas()
 
