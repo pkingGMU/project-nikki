@@ -40,12 +40,8 @@ function TileHandler:addMapTiles(game_map)
 			local layer_state = {}
 			if layer.type == "objectgroup" then
 				for obj_idx, obj in pairs(layer.objects) do
-					-- 	local constructor = ObjectConstructors[obj.name]
-					-- 	if constructor then
-					-- 		local instance = constructor(obj)
-					-- 		layer_state[obj.name] = copyNoCyclesNoFunctions(instance)
-					-- 	end
-					layer_state[obj.name] = copyNoCyclesNoFunctions(obj)
+					local unique_name = obj.name .. tostring(obj.id)
+					layer_state[unique_name] = copyNoCyclesNoFunctions(obj)
 				end
 			end
 

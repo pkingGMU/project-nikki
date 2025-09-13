@@ -5,6 +5,7 @@ function DrawAnim(obj)
 	love.graphics.setColor(1, 1, 1, 1)
 	local sprite_num = math.floor(obj.current_anim.current_time / obj.current_anim.duration * frame_count)
 		+ obj.current_anim.start_frame
+	sprite_num = math.min(sprite_num, obj.current_anim.end_frame)
 	love.graphics.draw(
 		obj.current_anim.sprite_sheet,
 		obj.current_anim.quads[sprite_num],
@@ -17,8 +18,6 @@ function DrawAnim(obj)
 		0
 	)
 	love.graphics.pop()
-
-	print(frame_count)
 end
 
 function DrawStatic(obj) end

@@ -16,9 +16,15 @@ require("helper_functions.dump")
 
 -- Draw Functions
 require("objects.DrawFunctions")
--- Player Spawn Present
+
+-- Physics Functions
+require("objects.PhysicsFunctions")
+
+-- Player Spawn Preset
 PlayerSpawn = require("objects.PlayerSpawn")
 
+-- Collide Tile Preset
+CollideTile = require("objects.CollideTile")
 Level1 = BaseState.new()
 function Level1:init()
 	local self = BaseState.new() -- Call the BaseState constructor
@@ -53,10 +59,17 @@ function Level1:enter(prev, persistent)
 	for layer, value in pairs(map_state) do
 		if layer == "PlayerSpawn" then
 			for object, value in pairs(value) do
-				if object == "PlayerSpawn" then
+				if string.find(object, "PlayerSpawn") then
 					self.player = PlayerSpawn(value)
-					table.insert(self.object_handler.active_objects, player)
+					table.insert(self.object_handler.active_objects, self.player)
 				end
+			end
+		end
+
+		if layer == "TileCollision" then
+			for tile, value in pairs(value) do
+				local collide_tile = CollideTile(value)
+				table.insert(self.object_handler.active_objects, collide_tile)
 			end
 		end
 	end
@@ -73,8 +86,19 @@ function Level1:update(dt)
 
 	-- Update Active Objects
 	for objIdx, obj in ipairs(self.object_handler.active_objects) do
-		-- Update Animations
-		UpdateAnimation(dt, obj)
+		if obj.name == "PlayerSpawn" then
+			KeyboardMovePlayer(dt, obj)
+		end
+
+		if obj.physics then
+			-- Update Physics
+			UpdatePhysics(dt, obj, self.object_handler.active_objects)
+		end
+
+		if obj.animation then
+			-- Update Animations
+			UpdateAnimation(dt, obj)
+		end
 	end
 end
 
@@ -88,9 +112,12 @@ function Level1:draw()
 	love.graphics.setColor(1, 1, 1, 1)
 	self.game_map:drawLayer(self.game_map.layers["Tile Layer 1"])
 
-	-- Draw Active Objects
 	for objIdx, obj in ipairs(self.object_handler.active_objects) do
-		DrawAnim(obj)
+		if obj.animation then
+			DrawAnim(obj)
+		else
+			love.graphics.rectangle("line", obj.x, obj.y, obj.w, obj.h)
+		end
 	end
 
 	self.cam:detach()
@@ -109,6 +136,14 @@ end
 
 function Level1:keyreleased(key)
 	BaseState.keyreleased(self, key)
+
+	if key == "c" then
+		self.player.dash = true
+	end
+
+	if key == "space" then
+		self.player.jump = true
+	end
 end
 
 return Level1
